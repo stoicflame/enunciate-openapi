@@ -1,0 +1,10 @@
+*~
+/.apt_generated/
+/.classpath
+/.eclipse-classes/
+/.gradle/
+/.settings/
+/bin/
+/build/
+/dist/
+/.project

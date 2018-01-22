@@ -1,0 +1,111 @@
+[#ftl]
+[#--
+
+    Copyright © 2006-2017 Web Cohesion (info@webcohesion.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--]
+[@file name="openapi.yml" charset="utf-8"]
+openapi: 3.0.0
+info:
+  title: ${info.title}
+  version: ${info.version}
+  description: ${info.description}
+  [#if info.termsOfService??]
+  termsOfService: ${info.termsOfService}
+  [/#if]
+  [#if info.hasContact]
+  contact:
+    name: ${info.contactName}
+    [#if info.contactUrl??]
+    url: ${info.contactUrl}
+    [/#if]
+    [#if info.contactEmail??]
+    email: ${info.contactEmail}
+    [/#if]
+  [/#if]
+  [#if info.hasLicense]
+  license:
+    name: ${info.licenseName}
+    url: ${info.licenseUrl}
+  [/#if]
+[#if servers.isEmpty]
+servers: []
+[#else]
+servers:
+  [#list servers.servers as server]
+- url: ${server.url}
+  [/#list]
+[/#if]
+[#if paths.isEmpty]
+paths: {}
+[#else]
+paths:
+  [#list paths.endpoints as endpoint]
+  ${endpoint.path}:
+    [#list endpoint.operations as operation]
+    ${operation.httpMethod}:
+      description: ${operation.description}
+      tags:
+        - ${endpoint.resourceGroupTag}
+      summary: ${operation.summary}
+      deprecated: ${operation.deprecated}
+      operationId: ${operation.operationId}
+      [#if operation.hasParameters]
+      parameters:
+        [#list operation.parameters as parameter]
+      - name: ${parameter.name}
+        in: ${parameter.inFormat}
+        description: ${parameter.description}
+        required: ${parameter.required}
+        schema:
+          ${parameter.renderDataType("          ")}
+        style: ${parameter.style}
+        [/#list][#-- list parameters --]
+      [/#if][#-- if operation.hasParameters --]
+      [#if operation.hasEntity]
+      requestBody:
+        description: ${operation.entityDescription}
+        required: ${operation.isEntityRequired}
+        content:
+          ${operation.renderEntity("          ")}
+      [/#if][#-- if operation.hasEntity --]
+      responses:
+        [#list operation.responses as response]
+        ${response.code}:
+          description: ${response.description}
+          [#if response.hasData]
+          content:
+            ${response.mediaType}:
+              schema:
+                ${response.renderDataType("                ")}
+              [#if response.hasExample]
+              example:
+                ${response.renderExample("                ")}
+              [/#if]
+          [/#if][#-- response.hasData --]
+[/#list] [#-- list responses --]
+            [/#list][#-- list operations --]
+        [/#list][#-- list endpoints --]
+[/#if][#-- if paths --]
+[#if components.isEmpty]
+components: {}
+[#else]
+components:
+  schemas:
+    [#list components.schemas as schema]
+    ${schema.render("    ")}
+[/#list][#-- list schemas --]
+[/#if][#-- if components --]
+[/@file]

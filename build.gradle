@@ -1,0 +1,124 @@
+plugins {
+	id "java"
+	id "eclipse"
+	id "maven-publish"
+}
+
+defaultTasks 'dist'
+
+// Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
+ext {
+	jbNexus = System.getenv('NEXUS_REPO_URL')
+}
+
+if (jbNexus) {
+	System.setProperty("javax.net.ssl.trustStore", file("gradle/jb-nexus-trust").getAbsolutePath());
+  	System.setProperty("javax.net.ssl.trustStorePassword", "changeit"); 
+}
+
+repositories {
+	if (jbNexus) {
+		maven {
+	    	url jbNexus
+	  	}
+    } else {
+    	mavenCentral()
+    }
+}
+
+dependencies {
+    compile 'com.webcohesion.enunciate:enunciate-core:2.10.1'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9'
+    compileOnly 'com.webcohesion.enunciate:enunciate-jaxb:2.10.1'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+    compileOnly 'org.freemarker:freemarker:2.3.23'
+
+    testCompile 'junit:junit:4.12'
+	testCompile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
+	testCompile "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
+	testCompile files(new File(System.getenv("JAVA_HOME"), "lib/tools.jar"))
+	testCompile "org.slf4j:slf4j-ext:1.7.7"
+	testCompile "ch.qos.logback:logback-classic:1.1.2"
+
+    testCompile "com.webcohesion.enunciate:enunciate-top:2.10.1"
+   	testCompile "org.assertj:assertj-core:3.6.1"
+   	testCompile files("build/distributions/openapi-swagger-ui.zip")
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+task packSwaggerUi(type: Zip) {
+     from "swagger-ui"
+     archiveName = "openapi-swagger-ui.zip"
+}
+
+jar {
+    from ("src/main/java") {
+        include "**/*.ftl"
+    }
+    from packSwaggerUi
+    destinationDir = file("dist/publish")
+    
+    manifest {
+		attributes(["Implementation-Version" : project.version])
+	}
+	version = project.version
+}
+
+test.doFirst {
+	project.copy {
+       	from 'build/resources/main/META-INF'
+       	into 'build/classes/main/META-INF/'
+   	}
+}
+
+task addPackedSwaggerUiToEclipseTest(type: Copy){
+	from packSwaggerUi
+	into file("bin/test")
+}
+
+task addPackedSwaggerUiToTest(type: Copy){
+	from packSwaggerUi
+	into file("build/classes/java/test")
+}
+
+
+task deleteDist(type: Delete) {
+	delete("dist")
+	delete("bin")
+}
+tasks.clean.dependsOn(deleteDist)
+
+group = 'dk.jyskebank.tooling.enunciate'
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+}
+
+// Prepare packaged ui for eclipse tests
+tasks['eclipse'].dependsOn("addPackedSwaggerUiToEclipseTest", "cleanEclipseClasspath")
+tasks['test'].dependsOn("addPackedSwaggerUiToTest")
+
+task dist(dependsOn: ["jar", "generatePomFileForMavenJavaPublication"])
+task eclipseIvyChanged(dependsOn: "eclipse")
+task eclipseGradlePropertiesChanged(dependsOn: "eclipse")
+task eclipsePropertiesFolderChanged(dependsOn: "eclipse")
+task ciBuild(dependsOn: "test")
+
+eclipse {
+	jdt {
+		file {
+			withProperties { props ->
+				props.putAll([
+					"org.eclipse.jdt.core.formatter.tabulation.char" 	: "space",
+					"org.eclipse.jdt.core.formatter.tabulation.size" 	: "2"
+				])
+			}
+		}
+	}
+}

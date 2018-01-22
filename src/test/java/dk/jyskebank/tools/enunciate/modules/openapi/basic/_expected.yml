@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
+servers: []
+paths:
+  "/path":
+    get:
+      description: "An initial summary.\n\nFollowed by a longer description.\n\n<p>And some HTML</p>\n<pre>\n {\n  \"weird\" : \"stuff\"\n }\n </pre>"
+      tags:
+        - "Resource group text"
+      summary: "An initial summary."
+      deprecated: false
+      operationId: get
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+components: {}

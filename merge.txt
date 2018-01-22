@@ -1,0 +1,16 @@
+Not yet sure how to keep the internal repo and the external up to date.
+This is a start...
+
+
+Setup
+ git clone https://github.com/Jyskebank/enunciate-openapi.git
+ git remote add jb https://bitbucket.corp.jyskebank.net/scm/jbintool/enunciate-openapi.git
+ git fetch jb
+
+First drop
+ git merge remotes/jb/master --squash --allow-unrelated-histories
+ git commit -m "First drop from Jyske Bank repo"
+ 
+
+ ...
+ 
