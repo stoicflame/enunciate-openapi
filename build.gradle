@@ -9,6 +9,7 @@ defaultTasks 'dist'
 // Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
 ext {
 	jbNexus = System.getenv('NEXUS_REPO_URL')
+	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
 }
 
 if (jbNexus) {
@@ -62,9 +63,9 @@ jar {
     destinationDir = file("dist/publish")
     
     manifest {
-		attributes(["Implementation-Version" : project.version])
+		attributes(["Implementation-Version" : publicVersion])
 	}
-	version = project.version
+	version = publicVersion
 }
 
 test.doFirst {
@@ -91,12 +92,19 @@ task deleteDist(type: Delete) {
 }
 tasks.clean.dependsOn(deleteDist)
 
-group = 'dk.jyskebank.tooling.enunciate'
+group 'dk.jyskebank.tooling.enunciate'
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
+			version = publicVersion
 		}
+	}
+}
+
+model {
+	tasks.generatePomFileForMavenJavaPublication {
+		destination = file("dist/publish/${project.name}-${publicVersion}.pom")
 	}
 }
 
