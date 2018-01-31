@@ -17,13 +17,6 @@ But I cannot (at this time, at least) commit time to fixing problems that may be
 I hope to improve the documentation over time.
 As it is, documentation is pretty barren - but I wanted to make the module available to those able to use it in its current form.
 
-## Release ##
-
-It would make sense to release the built versions of the module on Maven Central.
-I will get to that, eventually.
-
-For now, you will have to build the project yourself, or use the builds I make available on GitHub.
-
 ## Building Module ##
 
 Simply checkout the project and run gradle:
@@ -45,9 +38,7 @@ From Gradle you would do something like this:
       }
       dependencies {
         classpath "gradle.plugin.com.webcohesion.enunciate:enunciate-gradle:2.10.1"
-        classpath "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9"
-
-        classpath files("path/to/enunciate-openapi-n.n.n.jar")
+        classpath "dk.jyskebank.tooling.enunciate:enunciate-openapi:1.0.3"
       }
     }
 
@@ -62,6 +53,4 @@ I am unable to help Maven users. But if you know how to make it work, please let
 Your _enunciate.xml_ file should include this to enable the module:
     
     <openapi disabled="false" />
-
-
 
