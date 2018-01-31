@@ -10,6 +10,7 @@ defaultTasks 'dist'
 ext {
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
+	publishDir = file("dist/publish")
 }
 
 if (jbNexus) {
@@ -28,8 +29,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.webcohesion.enunciate:enunciate-core:2.10.1'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9'
+    compileOnly 'com.webcohesion.enunciate:enunciate-core:2.10.1'
     compileOnly 'com.webcohesion.enunciate:enunciate-jaxb:2.10.1'
     compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compileOnly 'org.freemarker:freemarker:2.3.23'
@@ -60,12 +61,35 @@ jar {
         include "**/*.ftl"
     }
     from packSwaggerUi
-    destinationDir = file("dist/publish")
+    destinationDir = publishDir
     
     manifest {
 		attributes(["Implementation-Version" : publicVersion])
 	}
 	version = publicVersion
+}
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	from javadoc
+    destinationDir = publishDir
+
+    manifest {
+		attributes(["Implementation-Version" : publicVersion])
+	}
+	version = publicVersion
+	classifier = "javadoc"
+}
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.allSource
+    destinationDir = publishDir
+
+    manifest {
+		attributes(["Implementation-Version" : publicVersion])
+	}
+	version = publicVersion
+	classifier = "sources"
 }
 
 test.doFirst {
@@ -96,15 +120,45 @@ group 'dk.jyskebank.tooling.enunciate'
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
+			pom.withXml {
+				asNode().with {
+					appendNode('name', 'enunciate-openapi')
+					appendNode('description', 'Enunciate module that generates OpenAPI output')
+					appendNode('url', 'https://github.com/Jyskebank/enunciate-openapi')
+					appendNode('licenses').with {
+						appendNode('license').with {
+							appendNode('name', 'The Apache Software License, Version 2.0')
+						 	appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+						}
+					}
+					appendNode('developers').with {
+						appendNode('developer').with {
+							appendNode('id', 'jskov')
+							appendNode('name', 'Jesper Skov')
+							appendNode('email', 'jskov@jyskebank.dk')
+							appendNode('organization', 'Jyske Bank')
+							appendNode('organizationUrl', 'http://www.jyskebank.dk')
+							appendNode('roles').with {
+								appendNode('role', 'developer')
+							}
+							appendNode('timezone', 'Europe/Copenhagen')
+						}
+					}
+					appendNode('scm').with {
+						appendNode('connection', 'scm:git:git@github.com:Jyskebank/enunciate-openapi.git')
+						appendNode('developerConnection', 'scm:git:git@github.com:Jyskebank/enunciate-openapi.git')
+						appendNode('url', 'https://github.com/Jyskebank/enunciate-openapi')
+					}
+				}
+			}
 			from components.java
 			version = publicVersion
 		}
 	}
 }
-
 model {
 	tasks.generatePomFileForMavenJavaPublication {
-		destination = file("dist/publish/${project.name}-${publicVersion}.pom")
+		destination = new File(publishDir, "${project.name}-${publicVersion}.pom")
 	}
 }
 
@@ -112,7 +166,8 @@ model {
 tasks['eclipse'].dependsOn("addPackedSwaggerUiToEclipseTest", "cleanEclipseClasspath")
 tasks['test'].dependsOn("addPackedSwaggerUiToTest")
 
-task dist(dependsOn: ["jar", "generatePomFileForMavenJavaPublication"])
+
+task dist(dependsOn: ["jar", "javadocJar", "sourceJar", "generatePomFileForMavenJavaPublication"])
 task eclipseIvyChanged(dependsOn: "eclipse")
 task eclipseGradlePropertiesChanged(dependsOn: "eclipse")
 task eclipsePropertiesFolderChanged(dependsOn: "eclipse")

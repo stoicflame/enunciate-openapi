@@ -14,3 +14,8 @@ First drop
 
  ...
  
+ 
+ Build and publish internally
+ 
+ Upload artifacts to Maven Central, see http://central.sonatype.org/pages/manual-staging-bundle-creation-and-deployment.html
+ 
