@@ -12,6 +12,10 @@ First drop
  git commit -m "First drop from Jyske Bank repo"
  
 
+Following drops
+ git fetch jb
+ git diff jb/master | patch -R -p1
+ 
  ...
  
  

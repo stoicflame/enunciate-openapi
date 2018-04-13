@@ -17,6 +17,13 @@ But I cannot (at this time, at least) commit time to fixing problems that may be
 I hope to improve the documentation over time.
 As it is, documentation is pretty barren - but I wanted to make the module available to those able to use it in its current form.
 
+## Release ##
+
+When built (with Jyske Bank internal build server), the artifacts are uploaded to Maven Central at the coordinates:
+
+	dk.jyskebank.tooling.enunciate:enunciate-openapi
+
+
 ## Building Module ##
 
 Simply checkout the project and run gradle:
@@ -38,7 +45,7 @@ From Gradle you would do something like this:
       }
       dependencies {
         classpath "gradle.plugin.com.webcohesion.enunciate:enunciate-gradle:2.10.1"
-        classpath "dk.jyskebank.tooling.enunciate:enunciate-openapi:1.0.3"
+        classpath "dk.jyskebank.tooling.enunciate:enunciate-openapi:1.0.4"
       }
     }
 
@@ -53,4 +60,6 @@ I am unable to help Maven users. But if you know how to make it work, please let
 Your _enunciate.xml_ file should include this to enable the module:
     
     <openapi disabled="false" />
+
+
 
