@@ -59,7 +59,9 @@ I am unable to help Maven users. But if you know how to make it work, please let
 
 Your _enunciate.xml_ file should include this to enable the module:
     
-    <openapi disabled="false" />
+	<enunciate>
+	  <modules>
+	    <openapi disabled="false" />
 
 ### Replacing Swagger UI Files ###
 
@@ -70,5 +72,12 @@ To do so, download your own copy of Swagger UI, tweak it to your needs, and tell
 
 	<enunciate>
 	  <modules>
-	    <openapi base="/path/to/my/custom/swagger-ui"/>
+	    <openapi disabled="false" base="/path/to/my/custom/swagger-ui"/>
+
+You can also use a relative path. In this case, you should know that the base path is relative to $buildDir. So you want something like:
+
+	<enunciate>
+	  <modules>
+	    <openapi disabled="false" base="../src/main/enunciate/custom-swagger-ui"/>
+
 
