@@ -55,11 +55,20 @@ But this will not be available until next release (2.11).
 
 I am unable to help Maven users. But if you know how to make it work, please let me know, so I can insert instructions here.
 
-## Enable the Module ##
+### Enable the Module ###
 
 Your _enunciate.xml_ file should include this to enable the module:
     
     <openapi disabled="false" />
 
+### Replacing Swagger UI Files ###
 
+The enunciate-openapi jar includes openapi-swagger-ui.zip. This contains the bundled Swagger UI files.
+
+Sometimes there is a need to provide a custom instance of the Swagger UI, such as to provide custom configuration of the SwaggerUI JavaScript object or to set up custom colors.
+To do so, download your own copy of Swagger UI, tweak it to your needs, and tell the plugin to use that directory (or zip file) as the "base" using the base attribute in the configuration file. For example:
+
+	<enunciate>
+	  <modules>
+	    <openapi base="/path/to/my/custom/swagger-ui"/>
 
