@@ -72,7 +72,7 @@ import freemarker.template.TemplateExceptionHandler;
 public class OpenApiModule extends BasicGeneratingModule implements ApiFeatureProviderModule, ApiRegistryAwareModule, ApiRegistryProviderModule, DocumentationProviderModule {
   private static final String OPENAPI_MODULENAME = "openapi";
 
-  private static final List<String> DEPENDENCY_MODULES = Arrays.asList("jackson", "jaxb", "jaxrs");
+  private static final List<String> DEPENDENCY_MODULES = Arrays.asList("jackson", "jackson1", "jaxb", "jaxrs", "jaxws", "spring-web");
 
   private ApiRegistry apiRegistry;
   private File defaultDocsDir;
