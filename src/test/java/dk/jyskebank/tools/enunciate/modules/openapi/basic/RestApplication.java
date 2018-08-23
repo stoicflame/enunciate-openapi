@@ -1,4 +1,4 @@
-package dk.jyskebank.tools.enunciate.modules.openapi.basic._test;
+package dk.jyskebank.tools.enunciate.modules.openapi.basic;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

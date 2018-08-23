@@ -1,3 +1,12 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
+	}
+}
+
 plugins {
 	id "java"
 	id "eclipse"
@@ -9,6 +18,9 @@ defaultTasks 'dist'
 // Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
 ext {
 	enunciateVersion = "2.11.1"
+
+	junitPlatformVersion = '1.0.0'
+	junitJupiterVersion = '5.0.0'
 	
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
@@ -37,16 +49,18 @@ dependencies {
     compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compileOnly 'org.freemarker:freemarker:2.3.23'
 
-    testCompile 'junit:junit:4.12'
 	testCompile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
 	testCompile "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
 	testCompile files(new File(System.getenv("JAVA_HOME"), "lib/tools.jar"))
 	testCompile "org.slf4j:slf4j-ext:1.7.7"
 	testCompile "ch.qos.logback:logback-classic:1.1.2"
-
     testCompile "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
-   	testCompile "org.assertj:assertj-core:3.6.1"
    	testCompile files("build/distributions/openapi-swagger-ui.zip")
+
+   	testCompile "org.assertj:assertj-core:3.6.1"
+	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+	testCompile("org.junit.platform:junit-platform-runner:${junitPlatformVersion}")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 }
 
 sourceCompatibility = "1.8"
@@ -179,17 +193,4 @@ eclipseJdt.doLast {
     File f = file('.settings/org.eclipse.core.resources.prefs')
     f.write('eclipse.preferences.version=1\n')
     f.append('encoding/<project>=UTF-8')
-}
-
-eclipse {
-	jdt {
-		file {
-			withProperties { props ->
-				props.putAll([
-					"org.eclipse.jdt.core.formatter.tabulation.char" 	: "space",
-					"org.eclipse.jdt.core.formatter.tabulation.size" 	: "2"
-				])
-			}
-		}
-	}
 }

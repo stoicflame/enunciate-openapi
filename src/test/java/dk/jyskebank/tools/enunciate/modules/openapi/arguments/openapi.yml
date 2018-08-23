@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: "Web Service API"
+  version: "version"
+  description: ""
+servers: []
+paths:
+  "/path":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: noArgs
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/path/entity":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: withEntity
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "*/*":
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/path/matrix/{id}":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: withMatrixParams
+      parameters:
+      - name: "id"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int64
+        style: matrix
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+components: {}

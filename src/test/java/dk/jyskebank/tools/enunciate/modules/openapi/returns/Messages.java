@@ -1,4 +1,4 @@
-package dk.jyskebank.tools.enunciate.modules.openapi.returns._test;
+package dk.jyskebank.tools.enunciate.modules.openapi.returns;
 
 import java.util.ArrayList;
 import java.util.List;

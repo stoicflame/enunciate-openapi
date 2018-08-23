@@ -134,8 +134,12 @@ components:
           content:
             type: string
             format: binary
+            x-annotations:
+              - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="bar", listValues={"a", "b", "c"})'
           password:
             type: string
+            x-annotations:
+              - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="foo")'
           receiver:
             xml:
               name: receivers

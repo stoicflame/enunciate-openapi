@@ -27,10 +27,10 @@ public class EnunciateExec {
 	private String runOnSubPackage;
 
 	public EnunciateExec(String runOnSubPackage) {
-	  this.runOnSubPackage = runOnSubPackage + "/_test";
+	  this.runOnSubPackage = runOnSubPackage;
 	}
           
-	public void test() throws IOException {
+	public void run() throws IOException {
 		Enunciate enunciate = new Enunciate();
 		Path srcDir = Paths.get("src/test/java");
 		Path outputdir = Paths.get("build", "test-enunciate", runOnSubPackage);
@@ -44,7 +44,7 @@ public class EnunciateExec {
 		
 		Path actual = docsDir.resolve("openapi.yml");
 		List<String> actualYml = Files.readAllLines(actual, StandardCharsets.UTF_8);
-		Path expected = srcDir.resolve(this.getClass().getPackage().getName().replace('.', '/')).resolve(runOnSubPackage).resolve("_expected.yml");
+		Path expected = srcDir.resolve(this.getClass().getPackage().getName().replace('.', '/')).resolve(runOnSubPackage).resolve("openapi.yml");
 		List<String> expectedYml = Files.readAllLines(expected, StandardCharsets.UTF_8);
         
 		assertThat(actualYml).isEqualTo(expectedYml);
@@ -62,7 +62,7 @@ public class EnunciateExec {
       enunciate.setSourceFiles(getSourceFiles(srcDir, runOnSubPackage));
       
       Path configFile = srcSubPackageDir.resolve("enunciate.xml");
-      logger.info("CONFIG is {} {}", configFile, Files.exists(configFile));
+      logger.info("CONFIG is {} {}", configFile, Files.exists(configFile)); // NOSONAR
       enunciate.loadConfiguration(configFile.toFile());
       enunciate.getConfiguration().setBase(srcSubPackageDir.toFile());
       enunciate.loadDiscoveredModules();
