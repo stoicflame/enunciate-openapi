@@ -19,9 +19,11 @@ public class DataXmlDTO {
 	/** First string. Should be first in serialization order. */
 	private String first;
 	
+	@CustomAnnotation(custom = "foo")
 	@XmlElement(name="password")
 	private String password;
 
+    @CustomAnnotation(custom = "bar", listValues = {"a", "b", "c"})
 	@XmlElement(name="content")
 	private byte[] content;
 

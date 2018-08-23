@@ -16,14 +16,19 @@
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
 import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeYamlString;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.ExecutableElement;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
@@ -50,10 +55,12 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.JsonToYamlHelper;
 public class ObjectTypeRenderer {
   private final EnunciateLogger logger;
   private final DataTypeReferenceRenderer datatypeRefRenderer;
+  private final Set<String> passThroughAnnotations;
 
-  public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer) {
+  public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer, Set<String> passThroughAnnotations) {
     this.logger = enunciateLogger;
     this.datatypeRefRenderer = datatypeRefRenderer;
+    this.passThroughAnnotations = passThroughAnnotations;
   }
   
   public void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
@@ -180,8 +187,41 @@ public class ObjectTypeRenderer {
     datatypeRefRenderer.render(ip, p.getDataType(), p.getDescription());
     
     addOptionalPropertyExample(ip, p, syntaxIsJson);
+    addPassThroughAnnotations(ip, p);
     
     ip.prevLevel();
+  }
+
+  private void addPassThroughAnnotations(IndententationPrinter ip, Property p) {
+    List<String> annotations = p.getAnnotations().entrySet().stream()
+      .filter(e -> passThroughAnnotations.contains(e.getKey()))
+      .map(e -> renderAnnotation(e.getKey(), e.getValue().getElementValues()))
+      .peek(s -> logger.info("  with " + s))
+      .collect(toList());
+    
+    if (!annotations.isEmpty()) {
+      ip.add("x-annotations:");
+      ip.nextLevel();
+      annotations.forEach(a -> ip.add("- '", a, "'"));
+      ip.prevLevel();
+    }
+  }
+  
+  private String renderAnnotation(String annotationName, Map<? extends ExecutableElement, ? extends AnnotationValue> annotationOptions) {
+    StringBuilder sb = new StringBuilder("@")
+        .append(annotationName);
+    if (!annotationOptions.isEmpty()) {
+      String args = annotationOptions.entrySet().stream()
+        .map(e -> {
+          String n = e.getKey().toString().replace("()", "");
+          String v = e.getValue().toString();
+          return n + "=" + v;
+        })
+        .collect(joining(", "));
+      
+      sb.append("(").append(args).append(")");
+    }
+    return sb.toString();
   }
 
   private static void addConstraints(IndententationPrinter ip, Property p) {
@@ -351,7 +391,6 @@ public class ObjectTypeRenderer {
       return specifiedExample;
     }
   }
-  
 
   private static Optional<String> findSpecifiedExample(Property property) {
     String example = null;

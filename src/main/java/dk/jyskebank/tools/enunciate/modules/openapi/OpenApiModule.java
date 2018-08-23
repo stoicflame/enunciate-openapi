@@ -16,6 +16,8 @@
  */
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,9 +35,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import com.webcohesion.enunciate.EnunciateContext;
 import com.webcohesion.enunciate.EnunciateException;
+import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.ApiRegistrationContext;
 import com.webcohesion.enunciate.api.ApiRegistry;
 import com.webcohesion.enunciate.api.DefaultRegistrationContext;
@@ -198,17 +202,20 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     
     protected void writeToFolder(File dir) throws IOException {
       
-      DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(enunciate.getLogger());
-      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(enunciate.getLogger(), dataTypeReferenceRenderer);
+      
+      
+      EnunciateLogger logger = enunciate.getLogger();
+      DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger);
+      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations());
       
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
-      model.put("info", new Info(enunciate.getLogger(), enunciate.getConfiguration(), context)); 
-      model.put("paths", new Paths(enunciate.getLogger(), dataTypeReferenceRenderer, objectTypeRenderer, new OperationIds(), enunciate.getConfiguration(), context, resourceApis));
-      model.put("servers", new Servers(enunciate.getLogger(), enunciate.getConfiguration(), config));
+      model.put("info", new Info(logger, enunciate.getConfiguration(), context)); 
+      model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, new OperationIds(), enunciate.getConfiguration(), context, resourceApis));
+      model.put("servers", new Servers(logger, enunciate.getConfiguration(), config));
       Set<Syntax> syntaxes = apiRegistry.getSyntaxes(apiRegistrationContext);
-      model.put("components", new Components(enunciate.getLogger(), objectTypeRenderer, syntaxes));
-      model.put("file", new FileDirective(dir, enunciate.getLogger()));
+      model.put("components", new Components(logger, objectTypeRenderer, syntaxes));
+      model.put("file", new FileDirective(dir, logger));
       
       buildBase(dir);
       try {
@@ -355,6 +362,14 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     return config.getString("[@base]", null);
   }
 
+  public Set<String> getPassThroughAnnotations() {
+    String arg = config.getString("[@passThroughAnnotations]", "");
+    return Stream.of(arg.split(","))
+      .map(String::trim)
+      .filter(s -> !s.isEmpty())
+      .collect(toSet());
+  }
+  
   public Set<String> getFacetIncludes() {
     List<Object> includes = config.getList("facets.include[@name]");
     Set<String> facetIncludes = new TreeSet<>();
