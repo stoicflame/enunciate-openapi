@@ -15,6 +15,10 @@ First drop
 Following drops
  git fetch jb
  git diff jb/master | patch -R -p1
+
+ git diff #tag# | patch -R -p1
+ git diff #hash# | patch -R -p1
+
  
  ...
  
