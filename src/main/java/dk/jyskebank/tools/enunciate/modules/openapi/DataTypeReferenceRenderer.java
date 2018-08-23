@@ -23,6 +23,7 @@ import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference.ContainerType;
+import com.webcohesion.enunciate.modules.jaxb.model.types.KnownXmlType;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 
@@ -137,13 +138,23 @@ public class DataTypeReferenceRenderer {
     ip.add("$ref: \"#/components/schemas/" + slug + "\"");
   }
 
-  private static String getFormatNameFor(DataTypeReference dtr) {
-    if ("base64Binary".equals(dtr.getLabel())) {
-      // KnownXmlType.BASE64_BINARY should render as string/binary
-      // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
-      return "binary";
-    }
-    return BaseTypeToOpenApiType.toOpenApiFormat(dtr.getBaseTypeFormat());
+  	private String getFormatNameFor(DataTypeReference dtr) {
+  		String res =  BaseTypeToOpenApiType.toOpenApiFormat(dtr.getBaseTypeFormat());
+
+  		// Overrides for XML types
+  		// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
+  		String label = dtr.getLabel();
+		if (KnownXmlType.BASE64_BINARY.getName().equals(label)) {
+  			res = "binary";
+  		} else if (KnownXmlType.DATE_TIME.getName().equals(label)) {
+  			res = "date-time";
+  		} else if (KnownXmlType.DATE.getName().equals(label)) {
+  			res = "date";
+  		} else if (KnownXmlType.TIME.getName().equals(label)) {
+  			res = "time";
+  		}
+  		logger.debug("getFormatName for " + dtr.getBaseType() + "/" + dtr.getBaseTypeFormat()  + " : " + label + " -> " + res);
+  		return res;
   }
 
   private static String getBaseType(DataTypeReference dtr) {

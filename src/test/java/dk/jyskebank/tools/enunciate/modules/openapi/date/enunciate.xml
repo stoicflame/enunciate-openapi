@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enunciate version="version" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.11.1.xsd">
+	<modules disabledByDefault="true">
+		<openapi disabled="false" skipBase="false" />
+		<jaxrs groupBy="class" disabled="false" />
+		<jackson disabled="false" />
+		<jaxb disabled="false" />
+	</modules>
+</enunciate>
