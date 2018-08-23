@@ -27,7 +27,7 @@ public class EnunciateExec {
 	private String runOnSubPackage;
 
 	public EnunciateExec(String runOnSubPackage) {
-	  this.runOnSubPackage = runOnSubPackage;
+	  this.runOnSubPackage = runOnSubPackage + "/_test";
 	}
           
 	public void test() throws IOException {

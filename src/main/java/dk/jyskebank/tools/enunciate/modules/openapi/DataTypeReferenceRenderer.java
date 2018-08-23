@@ -17,6 +17,7 @@ package dk.jyskebank.tools.enunciate.modules.openapi;
 
 import java.util.List;
 
+import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.BaseType;
 import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataType;
@@ -26,9 +27,14 @@ import com.webcohesion.enunciate.api.datatype.DataTypeReference.ContainerType;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 
 public class DataTypeReferenceRenderer {
-  private DataTypeReferenceRenderer() {}
+  @SuppressWarnings("unused")
+  private final EnunciateLogger logger;
   
-  public static void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
+  public DataTypeReferenceRenderer(EnunciateLogger logger) {
+    this.logger = logger;
+  }
+  
+  public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
     if (dtr == null) {
       throw new IllegalStateException("Cannot render null data type");
     }
@@ -76,9 +82,10 @@ public class DataTypeReferenceRenderer {
     }
   }
 
-  private static void renderSimpleType(IndententationPrinter ip, DataTypeReference dtr) {
+  private void renderSimpleType(IndententationPrinter ip, DataTypeReference dtr) {
     String baseType = getBaseType(dtr);
     String format = getFormatNameFor(dtr);
+    
     if (format != null) {
       renderBaseTypeWithFormat(ip, baseType, format);
     } else {
@@ -90,11 +97,11 @@ public class DataTypeReferenceRenderer {
     }
   }
 
-  public static void renderBaseType(IndententationPrinter ip, String baseType) {
+  public void renderBaseType(IndententationPrinter ip, String baseType) {
     ip.add("type: ", baseType);
   }
 
-  public static void renderBaseTypeWithOptFormat(IndententationPrinter ip, String baseType, BaseTypeFormat format) {
+  public void renderBaseTypeWithOptFormat(IndententationPrinter ip, String baseType, BaseTypeFormat format) {
     if (format != null) {
       String fomatStr = BaseTypeToOpenApiType.toOpenApiFormat(format);
       renderBaseTypeWithFormat(ip, baseType, fomatStr);
@@ -103,12 +110,12 @@ public class DataTypeReferenceRenderer {
     }
   }
 
-  private static void renderBaseTypeWithFormat(IndententationPrinter ip, String baseType, String format) {
+  private void renderBaseTypeWithFormat(IndententationPrinter ip, String baseType, String format) {
     renderBaseType(ip, baseType);
     ip.add("format: ", format);
   }
 
-  public static void renderObsoletedFileFormat(IndententationPrinter ip) {
+  public void renderObsoletedFileFormat(IndententationPrinter ip) {
     ip.add("type: string");
     ip.add("format: binary"); // TODO: Need to check type for base64/binary - assume binary for now
   }
@@ -117,7 +124,7 @@ public class DataTypeReferenceRenderer {
     addSchemaSlugReference(ip, value.getSlug());
   }
 
-  public static void addSchemaRef(IndententationPrinter ip, DataTypeReference ref) {
+  public void addSchemaRef(IndententationPrinter ip, DataTypeReference ref) {
     String slug = ref.getSlug();
     if (slug != null && !slug.isEmpty()) {
       addSchemaSlugReference(ip, slug);
@@ -130,7 +137,12 @@ public class DataTypeReferenceRenderer {
     ip.add("$ref: \"#/components/schemas/" + slug + "\"");
   }
 
-  private static String getFormatNameFor(DataTypeReference dtr) { 
+  private static String getFormatNameFor(DataTypeReference dtr) {
+    if ("base64Binary".equals(dtr.getLabel())) {
+      // KnownXmlType.BASE64_BINARY should render as string/binary
+      // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
+      return "binary";
+    }
     return BaseTypeToOpenApiType.toOpenApiFormat(dtr.getBaseTypeFormat());
   }
 

@@ -1,4 +1,4 @@
-package dk.jyskebank.tools.enunciate.modules.openapi.returns;
+package dk.jyskebank.tools.enunciate.modules.openapi.returns._test;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;

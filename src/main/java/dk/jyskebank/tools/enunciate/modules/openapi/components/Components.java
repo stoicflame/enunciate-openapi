@@ -24,15 +24,17 @@ import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.Namespace;
 import com.webcohesion.enunciate.api.datatype.Syntax;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
+
 public class Components {
   private final List<Schema> schemas = new ArrayList<>();
 
-  public Components(EnunciateLogger logger, Set<Syntax> syntaxes) {
+  public Components(EnunciateLogger logger, ObjectTypeRenderer objectTypeRenderer, Set<Syntax> syntaxes) {
     for (Syntax syntax: syntaxes) {
       boolean syntaxIsJson = syntax.isAssignableToMediaType("application/json");
       for (Namespace namespace: syntax.getNamespaces()) {
         for (DataType datatype: namespace.getTypes()) {
-          schemas.add(new Schema(logger, datatype, syntaxIsJson));
+          schemas.add(new Schema(logger, objectTypeRenderer, datatype, syntaxIsJson));
         }
       }
     }

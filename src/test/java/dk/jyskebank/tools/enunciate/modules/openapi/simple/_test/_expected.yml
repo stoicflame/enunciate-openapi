@@ -84,6 +84,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_DataDTO"
  
+  "/path/{pathArg}/xmldto":
+    get:
+      description: ""
+      tags:
+        - "Resource group text"
+      summary: ""
+      deprecated: false
+      operationId: getXmlType
+      parameters:
+      - name: "pathArg"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
+ 
 components:
   schemas:
     "json_DataDTO":
@@ -97,3 +121,30 @@ components:
       example:
         last: "..."
         first: "..."
+    "xml_ns0_dataXmlDTO":
+      title: "dataXmlDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          first:
+            description: First string. Should be first in serialization order.
+            type: string
+          content:
+            type: string
+            format: binary
+          password:
+            type: string
+          receiver:
+            xml:
+              name: receivers
+              wrapped: true
+            type: array
+            items:
+              type: string
+          last:
+            description: Last string. Should be last in serialization order.
+            type: string
+        xml:
+          name: dataXml

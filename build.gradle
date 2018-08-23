@@ -8,6 +8,8 @@ defaultTasks 'dist'
 
 // Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
 ext {
+	enunciateVersion = "2.11.1"
+	
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
 	publishDir = file("dist/publish")
@@ -30,8 +32,8 @@ repositories {
 
 dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9'
-    compileOnly 'com.webcohesion.enunciate:enunciate-core:2.10.1'
-    compileOnly 'com.webcohesion.enunciate:enunciate-jaxb:2.10.1'
+    compileOnly "com.webcohesion.enunciate:enunciate-core:${enunciateVersion}"
+    compileOnly "com.webcohesion.enunciate:enunciate-jaxb:${enunciateVersion}"
     compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
     compileOnly 'org.freemarker:freemarker:2.3.23'
 
@@ -42,7 +44,7 @@ dependencies {
 	testCompile "org.slf4j:slf4j-ext:1.7.7"
 	testCompile "ch.qos.logback:logback-classic:1.1.2"
 
-    testCompile "com.webcohesion.enunciate:enunciate-top:2.10.1"
+    testCompile "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
    	testCompile "org.assertj:assertj-core:3.6.1"
    	testCompile files("build/distributions/openapi-swagger-ui.zip")
 }
@@ -172,6 +174,12 @@ task eclipseIvyChanged(dependsOn: "eclipse")
 task eclipseGradlePropertiesChanged(dependsOn: "eclipse")
 task eclipsePropertiesFolderChanged(dependsOn: "eclipse")
 task ciBuild(dependsOn: "test")
+
+eclipseJdt.doLast {
+    File f = file('.settings/org.eclipse.core.resources.prefs')
+    f.write('eclipse.preferences.version=1\n')
+    f.append('encoding/<project>=UTF-8')
+}
 
 eclipse {
 	jdt {

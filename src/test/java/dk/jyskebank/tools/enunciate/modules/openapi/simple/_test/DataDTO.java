@@ -1,4 +1,4 @@
-package dk.jyskebank.tools.enunciate.modules.openapi.simple;
+package dk.jyskebank.tools.enunciate.modules.openapi.simple._test;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 

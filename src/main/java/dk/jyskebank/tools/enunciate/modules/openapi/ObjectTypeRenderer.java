@@ -19,6 +19,7 @@ import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeY
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -30,6 +31,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.core.io.JsonStringEncoder;
+import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.BaseType;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
@@ -45,9 +47,16 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.JsonToYamlHelper;
 
 public class ObjectTypeRenderer {
-  private ObjectTypeRenderer() {}
+  private final EnunciateLogger logger;
+  private final DataTypeReferenceRenderer datatypeRefRenderer;
+
+  public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer) {
+    this.logger = enunciateLogger;
+    this.datatypeRefRenderer = datatypeRefRenderer;
+  }
   
-  public static void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+  public void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+    logger.info("Rendering type " + datatype.getLabel());
     ip.pushNextLevel();
     ip.add("title: ", safeYamlString(datatype.getLabel()));
     addOptionalSupertypeHeader(ip, datatype);
@@ -63,7 +72,7 @@ public class ObjectTypeRenderer {
     ip.popLevel();
   }
 
-  private static void addOptionalSupertypeHeader(IndententationPrinter ip, DataType datatype) {
+  private void addOptionalSupertypeHeader(IndententationPrinter ip, DataType datatype) {
     List<DataTypeReference> supertypes = datatype.getSupertypes();
     if (supertypes == null || supertypes.isEmpty()) {
       return;
@@ -74,12 +83,12 @@ public class ObjectTypeRenderer {
     ip.itemFollows();
 
     DataTypeReference superType = supertypes.iterator().next();
-    DataTypeReferenceRenderer.addSchemaRef(ip, superType);
+    datatypeRefRenderer.addSchemaRef(ip, superType);
 
     ip.itemFollows();
   }
 
-  private static void addOptionalRequired(IndententationPrinter ip, DataType datatype) {
+  private void addOptionalRequired(IndententationPrinter ip, DataType datatype) {
     List<? extends Property> properties = datatype.getProperties();
     if (properties == null) {
       return;
@@ -139,7 +148,7 @@ public class ObjectTypeRenderer {
     ip.prevLevel();
   }
 
-  private static void addOptionalProperties(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+  private void addOptionalProperties(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
     List<? extends Property> properties = datatype.getProperties();
     if (properties == null || properties.isEmpty()) {
       return;
@@ -153,11 +162,12 @@ public class ObjectTypeRenderer {
     ip.prevLevel();
   }
 
-  private static void addProperty(IndententationPrinter ip, DataType datatype, Property p, boolean syntaxIsJson) {
+  private void addProperty(IndententationPrinter ip, DataType datatype, Property p, boolean syntaxIsJson) {
+    logger.info(" adding property " + p.getName() + " with annotations " + p.getAnnotations().keySet());
+    
     ip.add(p.getName(), ":");
     ip.nextLevel();
     if (datatype.getPropertyMetadata().containsKey("namespaceInfo")) {
-      // TODO: would be nicer to have it on the property
       addNamespaceXml(ip, p);
     }
     
@@ -166,7 +176,7 @@ public class ObjectTypeRenderer {
       ip.add("readonly: ", Boolean.toString(p.isReadOnly()));
     }
     
-    DataTypeReferenceRenderer.render(ip, p.getDataType(), p.getDescription());
+    datatypeRefRenderer.render(ip, p.getDataType(), p.getDescription());
     
     addOptionalPropertyExample(ip, p, syntaxIsJson);
     
@@ -213,29 +223,28 @@ public class ObjectTypeRenderer {
     }
   }
 
-  private static void addNamespaceXml(IndententationPrinter ip, Property p) {
+  private void addNamespaceXml(IndententationPrinter ip, Property p) {
     PropertyMetadata metadata = AccessorProperty.getMetadata(p);
     if (metadata == null) {
       return;
     }
 
-    String wrappedName = metadata.getValue();
+    Optional<String> wrappedName = getWrappedName(p);
     String namespace = metadata.getTitle();
 
-    boolean renderWrappedName = wrappedName != null && !wrappedName.isEmpty();
     boolean renderAttribute = AccessorProperty.isAttribute(p);
     boolean renderNamespace = namespace != null && !namespace.isEmpty();
     
-    if (!renderWrappedName && !renderAttribute && !renderNamespace) {
+    if (!wrappedName.isPresent() && !renderAttribute && !renderNamespace) {
       return;
     }
     
     ip.add("xml:");
     ip.nextLevel();
-    if (renderWrappedName) {
-      ip.add("name: ", wrappedName);
+    wrappedName.ifPresent(name -> {
+      ip.add("name: ", name);
       ip.add("wrapped: true");
-    }
+    });
     if (renderAttribute) {
       ip.add("attribute: ", Boolean.TRUE.toString());
     }
@@ -243,6 +252,21 @@ public class ObjectTypeRenderer {
       ip.add("namespace: ", namespace);
     }
     ip.prevLevel();
+  }
+
+  private Optional<String> getWrappedName(Property p) {
+    return getAttributeValue(p, "javax.xml.bind.annotation.XmlElementWrapper");
+  }
+  
+  private static Optional<String> getAttributeValue(Property p, String annotationName) {
+    return p.getAnnotations().entrySet().stream()
+      .filter(e -> annotationName.equals(e.getKey()))
+      .flatMap(am -> am.getValue().getElementValues().entrySet().stream())
+      .filter(e -> "name()".equals(e.getKey().toString()))
+      .map(e -> e.getValue().getValue())
+      .filter(Objects::nonNull)
+      .map(Objects::toString)
+      .findFirst();
   }
 
   private static void addOptionalXml(IndententationPrinter ip, DataType datatype) {
@@ -262,7 +286,6 @@ public class ObjectTypeRenderer {
     }
   }
   
-
   private static void addOptionalExample(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
     if (!syntaxIsJson) {
       return;
@@ -294,21 +317,18 @@ public class ObjectTypeRenderer {
   }
   
   private static Optional<String> getExampleFromType(DataType dataType, BaseType baseType, Optional<String> specifiedExample) {
-    if (baseType != null) {
-      switch (baseType) {
-        case object:
-          if (dataType != null) {
-            if (dataType.getBaseType() == BaseType.object) {
-              if (dataType.getExample() != null) {
-                return Optional.of(dataType.getExample().getBody());
-              }
-            }
-          }
-        default:
-          return specifiedExample;
-      }
+    if (baseType == null) {
+      return Optional.empty();
     }
-    return null;
+    
+    if (BaseType.object == baseType
+        && dataType != null
+        && dataType.getBaseType() == BaseType.object
+        && dataType.getExample() != null) {
+      return Optional.of(dataType.getExample().getBody());
+    } else {
+      return specifiedExample;
+    }
   }
   
 
@@ -324,7 +344,7 @@ public class ObjectTypeRenderer {
     DocumentationExample documentationExample = property.getAnnotation(DocumentationExample.class);
     if (documentationExample != null) {
       if (documentationExample.exclude()) {
-        return null;
+        return Optional.empty();
       }
 
       example = documentationExample.value();

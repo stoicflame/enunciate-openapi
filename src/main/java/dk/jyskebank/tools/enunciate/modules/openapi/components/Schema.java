@@ -18,11 +18,13 @@ package dk.jyskebank.tools.enunciate.modules.openapi.components;
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.DataType;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
+
 public class Schema {
   private SchemaRenderer renderer;
 
-  public Schema(EnunciateLogger logger, DataType datatype, boolean syntaxIsJson) {
-    this.renderer = new SchemaRenderer(logger, datatype, syntaxIsJson);
+  public Schema(EnunciateLogger logger, ObjectTypeRenderer objectTypeRenderer, DataType datatype, boolean syntaxIsJson) {
+    this.renderer = new SchemaRenderer(logger, objectTypeRenderer, datatype, syntaxIsJson);
   }
 
   public SchemaRenderer getRender() {

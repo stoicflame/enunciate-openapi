@@ -1,4 +1,4 @@
-package dk.jyskebank.tools.enunciate.modules.openapi.simple;
+package dk.jyskebank.tools.enunciate.modules.openapi.simple._test;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -38,6 +38,13 @@ public class DataResource {
 		return Response.ok(new DataDTO()).build();
 	}
 
+	@TypeHint(DataXmlDTO.class)
+	@GET
+	@Path("/xmldto")
+	@Produces(MediaType.APPLICATION_XML)
+    public Response getXmlType(@PathParam("pathArg") String pathArg) {
+      return Response.ok(new DataXmlDTO()).build();
+	}
 
 	/**
 	 * Summary.

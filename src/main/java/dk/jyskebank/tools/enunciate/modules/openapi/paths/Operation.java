@@ -36,6 +36,7 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.api.resources.ResourceGroup;
 import com.webcohesion.enunciate.api.resources.StatusCode;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod.MediaAndType;
 
@@ -50,16 +51,18 @@ public class Operation {
   private final List<Param> parameters = new ArrayList<>();
   private final List<Response> responses = new ArrayList<>();
   private final OperationIds operationIds;
-  private RequestEntityRenderer entityRenderer;
+  private final RequestEntityRenderer entityRenderer;
+  private final DataTypeReferenceRenderer dataTypeReferenceRenderer;
 
-  public Operation(EnunciateLogger logger, OperationIds operationIds, Method method, ResourceGroup resourceGroup) {
+  public Operation(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, OperationIds operationIds, Method method, ResourceGroup resourceGroup) {
+    this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
     this.operationIds = operationIds;
     this.method = method;
     this.resourceGroup = resourceGroup;
-    entityRenderer = new RequestEntityRenderer(method);
+    entityRenderer = new RequestEntityRenderer(dataTypeReferenceRenderer, method);
     
     for (Parameter parameter : method.getParameters()) {
-      parameters.add(new Param(logger, parameter));
+      parameters.add(new Param(logger, dataTypeReferenceRenderer, parameter));
     }
     
     computeResponses(logger);
@@ -135,7 +138,7 @@ public class Operation {
         String mediaType = getResponseMediaType(successResponse, mediaAndType, responseEntity);
         Optional<Example> optionalExample = getExampleForMediaType(responseEntity, mediaType);
         
-        responses.add(new Response(logger, code.getCode(), mediaType, dataType, headers, code.getCondition(), optionalExample));
+        responses.add(new Response(logger, dataTypeReferenceRenderer, code.getCode(), mediaType, dataType, headers, code.getCondition(), optionalExample));
         successResponseFound |= successResponse;
       }
     }
@@ -143,7 +146,7 @@ public class Operation {
     if (!successResponseFound) {
       int code = DEFAULT_201_METHODS.contains(method.getHttpMethod().toUpperCase()) ? 201 : DEFAULT_204_METHODS.contains(method.getHttpMethod().toUpperCase()) ? 204 : 200;
       String description = responseEntity != null ? responseEntity.getDescription() : "Success";
-      responses.add(new Response(logger, code, FALLBACK_SUCCESS_MEDIA_TYPE, successDataType, successHeaders, description, Optional.empty()));
+      responses.add(new Response(logger, dataTypeReferenceRenderer, code, FALLBACK_SUCCESS_MEDIA_TYPE, successDataType, successHeaders, description, Optional.empty()));
     }
   }
   

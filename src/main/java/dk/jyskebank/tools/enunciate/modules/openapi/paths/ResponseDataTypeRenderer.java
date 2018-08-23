@@ -25,11 +25,13 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 public class ResponseDataTypeRenderer extends Typed1ArgTemplateMethod<String, String> {
   @SuppressWarnings("unused") private final EnunciateLogger logger;
   private final DataTypeReference dataType;
-  private String description;
+  private final String description;
+  private final DataTypeReferenceRenderer dataTypeReferenceRenderer;
 
-  public ResponseDataTypeRenderer(EnunciateLogger logger, DataTypeReference dataType, String description) {
+  public ResponseDataTypeRenderer(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, DataTypeReference dataType, String description) {
     super(String.class);
     this.logger = logger;
+    this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
     this.dataType = dataType;
     this.description = description;
   }
@@ -38,7 +40,7 @@ public class ResponseDataTypeRenderer extends Typed1ArgTemplateMethod<String, St
   protected String exec(String nextLineIndent) {
     IndententationPrinter ip = new IndententationPrinter(nextLineIndent);
 
-    DataTypeReferenceRenderer.render(ip, dataType, description);
+    dataTypeReferenceRenderer.render(ip, dataType, description);
     return ip.toString();
   }
 }

@@ -25,6 +25,7 @@ import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import com.webcohesion.enunciate.api.datatype.Example;
 import com.webcohesion.enunciate.api.resources.Parameter;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 public class Response {
@@ -37,14 +38,14 @@ public class Response {
   private final ResponseDataTypeRenderer renderer;
   private final Optional<ExampleRenderer> exampleRenderer;
 
-  public Response(EnunciateLogger logger, int code, String mediaType, DataTypeReference dataType, List<Parameter> headers, String description, Optional<Example> optionalExample) {
+  public Response(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, int code, String mediaType, DataTypeReference dataType, List<Parameter> headers, String description, Optional<Example> optionalExample) {
     this.logger = logger;
     this.code = code;
     this.mediaType = mediaType;
     this.dataType = dataType;
     this.headers = headers;
     this.description = YamlHelper.safeYamlString(description);
-    renderer = new ResponseDataTypeRenderer(logger, dataType, description);
+    renderer = new ResponseDataTypeRenderer(logger, dataTypeReferenceRenderer, dataType, description);
     exampleRenderer = optionalExample.map(e -> new ExampleRenderer(logger, e));
     
     // TODO: Render headers

@@ -23,6 +23,7 @@ import java.util.Map;
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.resources.Parameter;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 public class Param {
@@ -57,10 +58,10 @@ public class Param {
     typeLabel2style.put(QUERY, FORM);
   }
 
-  public Param(EnunciateLogger logger, Parameter parameter) {
+  public Param(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, Parameter parameter) {
     this.parameter = parameter;
     
-    renderer = new ParameterRenderer(logger, parameter);
+    renderer = new ParameterRenderer(logger, dataTypeReferenceRenderer, parameter);
     String typeLabel = parameter.getTypeLabel();
     paramPassedIn = typeLabel2in.get(typeLabel);
     paramStyle = typeLabel2style.get(typeLabel);

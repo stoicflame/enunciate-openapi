@@ -29,10 +29,12 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
   @SuppressWarnings("unused") private final EnunciateLogger logger;
   private final Parameter parameter;
+  private final DataTypeReferenceRenderer dataTypeReferenceRenderer;
 
-  public ParameterRenderer(EnunciateLogger logger, Parameter parameter) {
+  public ParameterRenderer(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, Parameter parameter) {
     super(String.class);
     this.logger = logger;
+    this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
     this.parameter = parameter;
   }
 
@@ -51,10 +53,10 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
       ip.add("type: array");
       ip.add("items:");
       ip.nextLevel();
-      DataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
+      dataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
       ip.prevLevel();
     } else {
-      DataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
+      dataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
     }
   }
 

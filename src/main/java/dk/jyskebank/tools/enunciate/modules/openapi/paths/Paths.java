@@ -26,11 +26,13 @@ import com.webcohesion.enunciate.api.resources.Resource;
 import com.webcohesion.enunciate.api.resources.ResourceApi;
 import com.webcohesion.enunciate.api.resources.ResourceGroup;
 
+import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
+
 public class Paths {
   @SuppressWarnings("unused") private EnunciateLogger logger;
   private List<Endpoint> endpoints = new ArrayList<>();
 
-  public Paths(EnunciateLogger logger, OperationIds operationIds, EnunciateConfiguration configuration, EnunciateContext context, List<ResourceApi> resourceApis) {
+  public Paths(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, OperationIds operationIds, EnunciateConfiguration configuration, EnunciateContext context, List<ResourceApi> resourceApis) {
     this.logger = logger;
     
     for (ResourceApi resourceApi : resourceApis) {
@@ -38,7 +40,7 @@ public class Paths {
         for (PathSummary pathSummary : resourceGroup.getPaths()) {
           List<Resource> resources = findResourcesForPath(resourceGroup, pathSummary.getPath());
           
-          endpoints.add(new Endpoint(logger, operationIds, resources, resourceApi, resourceGroup, pathSummary));
+          endpoints.add(new Endpoint(logger, dataTypeReferenceRenderer, operationIds, resources, resourceApi, resourceGroup, pathSummary));
         }
       }
     }

@@ -33,10 +33,12 @@ public class SchemaRenderer extends Typed1ArgTemplateMethod<String, String> {
   private final DataType datatype;
 
   private boolean syntaxIsJson;
+  private final ObjectTypeRenderer objectTypeRenderer;
 
-  public SchemaRenderer(EnunciateLogger logger, DataType datatype, boolean syntaxIsJson) {
+  public SchemaRenderer(EnunciateLogger logger, ObjectTypeRenderer objectTypeRenderer, DataType datatype, boolean syntaxIsJson) {
     super(String.class);
     this.logger = logger;
+    this.objectTypeRenderer = objectTypeRenderer;
     this.datatype = datatype;
     this.syntaxIsJson = syntaxIsJson;
   }
@@ -50,7 +52,7 @@ public class SchemaRenderer extends Typed1ArgTemplateMethod<String, String> {
   
   private void renderLines(IndententationPrinter ip) {
     ip.add(getRefId() + ":");
-    ObjectTypeRenderer.render(ip, datatype, syntaxIsJson);
+    objectTypeRenderer.render(ip, datatype, syntaxIsJson);
   }
 
   private String getRefId() {

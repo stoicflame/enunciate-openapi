@@ -29,9 +29,11 @@ public class RequestEntityRenderer extends Typed1ArgTemplateMethod<String, Strin
   private MediaAndType mediaAndType;
   private boolean hasMedia;
   private String mediaWithFallback;
+  private DataTypeReferenceRenderer dataTypeReferenceRenderer;
 
-  public RequestEntityRenderer(Method method) {
+  public RequestEntityRenderer(DataTypeReferenceRenderer dataTypeReferenceRenderer, Method method) {
     super(String.class);
+    this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
     
     mediaAndType = FindBestDataTypeMethod.findBestMediaAndType(method.getRequestEntity());
     hasMedia = mediaAndType != null && mediaAndType.media != null;
@@ -47,9 +49,9 @@ public class RequestEntityRenderer extends Typed1ArgTemplateMethod<String, Strin
       ip.add("schema:");
       ip.nextLevel();
       if (hasMedia) {
-        DataTypeReferenceRenderer.addSchemaRef(ip, mediaAndType.type);
+        dataTypeReferenceRenderer.addSchemaRef(ip, mediaAndType.type);
       } else {
-        DataTypeReferenceRenderer.renderObsoletedFileFormat(ip);
+        dataTypeReferenceRenderer.renderObsoletedFileFormat(ip);
       }
       ip.prevLevel();
       
