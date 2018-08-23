@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: "Web Service API"
+  version: "version"
+  description: ""
+servers: []
+paths:
+  "/path/date":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: get
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+    put:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: acceptDate
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "application/xml":
+            schema:
+              type: string
+              format: binary
+      responses:
+        "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/path/xmldto":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: getXmlType
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
+ 
+components:
+  schemas:
+    "xml_ns0_dataXmlDTO":
+      title: "dataXmlDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          nillableBool:
+            nullable: true
+            type: boolean
+          nillableDto:
+            $ref: "#/components/schemas/xml_ns0_subDTO"
+          nillableEnum:
+            $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
+          nillableStr:
+            nullable: true
+            type: string
+          requiredBool:
+            nullable: false
+            type: boolean
+          requiredDto:
+            $ref: "#/components/schemas/xml_ns0_subDTO"
+          requiredEnum:
+            $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
+          requiredStr:
+            nullable: false
+            type: string
+          success:
+            nullable: false
+            type: boolean
+        xml:
+          name: dataXmlDto
+    "xml_ns0_dataXmlEnum":
+      title: "dataXmlEnum"
+      type: string
+      enum:
+      - GOOD
+      - MORNING
+    "xml_ns0_subDTO":
+      title: "subDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          first:
+            type: string
+          last:
+            type: string
+        xml:
+          name: subDto

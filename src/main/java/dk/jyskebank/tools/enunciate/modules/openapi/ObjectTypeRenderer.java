@@ -177,7 +177,8 @@ public class ObjectTypeRenderer {
     if (datatype.getPropertyMetadata().containsKey("namespaceInfo")) {
       addNamespaceXml(ip, p);
     }
-    addOptionalNullable(ip, p);
+    
+	addOptionalNullable(ip, p);
     
     addConstraints(ip, p);
     if (p.isReadOnly()) {
@@ -264,10 +265,13 @@ public class ObjectTypeRenderer {
     }
   }
 
-  private void addOptionalNullable(IndententationPrinter ip, Property p) {
-    getNillable(p).ifPresent(isNullable ->
-      ip.add("nullable: ", isNullable));
-  }
+  	private void addOptionalNullable(IndententationPrinter ip, Property p) {
+  		getNillable(p).ifPresent(isNullable -> {
+	  		if (!TypeHelper.isSimpleRef(p.getDataType())) {
+	  			ip.add("nullable: ", isNullable);
+	  		}
+  		});
+  	}
 
   private void addNamespaceXml(IndententationPrinter ip, Property p) {
     PropertyMetadata metadata = AccessorProperty.getMetadata(p);

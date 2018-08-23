@@ -49,9 +49,8 @@ public class DataTypeReferenceRenderer {
 	    DataType value = dtr.getValue();
 	    List<ContainerType> containers = dtr.getContainers();
 	    boolean hasContainers = containers != null && !containers.isEmpty();
-	    boolean isPlainReference = value != null && !hasContainers;
 	    
-	    if (isPlainReference) {
+	    if (TypeHelper.isSimpleRef(dtr)) {
     		addSchemaRef(ip, value);
     		return;
 	    }
