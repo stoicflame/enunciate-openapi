@@ -17,6 +17,7 @@ package dk.jyskebank.tools.enunciate.modules.openapi;
 
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.ComplexDataTypeImpl;
+import com.webcohesion.enunciate.modules.jaxb.api.impl.EnumDataTypeImpl;
 
 /**
  * Provides access to methods in DataType implementations in other modules.
@@ -27,6 +28,11 @@ public class AccessorDataType {
   public static String getXmlName(DataType dt) {
     if (dt instanceof ComplexDataTypeImpl) {
       return ((ComplexDataTypeImpl)dt).getXmlName();
+    }
+    if (dt instanceof EnumDataTypeImpl) {
+    	/* FIXME: This requires the fix for https://github.com/stoicflame/enunciate/issues/894
+    	return ((EnumDataTypeImpl)dt).getXmlName();
+    	 */
     }
     return null;
   }

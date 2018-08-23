@@ -21,14 +21,37 @@ paths:
               schema:
                 type: string
  
-  "/path/entity":
+  "/path/dtoEntity":
     get:
       description: ""
       tags:
         - "DataResource"
       summary: ""
       deprecated: false
-      operationId: withEntity
+      operationId: withDtoEntity
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "application/xml":
+            schema:
+              $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/path/inputStream":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: withInputStream
       requestBody:
         description: ""
         required: true
@@ -37,6 +60,29 @@ paths:
             schema:
               type: string
               format: binary
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/path/stringEntity":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: withStringEntity
+      requestBody:
+        description: ""
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string 
       responses:
         "200":
           description: ""
@@ -72,4 +118,16 @@ paths:
               schema:
                 type: string
  
-components: {}
+components:
+  schemas:
+    "xml_ns0_dataXmlDTO":
+      title: "dataXmlDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          simpleStr:
+            type: string
+        xml:
+          name: dataXmlDto

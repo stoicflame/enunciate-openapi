@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
+servers: []
+paths:
+  "/path/ref":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: getReferenceEnum
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
+ 
+  "/path/root":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: getRootElementEnum
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/xml_ns0_xmlTypeRoleType"
+ 
+components:
+  schemas:
+    "xml_ns0_dataXmlDTO":
+      title: "dataXmlDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          user:
+            $ref: "#/components/schemas/xml_ns0_referenceEnum"
+        xml:
+          name: dataXmlDto
+    "xml_ns0_referenceEnum":
+      title: "referenceEnum"
+      type: string
+      enum:
+      - REF_1
+      - REF_2
+    "xml_ns0_xmlTypeRoleType":
+      title: "xmlTypeRoleType"
+      type: string
+      enum:
+      - ADMIN
+      - MONITOR
+      xml:
+        name: xmlRootElementRoleType

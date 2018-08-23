@@ -17,21 +17,6 @@ But I cannot (at this time, at least) commit time to fixing problems that may be
 I hope to improve the documentation over time.
 As it is, documentation is pretty barren - but I wanted to make the module available to those able to use it in its current form.
 
-## Release ##
-
-When built (with Jyske Bank internal build server), the artifacts are uploaded to Maven Central at the coordinates:
-
-	dk.jyskebank.tooling.enunciate:enunciate-openapi
-
-
-## Building Module ##
-
-Simply checkout the project and run gradle:
-
-    export JAVA_HOME=/PATH/TO/JDK/8
-    gradlew
-    
-The built module will be in the folder _dist/publish_.
 
 ## Using the Module ##
 
@@ -80,4 +65,28 @@ You can also use a relative path. In this case, you should know that the base pa
 	  <modules>
 	    <openapi disabled="false" base="../src/main/enunciate/custom-swagger-ui"/>
 
+
+## Release ##
+
+When built (with Jyske Bank internal build server), the artifacts are uploaded to Maven Central at the coordinates:
+
+	dk.jyskebank.tooling.enunciate:enunciate-openapi
+
+
+## Building Module ##
+
+Simply checkout the project and run gradle:
+
+    export JAVA_HOME=/PATH/TO/JDK/8
+    gradlew
+    
+The built module will be in the folder _dist/publish_.
+
+## Testing ##
+
+Each of the test packages below `dk.jyskebank.tools.enunciate.modules.openapi` contains an example application (input) and the expected output (openapi.yml).
+
+The `EnunciateTestGenerator` dynamically creates the tests from existing folders.
+
+Each test will output its results in a folder below `build/test-enunciate`. The output is compared with the expected output.
 
