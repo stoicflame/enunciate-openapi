@@ -16,6 +16,7 @@
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
 import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeYamlString;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,20 +127,19 @@ public class ObjectTypeRenderer {
     }
   }
   
-  private static void addOptionalEnum(IndententationPrinter ip, DataType datatype) {
+  private void addOptionalEnum(IndententationPrinter ip, DataType datatype) {
     List<? extends Value> values = datatype.getValues();
     if (values == null || values.isEmpty()) {
       return;
     }
     
-    List<String> enums = new ArrayList<>();
-    for (Value v: values) {
-      enums.add(v.getValue());
-    }
+    List<String> enums = values.stream()
+      .map(Value::getValue)
+      .collect(toList());
     renderEnum(ip, enums);
   }
 
-  public static void renderEnum(IndententationPrinter ip, List<String> values) {
+  public void renderEnum(IndententationPrinter ip, List<String> values) {
     ip.add("enum:");
     ip.nextLevel();
     for (String e : values) {
@@ -279,21 +279,32 @@ public class ObjectTypeRenderer {
       .findFirst();
   }
 
-  private static void addOptionalXml(IndententationPrinter ip, DataType datatype) {
-    String xmlName = AccessorDataType.getXmlName(datatype);
+  private void addOptionalXml(IndententationPrinter ip, DataType datatype) {
+    String xmlName = getNonNullAndNonEmpty(AccessorDataType.getXmlName(datatype));
+    
     Namespace namespace = datatype.getNamespace();
-    if (xmlName != null && !xmlName.isEmpty()) {
+    String xmlNamespace = getNonNullAndNonEmpty(namespace != null ? namespace.getUri() : null); 
+    
+    logger.debug("optionalXml for " + datatype.getLabel() + " : " + xmlName + " / " + xmlNamespace);
+    
+    if (xmlName != null || xmlNamespace != null) {
       ip.add("xml:");
       ip.nextLevel();
-      ip.add("name: ", xmlName);
-      if (namespace != null) {
-        String uri = namespace.getUri();
-        if (uri != null && !uri.isEmpty()) {
-          ip.add("namespace: ", uri);
-        }
+      if (xmlName != null) {
+        ip.add("name: ", xmlName);
+      }
+      if (xmlNamespace != null) {
+        ip.add("namespace: ", xmlNamespace);
       }
       ip.prevLevel();
     }
+  }
+  
+  private static String getNonNullAndNonEmpty(String str) {
+    if (str == null) {
+      return null;
+    }
+    return str.isEmpty() ? null : str;
   }
   
   private static void addOptionalExample(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {

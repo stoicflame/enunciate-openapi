@@ -204,7 +204,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
       model.put("info", new Info(enunciate.getLogger(), enunciate.getConfiguration(), context)); 
-      model.put("paths", new Paths(enunciate.getLogger(), dataTypeReferenceRenderer, new OperationIds(), enunciate.getConfiguration(), context, resourceApis));
+      model.put("paths", new Paths(enunciate.getLogger(), dataTypeReferenceRenderer, objectTypeRenderer, new OperationIds(), enunciate.getConfiguration(), context, resourceApis));
       model.put("servers", new Servers(enunciate.getLogger(), enunciate.getConfiguration(), config));
       Set<Syntax> syntaxes = apiRegistry.getSyntaxes(apiRegistrationContext);
       model.put("components", new Components(enunciate.getLogger(), objectTypeRenderer, syntaxes));

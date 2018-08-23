@@ -38,6 +38,7 @@ import com.webcohesion.enunciate.api.resources.StatusCode;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod;
+import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod.MediaAndType;
 
 public class Operation {
@@ -54,7 +55,7 @@ public class Operation {
   private final RequestEntityRenderer entityRenderer;
   private final DataTypeReferenceRenderer dataTypeReferenceRenderer;
 
-  public Operation(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, OperationIds operationIds, Method method, ResourceGroup resourceGroup) {
+  public Operation(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, Method method, ResourceGroup resourceGroup) {
     this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
     this.operationIds = operationIds;
     this.method = method;
@@ -62,7 +63,7 @@ public class Operation {
     entityRenderer = new RequestEntityRenderer(dataTypeReferenceRenderer, method);
     
     for (Parameter parameter : method.getParameters()) {
-      parameters.add(new Param(logger, dataTypeReferenceRenderer, parameter));
+      parameters.add(new Param(logger, dataTypeReferenceRenderer, objectTypeRenderer, parameter));
     }
     
     computeResponses(logger);

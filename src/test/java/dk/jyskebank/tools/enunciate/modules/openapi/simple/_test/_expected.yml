@@ -149,8 +149,19 @@ components:
           message:
             nullable: true
             type: string
+          greeting:
+            $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
           last:
             description: Last string. Should be last in serialization order.
             type: string
         xml:
           name: dataXml
+          namespace: http://www.jyskebank.dk/enunciate/openapi/version/1
+    "xml_ns0_dataXmlEnum":
+      title: "dataXmlEnum"
+      type: string
+      enum:
+      - GOOD
+      - MORNING
+      xml:
+        namespace: http://www.jyskebank.dk/enunciate/openapi/version/1

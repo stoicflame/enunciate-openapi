@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="dataXml")
-@XmlType(propOrder = { "first", "content", "password", "receivers", "success", "message", "last"})
+@XmlType(propOrder = { "first", "content", "password", "receivers", "success", "message", "greeting", "last"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DataXmlDTO {
 	/** Last string. Should be last in serialization order. */
@@ -35,6 +35,9 @@ public class DataXmlDTO {
 	@XmlElement(name="message", nillable=true)
 	private String message;
 
+	@XmlElement(name="greeting")
+	private DataXmlEnum greeting;
+	
 	public String getLast() {
 		return last;
 	}
@@ -50,5 +53,4 @@ public class DataXmlDTO {
 	public void setFirst(String first) {
 		this.first = first;
 	}
-
 }

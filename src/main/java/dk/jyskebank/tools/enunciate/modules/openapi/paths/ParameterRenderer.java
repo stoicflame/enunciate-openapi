@@ -30,11 +30,13 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
   @SuppressWarnings("unused") private final EnunciateLogger logger;
   private final Parameter parameter;
   private final DataTypeReferenceRenderer dataTypeReferenceRenderer;
+  private final ObjectTypeRenderer objectTypeRenderer;
 
-  public ParameterRenderer(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, Parameter parameter) {
+  public ParameterRenderer(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, Parameter parameter) {
     super(String.class);
     this.logger = logger;
     this.dataTypeReferenceRenderer = dataTypeReferenceRenderer;
+    this.objectTypeRenderer = objectTypeRenderer;
     this.parameter = parameter;
   }
 
@@ -63,7 +65,7 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
   private void addOptionalEnum(IndententationPrinter ip) {
     Set<String> constraintValues = parameter.getConstraintValues();
     if (constraintValues != null && !constraintValues.isEmpty()) {
-      ObjectTypeRenderer.renderEnum(ip, new ArrayList<>(constraintValues));
+      objectTypeRenderer.renderEnum(ip, new ArrayList<>(constraintValues));
     }
   }
 }

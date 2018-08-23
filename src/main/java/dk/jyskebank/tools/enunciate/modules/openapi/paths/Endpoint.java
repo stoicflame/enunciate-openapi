@@ -28,19 +28,20 @@ import com.webcohesion.enunciate.api.resources.ResourceApi;
 import com.webcohesion.enunciate.api.resources.ResourceGroup;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
+import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
 
 public class Endpoint {
   private ResourceGroup resourceGroup;
   private PathSummary pathSummary;
   private List<Operation> operations = new ArrayList<>();
 
-  public Endpoint(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, OperationIds operationIds, List<Resource> resources, ResourceApi resourceApi, ResourceGroup resourceGroup, PathSummary pathSummary) {
+  public Endpoint(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, List<Resource> resources, ResourceApi resourceApi, ResourceGroup resourceGroup, PathSummary pathSummary) {
     this.resourceGroup = resourceGroup;
     this.pathSummary = pathSummary;
     
     for (Resource resource : resources) {
       for (Method m : resource.getMethods()) {
-        operations.add(new Operation(logger, dataTypeReferenceRenderer, operationIds, m, resourceGroup));
+        operations.add(new Operation(logger, dataTypeReferenceRenderer, objectTypeRenderer, operationIds, m, resourceGroup));
       }
     }    
   }
