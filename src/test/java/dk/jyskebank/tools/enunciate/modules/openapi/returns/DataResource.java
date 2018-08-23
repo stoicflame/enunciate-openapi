@@ -87,7 +87,7 @@ public class DataResource {
 	}
 	
 	@Path("/bytearray-input")
-	@GET
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("pathArg") String path, byte[] body) {
 	  return Response.ok("").build();

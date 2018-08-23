@@ -238,13 +238,13 @@ paths:
                 $ref: "#/components/schemas/json_Messages"
  
   "/data/{pathArg}/bytearray-input":
-    get:
+    put:
       description: ""
       tags:
         - "Data"
       summary: ""
       deprecated: false
-      operationId: get
+      operationId: get2
       parameters:
       - name: "userid"
         in: header
@@ -304,7 +304,7 @@ paths:
               schema:
                 description: Internal Server Error, Unexpected server error
                 $ref: "#/components/schemas/json_Messages"
-        "200":
+        "204":
           description: ""
           content:
             "*/*":
