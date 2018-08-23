@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: "Web Service API"
+  version: "version"
+  description: ""
+servers: []
+paths:
+  "/path/xmldto":
+    get:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: getXmlType
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
+ 
+components:
+  schemas:
+    "xml_ns0_dataXmlDTO":
+      title: "dataXmlDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          stringMap:
+            type: object
+            additionalProperties:
+              type: string
+          valueMap:
+            type: object
+            additionalProperties:
+              $ref: "#/components/schemas/xml_ns0_valueDTO"
+        xml:
+          name: dataXmlDto
+    "xml_ns0_valueDTO":
+      title: "valueDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          somethingOfValue:
+            type: string
+        xml:
+          name: valueDto

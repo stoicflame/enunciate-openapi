@@ -23,7 +23,10 @@ import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference.ContainerType;
+import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
 import com.webcohesion.enunciate.modules.jaxb.model.types.KnownXmlType;
+import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
+import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 
@@ -35,52 +38,67 @@ public class DataTypeReferenceRenderer {
     this.logger = logger;
   }
   
-  public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
-    if (dtr == null) {
-      throw new IllegalStateException("Cannot render null data type");
-    }
+  	public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
+	    if (dtr == null) {
+	      throw new IllegalStateException("Cannot render null data type");
+	    }
     
-    if (description != null && !description.isEmpty()) {
-      ip.add("description: ", description);
-    }
+	    logger.info("  render type for " + dtr.getContainers());
+    
+	    if (description != null && !description.isEmpty()) {
+	      ip.add("description: ", description);
+	    }
 
-    DataType value = dtr.getValue();
-    List<ContainerType> containers = dtr.getContainers();
-    if (value != null) {
-      if (containers != null && !containers.isEmpty()) {
-        for (ContainerType ct : containers) {
-          if (!ct.isMap()) {
+	    DataType value = dtr.getValue();
+	    List<ContainerType> containers = dtr.getContainers();
+	    if (value != null) {
+	    	if (containers != null && !containers.isEmpty()) {
+	    		for (ContainerType ct : containers) {
+	    			renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
+	    		}
+	    	} else {
+	    		addSchemaRef(ip, value);
+	    	}
+	    } else {
+	    	if (containers != null && !containers.isEmpty()) {
+	    		for (ContainerType ct : containers) {
+	    			renderContainer(ip, ct.isMap(), () -> ip.add("type: ", getBaseType(dtr)));
+	    		}
+	    	} else {
+	    		// FIXME: Conversion to DataTypeReferenceImpl must be broken in Jaxb frontend
+	    		boolean workaroundRendering = false;
+	    		if (dtr instanceof DataTypeReferenceImpl) {
+	    			XmlType xmlType = ((DataTypeReferenceImpl)dtr).getXmlType();
+	    			if (xmlType instanceof MapXmlType) {
+	    				MapXmlType mapXmlType = ((MapXmlType)xmlType);
+	    				if (mapXmlType.getKeyType().isSimple() && mapXmlType.getValueType().isSimple()) {
+	    					logger.info("Workaround rendering of simple map");
+	    					renderContainer(ip, true, () -> ip.add("type: string"));
+	    					workaroundRendering = true;
+	    				} else {
+	    					logger.info("Unhandled map with types " + mapXmlType.getKeyType() + " : " + mapXmlType.getValueType());
+	    				}
+	    			}
+	    		}
+	    		
+	    		if (!workaroundRendering) {
+	    			renderSimpleType(ip, dtr);
+	    		}
+	    	}
+	    }
+  	}
+
+  private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRendere) {
+      if (isMap) {
+    	  ip.add("type: object");
+    	  ip.add("additionalProperties:");
+        } else {
             ip.add("type: array");
             ip.add("items:");
-          } else {
-            ip.add("type: object");
-            ip.add("additionalProperties:");
-          }
-          ip.nextLevel();
-          addSchemaRef(ip, value);
-          ip.prevLevel();
         }
-      } else {
-        addSchemaRef(ip, value);
-      }
-    } else {
-      if (containers != null && !containers.isEmpty()) {
-        for (ContainerType ct : containers) {
-          if (!ct.isMap()) {
-            ip.add("type: array");
-            ip.add("items:");
-          } else {
-            ip.add("type: object");
-            ip.add("additionalProperties:");
-          }
-          ip.nextLevel();
-          ip.add("type: ", getBaseType(dtr));
-          ip.prevLevel();
-        }
-      } else {
-        renderSimpleType(ip, dtr);
-      }
-    }
+        ip.nextLevel();
+        valueTypeRendere.run(); // NOSONAR
+        ip.prevLevel();
   }
 
   private void renderSimpleType(IndententationPrinter ip, DataTypeReference dtr) {
@@ -117,7 +135,8 @@ public class DataTypeReferenceRenderer {
   }
 
   public void renderObsoletedFileFormat(IndententationPrinter ip) {
-    ip.add("type: string");
+	  logger.info("CALLING obsoleted format");
+	  ip.add("type: string");
     ip.add("format: binary"); // TODO: Need to check type for base64/binary - assume binary for now
   }
 
