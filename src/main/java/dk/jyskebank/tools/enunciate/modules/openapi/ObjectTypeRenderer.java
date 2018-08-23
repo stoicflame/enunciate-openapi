@@ -170,10 +170,11 @@ public class ObjectTypeRenderer {
     if (datatype.getPropertyMetadata().containsKey("namespaceInfo")) {
       addNamespaceXml(ip, p);
     }
+    addOptionalNullable(ip, p);
     
     addConstraints(ip, p);
     if (p.isReadOnly()) {
-      ip.add("readonly: ", Boolean.toString(p.isReadOnly()));
+      ip.add("readOnly: ", Boolean.toString(p.isReadOnly()));
     }
     
     datatypeRefRenderer.render(ip, p.getDataType(), p.getDescription());
@@ -223,6 +224,11 @@ public class ObjectTypeRenderer {
     }
   }
 
+  private void addOptionalNullable(IndententationPrinter ip, Property p) {
+    getNillable(p).ifPresent(isNullable ->
+      ip.add("nullable: ", isNullable));
+  }
+
   private void addNamespaceXml(IndententationPrinter ip, Property p) {
     PropertyMetadata metadata = AccessorProperty.getMetadata(p);
     if (metadata == null) {
@@ -255,14 +261,18 @@ public class ObjectTypeRenderer {
   }
 
   private Optional<String> getWrappedName(Property p) {
-    return getAttributeValue(p, "javax.xml.bind.annotation.XmlElementWrapper");
+    return getAttributeValue(p, "javax.xml.bind.annotation.XmlElementWrapper", "name()");
   }
-  
-  private static Optional<String> getAttributeValue(Property p, String annotationName) {
+
+  private Optional<String> getNillable(Property p) {
+    return getAttributeValue(p, "javax.xml.bind.annotation.XmlElement", "nillable()");
+  }
+
+  private Optional<String> getAttributeValue(Property p, String annotationName, String propertyName) {
     return p.getAnnotations().entrySet().stream()
       .filter(e -> annotationName.equals(e.getKey()))
       .flatMap(am -> am.getValue().getElementValues().entrySet().stream())
-      .filter(e -> "name()".equals(e.getKey().toString()))
+      .filter(e -> propertyName.equals(e.getKey().toString()))
       .map(e -> e.getValue().getValue())
       .filter(Objects::nonNull)
       .map(Objects::toString)

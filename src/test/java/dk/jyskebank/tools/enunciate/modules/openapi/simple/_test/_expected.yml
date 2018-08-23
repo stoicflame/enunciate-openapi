@@ -143,6 +143,12 @@ components:
             type: array
             items:
               type: string
+          success:
+            nullable: false
+            type: boolean
+          message:
+            nullable: true
+            type: string
           last:
             description: Last string. Should be last in serialization order.
             type: string
