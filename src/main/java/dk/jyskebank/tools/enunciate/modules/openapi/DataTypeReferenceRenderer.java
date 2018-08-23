@@ -31,12 +31,12 @@ import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 
 public class DataTypeReferenceRenderer {
-  @SuppressWarnings("unused")
-  private final EnunciateLogger logger;
+	@SuppressWarnings("unused")
+	private final EnunciateLogger logger;
   
-  public DataTypeReferenceRenderer(EnunciateLogger logger) {
-    this.logger = logger;
-  }
+	public DataTypeReferenceRenderer(EnunciateLogger logger) {
+		this.logger = logger;
+	}
   
   	public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
 	    if (dtr == null) {
@@ -45,22 +45,26 @@ public class DataTypeReferenceRenderer {
     
 	    logger.info("  render type for " + dtr.getContainers());
     
+	    DataType value = dtr.getValue();
+	    List<ContainerType> containers = dtr.getContainers();
+	    boolean hasContainers = containers != null && !containers.isEmpty();
+	    boolean isPlainReference = value != null && !hasContainers;
+	    
+	    if (isPlainReference) {
+    		addSchemaRef(ip, value);
+    		return;
+	    }
+	    
 	    if (description != null && !description.isEmpty()) {
 	      ip.add("description: ", description);
 	    }
 
-	    DataType value = dtr.getValue();
-	    List<ContainerType> containers = dtr.getContainers();
-	    if (value != null) {
-	    	if (containers != null && !containers.isEmpty()) {
-	    		for (ContainerType ct : containers) {
-	    			renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
-	    		}
-	    	} else {
-	    		addSchemaRef(ip, value);
-	    	}
+		if (value != null) {
+    		for (ContainerType ct : containers) {
+    			renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
+    		}
 	    } else {
-	    	if (containers != null && !containers.isEmpty()) {
+	    	if (hasContainers) {
 	    		for (ContainerType ct : containers) {
 	    			renderContainer(ip, ct.isMap(), () -> ip.add("type: ", getBaseType(dtr)));
 	    		}

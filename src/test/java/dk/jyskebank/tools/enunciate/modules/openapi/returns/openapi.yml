@@ -34,42 +34,36 @@ paths:
           content:
             "application/json":
               schema:
-                description: Success, consents deleted
                 $ref: "#/components/schemas/json_Messages"
         "400":
           description: "Bad request, inspect response payload for error details"
           content:
             "application/json":
               schema:
-                description: Bad request, inspect response payload for error details
                 $ref: "#/components/schemas/json_Messages"
         "401":
           description: "Unauthorized, please provide valid Authentication header"
           content:
             "application/json":
               schema:
-                description: Unauthorized, please provide valid Authentication header
                 $ref: "#/components/schemas/json_Messages"
         "403":
           description: "Forbidden, user does not have permission"
           content:
             "application/json":
               schema:
-                description: Forbidden, user does not have permission
                 $ref: "#/components/schemas/json_Messages"
         "404":
           description: "Not Found, inspect response for more info"
           content:
             "application/json":
               schema:
-                description: Not Found, inspect response for more info
                 $ref: "#/components/schemas/json_Messages"
         "500":
           description: "Internal Server Error, Unexpected server error"
           content:
             "application/json":
               schema:
-                description: Internal Server Error, Unexpected server error
                 $ref: "#/components/schemas/json_Messages"
  
     get:
@@ -100,7 +94,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Success, Response contains consents
                 $ref: "#/components/schemas/json_DataDTO"
               example:
                 first: "..."
@@ -110,7 +103,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Bad request, inspect response payload for error details
                 $ref: "#/components/schemas/json_Messages"
               example:
                 first: "..."
@@ -120,7 +112,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Unauthorized, please provide valid Authentication header
                 $ref: "#/components/schemas/json_Messages"
               example:
                 first: "..."
@@ -130,7 +121,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Forbidden, user does not have permission
                 $ref: "#/components/schemas/json_Messages"
               example:
                 first: "..."
@@ -140,7 +130,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Not Found, inspect response for more info
                 $ref: "#/components/schemas/json_Messages"
               example:
                 first: "..."
@@ -150,7 +139,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Internal Server Error, Unexpected server error
                 $ref: "#/components/schemas/json_Messages"
               example:
                 first: "..."
@@ -191,7 +179,6 @@ paths:
           content:
             "application/json":
               schema:
-                description: Created, Consents created
                 $ref: "#/components/schemas/json_DataDTO"
         "204":
           description: "No Content, Current consents updated"
@@ -206,35 +193,30 @@ paths:
           content:
             "application/json":
               schema:
-                description: Bad request, inspect response payload for error details
                 $ref: "#/components/schemas/json_Messages"
         "401":
           description: "Unauthorized, please provide valid Authentication header"
           content:
             "application/json":
               schema:
-                description: Unauthorized, please provide valid Authentication header
                 $ref: "#/components/schemas/json_Messages"
         "403":
           description: "Forbidden, user does not have permission"
           content:
             "application/json":
               schema:
-                description: Forbidden, user does not have permission
                 $ref: "#/components/schemas/json_Messages"
         "404":
           description: "Not Found, inspect response for more info"
           content:
             "application/json":
               schema:
-                description: Not Found, inspect response for more info
                 $ref: "#/components/schemas/json_Messages"
         "500":
           description: "Internal Server Error, Unexpected server error"
           content:
             "application/json":
               schema:
-                description: Internal Server Error, Unexpected server error
                 $ref: "#/components/schemas/json_Messages"
  
   "/data/{pathArg}/bytearray-input":
@@ -274,35 +256,30 @@ paths:
           content:
             "application/json":
               schema:
-                description: Bad request, inspect response payload for error details
                 $ref: "#/components/schemas/json_Messages"
         "401":
           description: "Unauthorized, please provide valid Authentication header"
           content:
             "application/json":
               schema:
-                description: Unauthorized, please provide valid Authentication header
                 $ref: "#/components/schemas/json_Messages"
         "403":
           description: "Forbidden, user does not have permission"
           content:
             "application/json":
               schema:
-                description: Forbidden, user does not have permission
                 $ref: "#/components/schemas/json_Messages"
         "404":
           description: "Not Found, inspect response for more info"
           content:
             "application/json":
               schema:
-                description: Not Found, inspect response for more info
                 $ref: "#/components/schemas/json_Messages"
         "500":
           description: "Internal Server Error, Unexpected server error"
           content:
             "application/json":
               schema:
-                description: Internal Server Error, Unexpected server error
                 $ref: "#/components/schemas/json_Messages"
         "204":
           description: ""
