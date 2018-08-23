@@ -29,6 +29,7 @@ import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 public class DataTypeReferenceRenderer {
 	@SuppressWarnings("unused")
@@ -56,7 +57,7 @@ public class DataTypeReferenceRenderer {
 	    }
 	    
 	    if (description != null && !description.isEmpty()) {
-	      ip.add("description: ", description);
+	      ip.add("description: ", YamlHelper.safeYamlString(description));
 	    }
 
 		if (value != null) {

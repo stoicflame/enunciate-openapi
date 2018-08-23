@@ -129,7 +129,7 @@ components:
       - type: object
         properties:
           first:
-            description: First string. Should be first in serialization order.
+            description: "First string. Should be first in serialization order."
             type: string
           content:
             type: string
@@ -156,7 +156,7 @@ components:
           greeting:
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
           last:
-            description: Last string. Should be last in serialization order.
+            description: "Last string. Should be last in serialization order."
             type: string
         xml:
           name: dataXml

@@ -185,7 +185,7 @@ paths:
           content:
             "application/json":
               schema:
-                description: No Content, Current consents updated
+                description: "No Content, Current consents updated"
                 type: string
                 format: binary
         "400":
