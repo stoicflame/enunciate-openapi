@@ -117,6 +117,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
    * The URL to "openapi.fmt".
    *
    * @return The URL to "openapi.fmt".
+   * @throws MalformedURLException if the template location could not be represented as an URL.
    */
   protected URL getTemplateURL() throws MalformedURLException {
     String template = getFreemarkerProcessingTemplate();
@@ -254,6 +255,9 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
    *
    * @param templateURL The template URL.
    * @param model       The root model.
+   * @return expanded template
+   * @throws IOException if IO failed.
+   * @throws TemplateException if template expansion failed.
    */
   public String processTemplate(URL templateURL, Object model) throws IOException, TemplateException {
     debug("Processing template %s.", templateURL);
@@ -289,6 +293,10 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
 
   /**
    * Builds the base output directory.
+   * 
+   * @param buildDir directory to write the Swagger UI to.
+   * 
+   * @throws IOException if IO failed.
    */
   protected void buildBase(File buildDir) throws IOException {
     if (isSkipBase()) {

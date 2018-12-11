@@ -267,7 +267,7 @@ public class ObjectTypeRenderer {
 
   	private void addOptionalNullable(IndententationPrinter ip, Property p) {
   		getNillable(p).ifPresent(isNullable -> {
-	  		if (!TypeHelper.isSimpleRef(p.getDataType())) {
+	  		if (!TypeHelper.renderAsSimpleRef(p.getDataType())) {
 	  			ip.add("nullable: ", isNullable);
 	  		}
   		});
