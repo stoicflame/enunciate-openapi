@@ -32,7 +32,7 @@ public class AccessorDataType {
     if (dt instanceof EnumDataTypeImpl) {
     	/* FIXME: This requires the fix for https://github.com/stoicflame/enunciate/issues/894
     	return ((EnumDataTypeImpl)dt).getXmlName();
-    	 */
+    	*/
     }
     return null;
   }

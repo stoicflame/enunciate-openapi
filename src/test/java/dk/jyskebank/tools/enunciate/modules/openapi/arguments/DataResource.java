@@ -59,6 +59,13 @@ public class DataResource {
     return dummyResult();
   }
 
+//  @Path("/bytearray-input")
+//  @PUT
+//  @Produces(MediaType.APPLICATION_JSON)
+//  public Response get(@PathParam("pathArg") String path, byte[] body) {
+//	  return Response.ok("").build();
+//  }
+
   private Response dummyResult() {
     return Response.ok("OK").build();
   }

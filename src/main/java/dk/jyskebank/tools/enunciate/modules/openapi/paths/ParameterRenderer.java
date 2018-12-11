@@ -55,10 +55,10 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
       ip.add("type: array");
       ip.add("items:");
       ip.nextLevel();
-      dataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
+      dataTypeReferenceRenderer.renderType(ip, parameter);
       ip.prevLevel();
     } else {
-      dataTypeReferenceRenderer.renderBaseTypeWithOptFormat(ip, parameter.getTypeName(), parameter.getTypeFormat());
+      dataTypeReferenceRenderer.renderType(ip, parameter);
     }
   }
 

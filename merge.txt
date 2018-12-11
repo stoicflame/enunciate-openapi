@@ -4,7 +4,7 @@ This is a start...
 
 Setup
  git clone https://github.com/Jyskebank/enunciate-openapi.git
- git remote add jb https://bitbucket.corp.jyskebank.net/scm/jbintool/enunciate-openapi.git
+ git remote add jb ssh://git@bitbucket.corp.jyskebank.net:7999/jbintool/enunciate-openapi.git
  git fetch jb
 
 First drop
@@ -15,10 +15,10 @@ First drop
 Following drops
  git fetch jb
  git diff jb/master | patch -R -p1
-
+ 
  git diff #tag# | patch -R -p1
  git diff #hash# | patch -R -p1
-
+ 
  
  ...
  

@@ -80,9 +80,9 @@ paths:
         description: ""
         required: true
         content:
-          text/plain:
+          "text/plain":
             schema:
-              type: string 
+              type: string
       responses:
         "200":
           description: ""

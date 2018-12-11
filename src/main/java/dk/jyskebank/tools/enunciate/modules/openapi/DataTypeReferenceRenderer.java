@@ -18,13 +18,11 @@ package dk.jyskebank.tools.enunciate.modules.openapi;
 import java.util.List;
 
 import com.webcohesion.enunciate.EnunciateLogger;
-import com.webcohesion.enunciate.api.datatype.BaseType;
-import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference.ContainerType;
+import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
-import com.webcohesion.enunciate.modules.jaxb.model.types.KnownXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
 
@@ -32,7 +30,6 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 public class DataTypeReferenceRenderer {
-	@SuppressWarnings("unused")
 	private final EnunciateLogger logger;
   
 	public DataTypeReferenceRenderer(EnunciateLogger logger) {
@@ -66,7 +63,7 @@ public class DataTypeReferenceRenderer {
 	    } else {
 	    	if (hasContainers) {
 	    		for (ContainerType ct : containers) {
-	    			renderContainer(ip, ct.isMap(), () -> ip.add("type: ", getBaseType(dtr)));
+	    			renderContainer(ip, ct.isMap(), () -> renderType(ip, dtr));
 	    		}
 	    	} else {
 	    		// FIXME: Conversion to DataTypeReferenceImpl must be broken in Jaxb frontend
@@ -86,7 +83,7 @@ public class DataTypeReferenceRenderer {
 	    		}
 	    		
 	    		if (!workaroundRendering) {
-	    			renderSimpleType(ip, dtr);
+	    			renderType(ip, dtr);
 	    		}
 	    	}
 	    }
@@ -105,43 +102,23 @@ public class DataTypeReferenceRenderer {
         ip.prevLevel();
   }
 
-  private void renderSimpleType(IndententationPrinter ip, DataTypeReference dtr) {
-    String baseType = getBaseType(dtr);
-    String format = getFormatNameFor(dtr);
-    
-    if (format != null) {
-      renderBaseTypeWithFormat(ip, baseType, format);
-    } else {
-      if (dtr.getBaseType() == BaseType.object) {
-        renderObsoletedFileFormat(ip);
-      } else {
-        renderBaseType(ip, baseType);
-      }
-    }
+  public void renderType(IndententationPrinter ip, Parameter parameter) {
+	  renderType(ip, OpenApiTypeFormat.from(parameter));
   }
-
-  public void renderBaseType(IndententationPrinter ip, String baseType) {
-    ip.add("type: ", baseType);
+  
+  private void renderType(IndententationPrinter ip, DataTypeReference dtr) {
+	  renderType(ip, OpenApiTypeFormat.from(dtr));
   }
-
-  public void renderBaseTypeWithOptFormat(IndententationPrinter ip, String baseType, BaseTypeFormat format) {
-    if (format != null) {
-      String fomatStr = BaseTypeToOpenApiType.toOpenApiFormat(format);
-      renderBaseTypeWithFormat(ip, baseType, fomatStr);
-    } else {
-      renderBaseType(ip, baseType);
-    }
+  
+  private void renderType(IndententationPrinter ip, OpenApiTypeFormat tf) {
+	  ip.add("type: ", tf.getType());
+	  tf.getFormat().ifPresent(f -> ip.add("format: ", f));
   }
-
-  private void renderBaseTypeWithFormat(IndententationPrinter ip, String baseType, String format) {
-    renderBaseType(ip, baseType);
-    ip.add("format: ", format);
-  }
-
+  
   public void renderObsoletedFileFormat(IndententationPrinter ip) {
 	  logger.info("CALLING obsoleted format");
-	  ip.add("type: string");
-    ip.add("format: binary"); // TODO: Need to check type for base64/binary - assume binary for now
+	  //new Exception("bad code").printStackTrace();
+	  renderType(ip, OpenApiTypeFormat.BINARY_STREAM_TYPE);
   }
 
   private static void addSchemaRef(IndententationPrinter ip, DataType value) {
@@ -149,56 +126,17 @@ public class DataTypeReferenceRenderer {
   }
 
   public void addSchemaRef(IndententationPrinter ip, DataTypeReference ref) {
+	  logger.info("Looking at ref %s",  ref.getBaseType());
+	  
     String slug = ref.getSlug();
     if (slug != null && !slug.isEmpty()) {
       addSchemaSlugReference(ip, slug);
     } else {
-      renderObsoletedFileFormat(ip);
+    	renderType(ip, ref);
     }
   }
 
   private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
     ip.add("$ref: \"#/components/schemas/" + slug + "\"");
-  }
-
-  	private String getFormatNameFor(DataTypeReference dtr) {
-  		String res =  BaseTypeToOpenApiType.toOpenApiFormat(dtr.getBaseTypeFormat());
-
-  		// Overrides for XML types
-  		// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
-  		String label = dtr.getLabel();
-		if (KnownXmlType.BASE64_BINARY.getName().equals(label)) {
-  			res = "binary";
-  		} else if (KnownXmlType.DATE_TIME.getName().equals(label)) {
-  			res = "date-time";
-  		} else if (KnownXmlType.DATE.getName().equals(label)) {
-  			res = "date";
-  		} else if (KnownXmlType.TIME.getName().equals(label)) {
-  			res = "time";
-  		}
-  		logger.debug("getFormatName for " + dtr.getBaseType() + "/" + dtr.getBaseTypeFormat()  + " : " + label + " -> " + res);
-  		return res;
-  }
-
-  private static String getBaseType(DataTypeReference dtr) {
-    BaseType baseType = dtr.getBaseType();
-    BaseTypeFormat format = dtr.getBaseTypeFormat();
-
-    switch (baseType) {
-      case bool:
-        return "boolean";
-      case number:
-        if (BaseTypeFormat.INT32 == format || BaseTypeFormat.INT64 == format) {
-          return "integer";
-        } else {
-          return "number";
-        }
-      case string:
-        return "string";
-      case object:
-        return "object";
-      default:
-        throw new IllegalStateException("Called with unhandled type " + baseType);
-    }
   }
 }

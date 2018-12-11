@@ -249,7 +249,6 @@ paths:
           "application/json":
             schema:
               type: string
-              format: binary
       responses:
         "400":
           description: "Bad request, inspect response payload for error details"

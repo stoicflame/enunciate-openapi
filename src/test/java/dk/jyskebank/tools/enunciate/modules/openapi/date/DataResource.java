@@ -1,10 +1,6 @@
 package dk.jyskebank.tools.enunciate.modules.openapi.date;
 
-import java.util.Date;
-
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +10,7 @@ import com.webcohesion.enunciate.metadata.rs.TypeHint;
 
 @Path("/path")
 public class DataResource {
+	/* TODO: This is bad - should use org.jboss.resteasy.spi.StringConverter and produces TEXT
 	@TypeHint(Date.class)
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
@@ -21,7 +18,9 @@ public class DataResource {
 	public Response get() {
 		return Response.ok(new Date()).build();
 	}
+	*/
 
+	/* TODO: This is bad - should use org.jboss.resteasy.spi.StringConverter and consumes TEXT
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces()
@@ -29,6 +28,7 @@ public class DataResource {
 	public Response acceptDate(Date data) {
 		return Response.ok().build();
 	}
+	*/
 
 	@TypeHint(DataXmlDTO.class)
 	@GET
