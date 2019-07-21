@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,6 +69,24 @@ public class ObjectTypeRenderer {
     public void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         logger.info("Rendering type " + datatype.getLabel());
         ip.pushNextLevel();
+
+        if (datatype.isAbstract()) {
+            ip.add("oneOf: ", "");
+            for (DataTypeReference subType : datatype.getSubtypes()) {
+                addSchemaSlugReference(ip, subType.getSlug());
+            }
+        } else {
+            renderConcreteType(ip, datatype, syntaxIsJson);
+        }
+
+        ip.popLevel();
+    }
+
+    private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
+        ip.add("- $ref: \"#/components/schemas/" + slug + "\"");
+    }
+
+    private void renderConcreteType(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         ip.add("title: ", safeYamlString(datatype.getLabel()));
         addOptionalSupertypeHeader(ip, datatype);
 
@@ -79,8 +97,6 @@ public class ObjectTypeRenderer {
         addOptionalXml(ip, datatype);
 
         addOptionalExample(ip, datatype, syntaxIsJson);
-
-        ip.popLevel();
     }
 
     private void addOptionalSupertypeHeader(IndententationPrinter ip, DataType datatype) {
