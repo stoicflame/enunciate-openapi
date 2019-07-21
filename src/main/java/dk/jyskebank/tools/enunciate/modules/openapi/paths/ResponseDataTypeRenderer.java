@@ -38,7 +38,7 @@ public class ResponseDataTypeRenderer extends Typed1ArgTemplateMethod<String, St
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent);
+    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
     dataTypeReferenceRenderer.render(ip, dataType, description);
     return ip.toString();

@@ -5,7 +5,7 @@
     <groupId>dk.jyskebank.tooling.enunciate</groupId>
     <artifactId>enunciate-openapi</artifactId>
     <name>Enunciate module for OpenAPI</name>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

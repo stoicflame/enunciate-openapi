@@ -42,7 +42,7 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent);
+    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
     addOptionalEnum(ip);
     addType(ip);
