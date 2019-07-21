@@ -9,6 +9,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/swagger-ui/</directory>
+            <outputDirectory>\</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>
