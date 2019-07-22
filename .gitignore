@@ -8,3 +8,10 @@
 /build/
 /dist/
 /.project
+
+# Maven output dir:
+target/
+
+# IntelliJ project files:
+.idea/
+*.iml
