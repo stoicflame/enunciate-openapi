@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="dataXml")
-@XmlType(propOrder = { "first", "content", "password", "receivers", "success", "message", "greeting", "last"})
+@XmlType(propOrder = { "first", "content", "password", "success", "message", "greeting", "receivers", "last"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DataXmlDTO {
 	/** Last string. Should be last in serialization order. */
@@ -27,8 +27,21 @@ public class DataXmlDTO {
 	@XmlElement(name="content")
 	private byte[] content;
 
-	@XmlElementWrapper(name="receivers")
-	@XmlElement(name = "receiver")
+    // FIXME:
+    // Ideally the field name should be preserved (although this is not really relevant in itself).
+    // But forcing the XmlElement name onto the field means what if there are also a @JsonProperty naming?
+    // Can OpenAPI represent a base property name, an xmlelement name, an xmlwrapper name, *and* a json name? 
+    //
+    //  receiverXmlName:
+    //   xml:
+    //      name: receiversWrapper
+    //      wrapped: true
+    //    type: array
+    //    items:
+    //      type: string
+
+	@XmlElementWrapper(name="receiversWrapper")
+	@XmlElement(name = "receiverXmlName")
 	private List<String> receivers = new ArrayList<>();
 
 	@XmlElement(name="success", nillable=false)

@@ -140,13 +140,6 @@ components:
             type: string
             x-annotations:
               - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="foo")'
-          receiver:
-            xml:
-              name: receivers
-              wrapped: true
-            type: array
-            items:
-              type: string
           success:
             nullable: false
             type: boolean
@@ -155,6 +148,13 @@ components:
             type: string
           greeting:
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
+          receiverXmlName:
+            xml:
+              name: receiversWrapper
+              wrapped: true
+            type: array
+            items:
+              type: string
           last:
             description: "Last string. Should be last in serialization order."
             type: string
