@@ -204,7 +204,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     protected void writeToFolder(File dir) throws IOException {
       EnunciateLogger logger = enunciate.getLogger();
       DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
-      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix());
+      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix(), excludeExamples());
       
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
@@ -222,6 +222,10 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       catch (TemplateException e) {
         throw new EnunciateException(e);
       }
+    }
+
+    private boolean excludeExamples() {
+      return Boolean.parseBoolean(config.getString("[@excludeExamples]"));
     }
 
 	  /**
