@@ -23,6 +23,9 @@ public class DataXmlDTO {
 	@XmlElement
 	private Calendar aCalendar;
 
+	// NOTE: The below are currently broken (not recognized as date/time types).
+	// See https://github.com/stoicflame/enunciate/issues/881
+	
 	@XmlElement
 	private LocalDate aLocalDate;
 
