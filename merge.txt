@@ -4,6 +4,10 @@ This is a start...
 
 Setup
  git clone https://github.com/Jyskebank/enunciate-openapi.git
+
+ git config --local user.name "Jesper Skov"
+ git config --local user.email "jskov@jyskebank.dk"
+
  git remote add jb ssh://git@bitbucket.corp.jyskebank.net:7999/jbintool/enunciate-openapi.git
  git fetch jb
 
