@@ -25,6 +25,8 @@ ext {
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
 	publishDir = file("dist/publish")
+	
+	jdkHome = findJdkHome()
 }
 
 if (jbNexus) {
@@ -51,7 +53,7 @@ dependencies {
 
 	testCompile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
 	testCompile "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
-	testCompile files(new File(System.getenv("JAVA_HOME"), "lib/tools.jar"))
+	testCompile files("$jdkHome/lib/tools.jar")
 	testCompile "org.slf4j:slf4j-ext:1.7.7"
 	testCompile "ch.qos.logback:logback-classic:1.1.2"
     testCompile "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
@@ -193,4 +195,12 @@ eclipseJdt.doLast {
     File f = file('.settings/org.eclipse.core.resources.prefs')
     f.write('eclipse.preferences.version=1\n')
     f.append('encoding/<project>=UTF-8')
+}
+
+File findJdkHome() {
+	File home = new File(System.getProperty("java.home"))
+	if (!home.list().contains("jre")) {
+		home = home.getParentFile()
+	}
+	return home;
 }
