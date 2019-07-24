@@ -19,8 +19,8 @@ defaultTasks 'dist'
 ext {
 	enunciateVersion = "2.11.1"
 
-	junitPlatformVersion = '1.0.0'
-	junitJupiterVersion = '5.0.0'
+	junitPlatformVersion = '1.5.1'
+	junitJupiterVersion = '5.5.1'
 	
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
@@ -43,10 +43,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9'
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9"
     compileOnly "com.webcohesion.enunciate:enunciate-core:${enunciateVersion}"
     compileOnly "com.webcohesion.enunciate:enunciate-jaxb:${enunciateVersion}"
-    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
+    compileOnly "com.fasterxml.jackson.core:jackson-databind:2.9.9.1"
     compileOnly 'org.freemarker:freemarker:2.3.23'
 
 	testCompile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
@@ -57,7 +57,7 @@ dependencies {
     testCompile "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
    	testCompile files("build/distributions/openapi-swagger-ui.zip")
 
-   	testCompile "org.assertj:assertj-core:3.6.1"
+   	testCompile "org.assertj:assertj-core:3.12.2"
 	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
 	testCompile("org.junit.platform:junit-platform-runner:${junitPlatformVersion}")
 	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
