@@ -45,7 +45,7 @@ public class SchemaRenderer extends Typed1ArgTemplateMethod<String, String> {
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent);
+    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, objectTypeRenderer.doRemoveObjectPrefix());
     renderLines(ip);
     return ip.toString();
   }

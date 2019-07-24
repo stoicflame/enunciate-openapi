@@ -206,8 +206,8 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       
       
       EnunciateLogger logger = enunciate.getLogger();
-      DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger);
-      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations());
+      DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
+      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix());
       
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
@@ -226,6 +226,16 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
         throw new EnunciateException(e);
       }
     }
+  }
+
+  /**
+   * By default all model objects are prefixed with "json_" in output file openapi.yml.
+   * When this configuration property has value <code>true</code>, then this prefix is omitted.
+   *
+   * Having the prefix caused problems with client code generation.
+   */
+  private boolean doRemoveObjectPrefix() {
+    return Boolean.valueOf(config.getString("[@removeObjectPrefix]"));
   }
 
   protected String getHost() {
@@ -397,6 +407,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
   }
   
   public File getDocsDir() {
+
     String docsDir = config.getString("[@docsDir]");
     if (docsDir != null) {
       return resolveFile(docsDir);

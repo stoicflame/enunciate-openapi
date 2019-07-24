@@ -42,7 +42,7 @@ public class RequestEntityRenderer extends Typed1ArgTemplateMethod<String, Strin
   
   @Override
   protected String exec(String nextLineIndent) {
-      IndententationPrinter ip = new IndententationPrinter(nextLineIndent);
+      IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
       ip.add(safeYamlString(mediaWithFallback), ":");
       ip.nextLevel();

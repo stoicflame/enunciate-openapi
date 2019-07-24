@@ -46,7 +46,7 @@ public class Response {
     this.headers = headers;
     this.description = YamlHelper.safeYamlString(description);
     renderer = new ResponseDataTypeRenderer(logger, dataTypeReferenceRenderer, dataType, description);
-    exampleRenderer = optionalExample.map(e -> new ExampleRenderer(logger, e));
+    exampleRenderer = optionalExample.map(e -> new ExampleRenderer(logger, e, dataTypeReferenceRenderer.doRemoveObjectPrefix()));
     
     // TODO: Render headers
   }

@@ -31,9 +31,11 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 public class DataTypeReferenceRenderer {
 	private final EnunciateLogger logger;
-  
-	public DataTypeReferenceRenderer(EnunciateLogger logger) {
+	private boolean removeObjectPrefix;
+
+	public DataTypeReferenceRenderer(EnunciateLogger logger, boolean removeObjectPrefix) {
 		this.logger = logger;
+		this.removeObjectPrefix = removeObjectPrefix;
 	}
   
   	public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
@@ -88,6 +90,10 @@ public class DataTypeReferenceRenderer {
 	    	}
 	    }
   	}
+
+	public boolean doRemoveObjectPrefix() {
+		return removeObjectPrefix;
+	}
 
   private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRendere) {
       if (isMap) {
