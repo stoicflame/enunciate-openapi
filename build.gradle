@@ -21,6 +21,7 @@ ext {
 
 	junitPlatformVersion = '1.5.1'
 	junitJupiterVersion = '5.5.1'
+	mockitoVersion = '3.0.0'
 	
 	jbNexus = System.getenv('NEXUS_REPO_URL')
 	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
@@ -62,6 +63,7 @@ dependencies {
    	testCompile "org.assertj:assertj-core:3.12.2"
 	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
 	testCompile("org.junit.platform:junit-platform-runner:${junitPlatformVersion}")
+	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 }
 

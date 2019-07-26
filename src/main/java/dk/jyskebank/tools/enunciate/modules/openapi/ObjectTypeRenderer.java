@@ -53,6 +53,7 @@ import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.JsonToYamlHelper;
 
 public class ObjectTypeRenderer {
+    public static final String JSON_REF_FORMAT = "- $ref: \"#/components/schemas/%s\"";
     private final EnunciateLogger logger;
     private final DataTypeReferenceRenderer datatypeRefRenderer;
     private final Set<String> passThroughAnnotations;
@@ -83,7 +84,7 @@ public class ObjectTypeRenderer {
     }
 
     private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
-        ip.add("- $ref: \"#/components/schemas/" + slug + "\"");
+        ip.add(String.format(JSON_REF_FORMAT, slug));
     }
 
     private void renderConcreteType(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
