@@ -16,18 +16,22 @@
 package dk.jyskebank.tools.enunciate.modules.openapi.yaml;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 
 public class JsonToYamlHelper {
+  private static final Charset JSON_SPEC_ENCODING = StandardCharsets.UTF_8;
+
   private JsonToYamlHelper() {}
   
   public static String jsonToYaml(String json) {
     try {
       ObjectMapper jsonReader = new ObjectMapper();
-      Object obj = jsonReader.readValue(json.getBytes(), Object.class);
+      Object obj = jsonReader.readValue(json.getBytes(JSON_SPEC_ENCODING), Object.class);
       
       ObjectMapper yamlWriter = new ObjectMapper(new YAMLFactory());
       return yamlWriter.writeValueAsString(obj);

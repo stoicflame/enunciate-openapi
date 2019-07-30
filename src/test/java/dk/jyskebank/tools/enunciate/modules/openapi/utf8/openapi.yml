@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
+servers:
+- url: "../.."
+paths:
+  "/path/{pathArg}":
+    get:
+      description: ""
+      tags:
+        - "Other"
+      summary: ""
+      deprecated: false
+      operationId: get
+      parameters:
+      - name: "pathArg"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/json_DataUTF8CharsetFieldsDTO"
+ 
+components:
+  schemas:
+    "json_DataUTF8CharsetFieldsDTO":
+      title: "DataUTF8CharsetFieldsDTO"
+      type: object
+      properties:
+        fieldContainsDanishLettersÆØÅæøå:
+          type: number
+        noFunkyLettersHere:
+          type: number
+      example:
+        fieldContainsDanishLettersÆØÅæøå: 12345
+        noFunkyLettersHere: 12345
