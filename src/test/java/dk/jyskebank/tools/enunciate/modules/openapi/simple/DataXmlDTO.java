@@ -46,7 +46,7 @@ public class DataXmlDTO {
 
 	@XmlElement(name="success", nillable=false)
 	private boolean success = true;
-	    
+
 	@XmlElement(name="message", nillable=true)
 	private String message;
 

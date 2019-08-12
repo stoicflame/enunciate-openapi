@@ -37,9 +37,11 @@ components:
       type: object
       properties:
         fieldContainsDanishLettersÆØÅæøå:
-          type: number
+          type: integer
+          format: int32
         noFunkyLettersHere:
-          type: number
+          type: integer
+          format: int32
       example:
         fieldContainsDanishLettersÆØÅæøå: 12345
         noFunkyLettersHere: 12345

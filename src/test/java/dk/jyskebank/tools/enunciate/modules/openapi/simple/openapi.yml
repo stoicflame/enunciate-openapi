@@ -127,6 +127,8 @@ components:
       - type: string
         format: binary
       - type: object
+        required:
+        - success
         properties:
           first:
             description: "First string. Should be first in serialization order."
