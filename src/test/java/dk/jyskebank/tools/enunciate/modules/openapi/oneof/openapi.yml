@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
+servers: []
+paths:
+  "/data/{pathArg}":
+    post:
+      description: "Summary.\n\nDescription follows..."
+      tags:
+        - "Data"
+      summary: "Summary."
+      deprecated: false
+      operationId: update
+      parameters:
+      - name: "userid"
+        in: header
+        description: "The actual user performing the operation"
+        required: false
+        schema:
+          type: string
+        style: simple
+      - name: "pathArg"
+        in: path
+        description: "The id of the customer"
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/json_DataDTO"
+      responses:
+        "201":
+          description: "Created, Consents created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_DataDTO"
+        "204":
+          description: "No Content, Current consents updated"
+          content:
+            "application/json":
+              schema:
+                description: "No Content, Current consents updated"
+                type: string
+                format: binary
+        "400":
+          description: "Bad request, inspect response payload for error details"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "401":
+          description: "Unauthorized, please provide valid Authentication header"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "403":
+          description: "Forbidden, user does not have permission"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "404":
+          description: "Not Found, inspect response for more info"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "500":
+          description: "Internal Server Error, Unexpected server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+ 
+components:
+  schemas:
+    "json_Cat":
+      title: "Cat"
+      type: object
+      properties:
+        famousOnYouTube:
+          type: boolean
+        name:
+          type: string
+      example:
+        famousOnYouTube: true
+        name: "..."
+    "json_Dog":
+      title: "Dog"
+      type: object
+      properties:
+        aggressive:
+          type: boolean
+        name:
+          type: string
+      example:
+        aggressive: true
+        name: "..."
+    "json_Messages":
+      title: "Messages"
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+        notOk:
+          type: boolean
+        OK:
+          type: boolean
+      example:
+        messages:
+        - "..."
+        - "..."
+        notOk: true
+        OK: true
+    "json_Pet":
+      oneOf: 
+      - $ref: "#/components/schemas/json_Cat"
+      - $ref: "#/components/schemas/json_Dog"
+    "json_DataDTO":
+      title: "oneOfSupport"
+      type: object
+      properties:
+        pet:
+          $ref: "#/components/schemas/json_Pet"
+      example:
+        pet:
+          name: "..."
