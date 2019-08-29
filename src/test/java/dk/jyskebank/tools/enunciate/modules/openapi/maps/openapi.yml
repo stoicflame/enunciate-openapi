@@ -30,11 +30,11 @@ components:
         format: binary
       - type: object
         properties:
-          stringMap:
+          "stringMap":
             type: object
             additionalProperties:
               type: string
-          valueMap:
+          "valueMap":
             type: string
             format: binary
         xml:
@@ -46,7 +46,7 @@ components:
         format: binary
       - type: object
         properties:
-          somethingOfValue:
+          "somethingOfValue":
             type: string
         xml:
           name: valueDto

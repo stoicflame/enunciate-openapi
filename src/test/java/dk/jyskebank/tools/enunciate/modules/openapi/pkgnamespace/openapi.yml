@@ -30,9 +30,9 @@ components:
         format: binary
       - type: object
         properties:
-          aString:
+          "aString":
             type: string
-          anEnum:
+          "anEnum":
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
         xml:
           name: dataXml

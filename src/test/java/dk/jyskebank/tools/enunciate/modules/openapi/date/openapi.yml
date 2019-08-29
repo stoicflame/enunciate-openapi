@@ -30,27 +30,27 @@ components:
         format: binary
       - type: object
         properties:
-          aCalendar:
+          "aCalendar":
             type: string
             format: date-time
-          aDate:
+          "aDate":
             type: string
             format: date-time
-          aLocalDate:
+          "aLocalDate":
             type: string
             format: date
-          aLocalDateTime:
+          "aLocalDateTime":
             type: string
             format: date-time
-          aLocalTime:
+          "aLocalTime":
             type: string
-          aZonedDateTime:
-            type: string
-            format: date-time
-          anOffsetDateTime:
+          "aZonedDateTime":
             type: string
             format: date-time
-          anOffsetTime:
+          "anOffsetDateTime":
+            type: string
+            format: date-time
+          "anOffsetTime":
             $ref: "#/components/schemas/xml_ns0_offsetTime"
         xml:
           name: dataXmlDto

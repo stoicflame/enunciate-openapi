@@ -127,7 +127,7 @@ components:
         format: binary
       - type: object
         properties:
-          simpleStr:
+          "simpleStr":
             type: string
         xml:
           name: dataXmlDto

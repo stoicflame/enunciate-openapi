@@ -46,7 +46,7 @@ components:
         format: binary
       - type: object
         properties:
-          user:
+          "user":
             $ref: "#/components/schemas/xml_ns0_referenceEnum"
         xml:
           name: dataXmlDto

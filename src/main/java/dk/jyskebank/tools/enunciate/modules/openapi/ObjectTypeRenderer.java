@@ -136,7 +136,7 @@ public class ObjectTypeRenderer {
         ip.add("required:");
         ip.nextLevel();
         for (Property p : requiredProperties) {
-            ip.item(p.getName());
+            ip.item("\"" + p.getName() + "\"");
         }
         ip.prevLevel();
     }
@@ -196,7 +196,7 @@ public class ObjectTypeRenderer {
     private void addProperty(IndententationPrinter ip, DataType datatype, Property p, boolean syntaxIsJson) {
         logger.info(" adding property " + p.getName() + " with annotations " + p.getAnnotations().keySet());
 
-        ip.add(p.getName(), ":");
+        ip.add("\"" + p.getName() + "\"", ":");
         ip.nextLevel();
         if (datatype.getPropertyMetadata().containsKey("namespaceInfo")) {
             addNamespaceXml(ip, p);

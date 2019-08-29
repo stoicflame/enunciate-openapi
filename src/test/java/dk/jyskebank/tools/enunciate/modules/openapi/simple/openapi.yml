@@ -114,9 +114,9 @@ components:
       title: "DataDTO"
       type: object
       properties:
-        last:
+        "last":
           type: string
-        first:
+        "first":
           type: string
       example:
         last: "..."
@@ -128,36 +128,36 @@ components:
         format: binary
       - type: object
         required:
-        - success
+        - "success"
         properties:
-          first:
+          "first":
             description: "First string. Should be first in serialization order."
             type: string
-          content:
+          "content":
             type: string
             format: binary
             x-annotations:
               - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="bar", listValues={"a", "b", "c"})'
-          password:
+          "password":
             type: string
             x-annotations:
               - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="foo")'
-          success:
+          "success":
             nullable: false
             type: boolean
-          message:
+          "message":
             nullable: true
             type: string
-          greeting:
+          "greeting":
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
-          receiverXmlName:
+          "receiverXmlName":
             xml:
               name: receiversWrapper
               wrapped: true
             type: array
             items:
               type: string
-          last:
+          "last":
             description: "Last string. Should be last in serialization order."
             type: string
         xml:

@@ -294,16 +294,16 @@ components:
       title: "Messages"
       type: object
       required:
-      - notOk
-      - OK
+      - "notOk"
+      - "OK"
       properties:
-        messages:
+        "messages":
           type: array
           items:
             type: string
-        notOk:
+        "notOk":
           type: boolean
-        OK:
+        "OK":
           type: boolean
       example:
         messages:
@@ -315,9 +315,9 @@ components:
       title: "madness"
       type: object
       properties:
-        first:
+        "first":
           type: string
-        last:
+        "last":
           type: string
       example:
         first: "..."

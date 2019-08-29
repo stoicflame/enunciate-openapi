@@ -30,29 +30,29 @@ components:
         format: binary
       - type: object
         required:
-        - success
+        - "success"
         properties:
-          nillableBool:
+          "nillableBool":
             nullable: true
             type: boolean
-          nillableDto:
+          "nillableDto":
             $ref: "#/components/schemas/xml_ns0_subDTO"
-          nillableEnum:
+          "nillableEnum":
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
-          nillableStr:
+          "nillableStr":
             nullable: true
             type: string
-          requiredBool:
+          "requiredBool":
             nullable: false
             type: boolean
-          requiredDto:
+          "requiredDto":
             $ref: "#/components/schemas/xml_ns0_subDTO"
-          requiredEnum:
+          "requiredEnum":
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
-          requiredStr:
+          "requiredStr":
             nullable: false
             type: string
-          success:
+          "success":
             nullable: false
             type: boolean
         xml:
@@ -70,9 +70,9 @@ components:
         format: binary
       - type: object
         properties:
-          first:
+          "first":
             type: string
-          last:
+          "last":
             type: string
         xml:
           name: subDto

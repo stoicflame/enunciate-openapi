@@ -36,10 +36,10 @@ components:
       title: "DataUTF8CharsetFieldsDTO"
       type: object
       properties:
-        fieldContainsDanishLettersÆØÅæøå:
+        "fieldContainsDanishLettersÆØÅæøå":
           type: integer
           format: int32
-        noFunkyLettersHere:
+        "noFunkyLettersHere":
           type: integer
           format: int32
       example:

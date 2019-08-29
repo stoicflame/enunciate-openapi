@@ -67,11 +67,11 @@ components:
       title: "Cat"
       type: object
       required:
-      - famousOnYouTube
+      - "famousOnYouTube"
       properties:
-        famousOnYouTube:
+        "famousOnYouTube":
           type: boolean
-        name:
+        "name":
           type: string
       example:
         famousOnYouTube: true
@@ -80,11 +80,11 @@ components:
       title: "Dog"
       type: object
       required:
-      - aggressive
+      - "aggressive"
       properties:
-        aggressive:
+        "aggressive":
           type: boolean
-        name:
+        "name":
           type: string
       example:
         aggressive: true
@@ -97,7 +97,7 @@ components:
       title: "oneOfSupport"
       type: object
       properties:
-        pet:
+        "pet":
           $ref: "#/components/schemas/json_Pet"
       example:
         pet:
