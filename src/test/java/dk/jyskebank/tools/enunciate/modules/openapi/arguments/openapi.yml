@@ -22,7 +22,7 @@ paths:
                 type: string
  
   "/path/dtoEntity":
-    get:
+    put:
       description: ""
       tags:
         - "DataResource"
@@ -37,7 +37,7 @@ paths:
             schema:
               $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
       responses:
-        "200":
+        "204":
           description: ""
           content:
             "*/*":
@@ -45,7 +45,7 @@ paths:
                 type: string
  
   "/path/inputStream":
-    get:
+    put:
       description: ""
       tags:
         - "DataResource"
@@ -56,12 +56,12 @@ paths:
         description: ""
         required: true
         content:
-          "*/*":
+          "application/octet-stream":
             schema:
               type: string
               format: binary
       responses:
-        "200":
+        "204":
           description: ""
           content:
             "*/*":
@@ -69,7 +69,7 @@ paths:
                 type: string
  
   "/path/stringEntity":
-    get:
+    put:
       description: ""
       tags:
         - "DataResource"
@@ -84,7 +84,7 @@ paths:
             schema:
               type: string
       responses:
-        "200":
+        "204":
           description: ""
           content:
             "*/*":

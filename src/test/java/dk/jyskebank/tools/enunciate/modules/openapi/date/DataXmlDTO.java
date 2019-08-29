@@ -23,12 +23,11 @@ public class DataXmlDTO {
 	@XmlElement
 	private Calendar aCalendar;
 
-	// NOTE: The below are currently broken (not recognized as date/time types).
-	// See https://github.com/stoicflame/enunciate/issues/881
-	
 	@XmlElement
 	private LocalDate aLocalDate;
 
+	// NOTE: there is no OpenAPI spec for time-only fields, see https://swagger.io/specification/#dataTypes
+	// So this gets represented by a simple string.
 	@XmlElement
 	private LocalTime aLocalTime;
 	

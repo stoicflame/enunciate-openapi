@@ -94,7 +94,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
 
   @Override
   public List<DependencySpec> getDependencySpecifications() {
-    return Arrays.asList((DependencySpec) new DependencySpec() {
+    return Collections.singletonList(new DependencySpec() {
       @Override
       public boolean accept(EnunciateModule module) {
         return DEPENDENCY_MODULES.contains(module.getName());
@@ -104,7 +104,6 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       public boolean isFulfilled() {
         return true;
       }
-
 
       @Override
       public String toString() {
@@ -142,7 +141,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     enunciate.addArtifact(openapiArtifact);
     
     try {
-      ApiRegistrationContext registrationContext = new DefaultRegistrationContext();
+      ApiRegistrationContext registrationContext = new DefaultRegistrationContext(context);
       List<ResourceApi> resourceApis = apiRegistry.getResourceApis(registrationContext);
       new OpenApiInterfaceDescription(resourceApis, registrationContext).writeToFolder(docsDir);
     } catch (IOException e) {
@@ -169,14 +168,15 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       }
 
       @Override
-      public InterfaceDescriptionFile getSwaggerUI(ApiRegistrationContext context) {
-        List<ResourceApi> resourceApis = apiRegistry.getResourceApis(context);
+      public InterfaceDescriptionFile getSwaggerUI() {
+        ApiRegistrationContext registrationContext = new DefaultRegistrationContext(context);
+        List<ResourceApi> resourceApis = apiRegistry.getResourceApis(registrationContext);
 
         if (resourceApis == null || resourceApis.isEmpty()) {
           info("No resource APIs registered: OpenApi UI will not be generated.");
         }
 
-        return new OpenApiInterfaceDescription(resourceApis, context);
+        return new OpenApiInterfaceDescription(resourceApis, registrationContext);
       }
     };
   }
@@ -202,9 +202,6 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     }
     
     protected void writeToFolder(File dir) throws IOException {
-      
-      
-      
       EnunciateLogger logger = enunciate.getLogger();
       DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
       ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix());
@@ -226,16 +223,16 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
         throw new EnunciateException(e);
       }
     }
-  }
 
-  /**
-   * By default all model objects are prefixed with "json_" in output file openapi.yml.
-   * When this configuration property has value <code>true</code>, then this prefix is omitted.
-   *
-   * Having the prefix caused problems with client code generation.
-   */
-  private boolean doRemoveObjectPrefix() {
-    return Boolean.valueOf(config.getString("[@removeObjectPrefix]"));
+	  /**
+	   * By default all model objects are prefixed with "json_" in output file openapi.yml.
+	   * When this configuration property has value <code>true</code>, then this prefix is omitted.
+	   *
+	   * Having the prefix caused problems with client code generation.
+	   */
+	  private boolean doRemoveObjectPrefix() {
+	    return Boolean.parseBoolean(config.getString("[@removeObjectPrefix]"));
+	  }
   }
 
   protected String getHost() {

@@ -293,6 +293,9 @@ components:
     "json_Messages":
       title: "Messages"
       type: object
+      required:
+      - notOk
+      - OK
       properties:
         messages:
           type: array

@@ -37,51 +37,25 @@ components:
             type: string
             format: date-time
           aLocalDate:
-            $ref: "#/components/schemas/xml_ns0_localDate"
+            type: string
+            format: date
           aLocalDateTime:
-            $ref: "#/components/schemas/xml_ns0_localDateTime"
+            type: string
+            format: date-time
           aLocalTime:
-            $ref: "#/components/schemas/xml_ns0_localTime"
+            type: string
           aZonedDateTime:
-            $ref: "#/components/schemas/xml_ns0_zonedDateTime"
+            type: string
+            format: date-time
           anOffsetDateTime:
-            $ref: "#/components/schemas/xml_ns0_offsetDateTime"
+            type: string
+            format: date-time
           anOffsetTime:
             $ref: "#/components/schemas/xml_ns0_offsetTime"
         xml:
           name: dataXmlDto
-    "xml_ns0_localDate":
-      title: "localDate"
-      allOf:
-      - type: string
-        format: binary
-      - type: object
-    "xml_ns0_localDateTime":
-      title: "localDateTime"
-      allOf:
-      - type: string
-        format: binary
-      - type: object
-    "xml_ns0_localTime":
-      title: "localTime"
-      allOf:
-      - type: string
-        format: binary
-      - type: object
-    "xml_ns0_offsetDateTime":
-      title: "offsetDateTime"
-      allOf:
-      - type: string
-        format: binary
-      - type: object
     "xml_ns0_offsetTime":
       title: "offsetTime"
-      allOf:
-      - type: string
-        format: binary
-      - type: object
-    "xml_ns0_zonedDateTime":
-      title: "zonedDateTime"
       allOf:
       - type: string
         format: binary

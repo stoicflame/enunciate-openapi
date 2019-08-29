@@ -29,6 +29,8 @@ components:
       - type: string
         format: binary
       - type: object
+        required:
+        - success
         properties:
           nillableBool:
             nullable: true

@@ -11,7 +11,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 @XmlRootElement
 public class Messages {
 	
-	private List<String> messages = new ArrayList<String>();
+	private List<String> messages = new ArrayList<>();
 	
 	public List<String> getMessages() {
 		return messages;
@@ -30,7 +30,7 @@ public class Messages {
 
 	@JsonIgnore
 	public boolean isNotOk() {
-		return messages.stream().anyMatch(m -> "error".equals(m));
+		return messages.stream().anyMatch("error"::equals);
 	}
 
 	@JsonIgnore
@@ -41,7 +41,7 @@ public class Messages {
 	@Override
 	public String toString() {
 		try {
-			return new ObjectMapper().writeValueAsString(this).toString();
+			return new ObjectMapper().writeValueAsString(this);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
