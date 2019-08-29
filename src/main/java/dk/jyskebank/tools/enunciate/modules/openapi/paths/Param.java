@@ -48,6 +48,7 @@ public class Param {
     typeLabel2in.put(MATRIX, PATH);
     typeLabel2in.put(PATH, PATH);
     typeLabel2in.put(QUERY, QUERY);
+    typeLabel2in.put(FORM, QUERY);
   }
 
   private static final Map<String, String> typeLabel2style = new HashMap<>();
@@ -57,6 +58,7 @@ public class Param {
     typeLabel2style.put(MATRIX, MATRIX);
     typeLabel2style.put(PATH, SIMPLE);
     typeLabel2style.put(QUERY, FORM);
+    typeLabel2style.put(FORM, FORM);
   }
 
   public Param(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, Parameter parameter) {

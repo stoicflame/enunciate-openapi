@@ -44,6 +44,30 @@ paths:
               schema:
                 type: string
  
+  "/path/form":
+    put:
+      description: ""
+      tags:
+        - "DataResource"
+      summary: ""
+      deprecated: false
+      operationId: formParam
+      parameters:
+      - name: "name"
+        in: query
+        description: ""
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
   "/path/inputStream":
     put:
       description: ""

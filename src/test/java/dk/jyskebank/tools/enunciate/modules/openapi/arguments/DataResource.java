@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PUT;
@@ -60,6 +61,13 @@ public class DataResource {
     return dummyResult();
   }
 
+  @PUT
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("form")
+  public Response formParam(@FormParam("name") String name) {
+	  return dummyResult();
+  }
+  
 //  @Path("/bytearray-input")
 //  @PUT
 //  @Produces(MediaType.APPLICATION_JSON)
