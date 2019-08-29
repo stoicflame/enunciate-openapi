@@ -1,5 +1,7 @@
 package dk.jyskebank.tools.enunciate.modules.openapi.simple;
 
+import javax.validation.constraints.Pattern;
+
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "first", "last", })
@@ -17,6 +19,7 @@ public class DataDTO {
 		this.last = last;
 	}
 
+	@Pattern(regexp = "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}")
 	public String getFirst() {
 		return first;
 	}

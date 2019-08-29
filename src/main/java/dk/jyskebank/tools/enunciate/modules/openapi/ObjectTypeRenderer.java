@@ -284,7 +284,7 @@ public class ObjectTypeRenderer {
 
         Pattern mustMatchPattern = p.getAnnotation(Pattern.class);
         if (mustMatchPattern != null) {
-            ip.add("pattern: ", mustMatchPattern.regexp());
+            ip.add("pattern: ", "'" + mustMatchPattern.regexp() + "'");
         }
     }
 
