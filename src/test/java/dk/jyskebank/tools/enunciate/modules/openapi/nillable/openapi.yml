@@ -61,8 +61,8 @@ components:
       title: "dataXmlEnum"
       type: string
       enum:
-      - GOOD
-      - MORNING
+      - "GOOD"
+      - "MORNING"
     "xml_ns0_subDTO":
       title: "subDTO"
       allOf:

@@ -54,13 +54,15 @@ components:
       title: "referenceEnum"
       type: string
       enum:
-      - REF_1
-      - REF_2
+      - "REF_1"
+      - "REF_2"
     "xml_ns0_xmlTypeRoleType":
       title: "xmlTypeRoleType"
       type: string
       enum:
-      - ADMIN
-      - MONITOR
+      - "ADMIN"
+      - "MONITOR"
+      - "YES"
+      - "NO"
       xml:
         name: xmlRootElementRoleType

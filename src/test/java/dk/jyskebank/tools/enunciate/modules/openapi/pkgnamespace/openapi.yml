@@ -41,7 +41,7 @@ components:
       title: "dataXmlEnum"
       type: string
       enum:
-      - GOOD
-      - MORNING
+      - "GOOD"
+      - "MORNING"
       xml:
         namespace: http://www.jyskebank.dk/enunciate/openapi/version/1

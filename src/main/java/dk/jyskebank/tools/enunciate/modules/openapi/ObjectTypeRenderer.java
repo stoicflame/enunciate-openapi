@@ -174,7 +174,7 @@ public class ObjectTypeRenderer {
         ip.add("enum:");
         ip.nextLevel();
         for (String e : values) {
-            ip.item(e);
+            ip.item("\"" + e + "\"");
         }
         ip.prevLevel();
     }

@@ -9,5 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum RootElementEnum {
 	ADMIN,
-	MONITOR
+	MONITOR,
+	YES,
+	NO
 }
