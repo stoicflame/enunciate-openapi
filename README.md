@@ -22,20 +22,11 @@ As it is, documentation is pretty barren - but I wanted to make the module avail
 
 From Gradle you would do something like this:
 
-    buildscript {
-      repositories {
-        maven {
-          url "https://plugins.gradle.org/m2/"
-        }
-      }
-      dependencies {
-        classpath "gradle.plugin.com.webcohesion.enunciate:enunciate-gradle:2.10.1"
-        classpath "dk.jyskebank.tooling.enunciate:enunciate-openapi:1.0.4"
-      }
-    }
+    apply plugin: "com.webcohesion.enunciate"
 
-I have changed the [Gradle Enunciate plugin](https://github.com/stoicflame/enunciate-gradle) to allow specifying additional modules.
-But this will not be available until next release (2.11).
+    dependencies {
+      enunciate "dk.jyskebank.tooling.enunciate:enunciate-openapi:1.1.x"
+    }
 
 
 I am unable to help Maven users. But if you know how to make it work, please let me know, so I can insert instructions here.
