@@ -89,6 +89,14 @@ components:
       example:
         aggressive: true
         name: "..."
+    "json_Fruit":
+      title: "Fruit"
+      type: object
+      properties:
+        "name":
+          type: string
+      example:
+        name: "..."
     "json_Pet":
       oneOf: 
       - $ref: "#/components/schemas/json_Cat"
@@ -99,6 +107,10 @@ components:
       properties:
         "pet":
           $ref: "#/components/schemas/json_Pet"
+        "fruit":
+          $ref: "#/components/schemas/json_Fruit"
       example:
         pet:
+          name: "..."
+        fruit:
           name: "..."

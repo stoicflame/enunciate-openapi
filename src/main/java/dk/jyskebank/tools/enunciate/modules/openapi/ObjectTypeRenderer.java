@@ -71,10 +71,11 @@ public class ObjectTypeRenderer {
         logger.info("Rendering type " + datatype.getLabel());
         ip.pushNextLevel();
 
-        if (datatype.isAbstract()) {
+        List<DataTypeReference> subtypes = datatype.getSubtypes();
+        if (datatype.isAbstract() && subtypes != null) {
             ip.add("oneOf: ", "");
-            for (DataTypeReference subType : datatype.getSubtypes()) {
-                addSchemaSlugReference(ip, subType.getSlug());
+            for (DataTypeReference subType : subtypes) {
+            	addSchemaSlugReference(ip, subType.getSlug());
             }
         } else {
             renderConcreteType(ip, datatype, syntaxIsJson);
