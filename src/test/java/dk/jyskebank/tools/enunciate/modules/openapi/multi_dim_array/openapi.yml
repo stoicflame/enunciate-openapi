@@ -74,20 +74,38 @@ components:
           items:
             type: array
             items:
-              type: integer
-              format: int32
+              type: array
+              items:
+                type: integer
+                format: int32
         "locations":
           type: array
           items:
             type: integer
             format: int32
+        "sudoku":
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+              format: int32
       example:
         name: "..."
         temperatures:
-        - - 12345
-          - 12345
-        - - 12345
-          - 12345
+        - - - 12345
+            - 12345
+          - - 12345
+            - 12345
+        - - - 12345
+            - 12345
+          - - 12345
+            - 12345
         locations:
         - 12345
         - 12345
+        sudoku:
+        - - 12345
+          - 12345
+        - - 12345
+          - 12345

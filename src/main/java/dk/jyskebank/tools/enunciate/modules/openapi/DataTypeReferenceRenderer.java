@@ -15,8 +15,6 @@
  */
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
-import java.util.List;
-
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
@@ -25,9 +23,10 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
 import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
-
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
+
+import java.util.List;
 
 public class DataTypeReferenceRenderer {
     private final EnunciateLogger logger;
@@ -65,7 +64,7 @@ public class DataTypeReferenceRenderer {
         } else {
             if (hasContainers) {
                 if (isMultiDimensionalCollection(containers)) {
-                    renderNestedArrays(ip, dtr, containers);
+                    renderNestedArrays(ip, dtr, containers.size());
 
                 } else {
                     for (ContainerType ct : containers) {
@@ -100,40 +99,48 @@ public class DataTypeReferenceRenderer {
         return containers.stream().noneMatch(c -> c.isMap());
     }
 
-    private void renderNestedArrays(IndententationPrinter ip, DataTypeReference dtr, List<ContainerType> containers) {
+    private void renderNestedArrays(IndententationPrinter ip, DataTypeReference dtr, int dimensionSize) {
 
-        if ( containers.size()==1) {
-            renderContainer(ip, false, () -> renderType(ip, dtr));
-            return;
-        }
-
-        for (int i = 0; i < containers.size() - 1; i++) {
-            renderArray(ip);
-        }
-        ip.nextLevel();
-        renderContainer(ip, false, () -> renderType(ip, dtr));
-        ip.prevLevel();
-    }
-
-    public boolean doRemoveObjectPrefix() {
-        return removeObjectPrefix;
-    }
-
-    private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRendere) {
-        if (isMap) {
-            ip.add("type: object");
-            ip.add("additionalProperties:");
+        if (dimensionSize == 0) {
+            renderValue(ip, () -> renderType(ip, dtr));
         } else {
             renderArray(ip);
+            ip.nextLevel();
+            renderNestedArrays(ip, dtr, dimensionSize - 1);
+            ip.prevLevel();
         }
+    }
+
+    private void renderValue(IndententationPrinter ip, Runnable valueTypeRenderer) {
+        valueTypeRenderer.run(); // NOSONAR
+    }
+
+    private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
+        if (isMap) {
+            renderMapContainer(ip, valueTypeRenderer);
+        } else {
+            renderNonMapContainer(ip, valueTypeRenderer);
+        }
+    }
+
+    private void renderNonMapContainer(IndententationPrinter ip, Runnable valueTypeRenderer) {
+        renderArray(ip);
         ip.nextLevel();
-        valueTypeRendere.run(); // NOSONAR
+        renderValue(ip, valueTypeRenderer);
         ip.prevLevel();
     }
 
     private void renderArray(IndententationPrinter ip) {
         ip.add("type: array");
         ip.add("items:");
+    }
+
+    private void renderMapContainer(IndententationPrinter ip, Runnable valueTypeRenderer) {
+        ip.add("type: object");
+        ip.add("additionalProperties:");
+        ip.nextLevel();
+        renderValue(ip, valueTypeRenderer);
+        ip.prevLevel();
     }
 
     public void renderType(IndententationPrinter ip, Parameter parameter) {
@@ -172,5 +179,9 @@ public class DataTypeReferenceRenderer {
 
     private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
         ip.add("$ref: \"#/components/schemas/" + slug + "\"");
+    }
+
+    public boolean doRemoveObjectPrefix() {
+        return removeObjectPrefix;
     }
 }

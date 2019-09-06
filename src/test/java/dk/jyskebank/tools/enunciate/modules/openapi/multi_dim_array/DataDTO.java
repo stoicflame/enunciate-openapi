@@ -1,15 +1,14 @@
 package dk.jyskebank.tools.enunciate.modules.openapi.multi_dim_array;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.webcohesion.enunciate.metadata.rs.TypeHint;
-
-import java.util.List;
 
 @JsonRootName("multiDimArraySupport")
 public class DataDTO {
     private String name;
 
-    private List<int[]> temperatures;
+    private int[][][] temperatures;
+
+    private int[][] sudoku;
 
     private int[] locations;
 
@@ -21,12 +20,11 @@ public class DataDTO {
         this.name = name;
     }
 
-    @TypeHint(int[][].class)
-    public List<int[]> getTemperatures() {
+    public int[][][] getTemperatures() {
         return temperatures;
     }
 
-    public void setTemperatures(List<int[]> temperatures) {
+    public void setTemperatures(int[][][] temperatures) {
         this.temperatures = temperatures;
     }
 
@@ -36,5 +34,9 @@ public class DataDTO {
 
     public void setLocations(int[] locations) {
         this.locations = locations;
+    }
+
+    public int[][] getSudoku() {
+        return sudoku;
     }
 }
