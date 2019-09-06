@@ -64,7 +64,7 @@ public class DataTypeReferenceRenderer {
             }
         } else {
             if (hasContainers) {
-                if (containers.stream().noneMatch(c -> c.isMap())) {
+                if (isMultiDimensionalCollection(containers)) {
                     renderNestedArrays(ip, dtr, containers);
 
                 } else {
@@ -94,6 +94,10 @@ public class DataTypeReferenceRenderer {
                 }
             }
         }
+    }
+
+    private boolean isMultiDimensionalCollection(List<ContainerType> containers) {
+        return containers.stream().noneMatch(c -> c.isMap());
     }
 
     private void renderNestedArrays(IndententationPrinter ip, DataTypeReference dtr, List<ContainerType> containers) {
