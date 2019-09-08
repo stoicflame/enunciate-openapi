@@ -3,13 +3,15 @@ package dk.jyskebank.tools.enunciate.modules.openapi;
 import com.webcohesion.enunciate.api.datatype.BaseType;
 import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,94 +19,97 @@ class DataTypeReferenceRendererTest {
 
     private static final String DOS_NEWLINE = "\r\n";
 
+    private DataTypeReferenceRenderer renderer = new DataTypeReferenceRenderer(new OutputLogger(), false);
+    private List<DataTypeReference.ContainerType> containers = new ArrayList<>();
+    private DataTypeReference dtr = mock(DataTypeReference.class);
+    private final IndentationPrinter ip = TestHelper.getIndentationPrinter();
+    private final StringBuffer yamlBuffer = new StringBuffer();
+
+    @BeforeEach
+    public void init() {
+
+        System.out.println("Running init");
+        when(dtr.getBaseType()).thenReturn(BaseType.number);
+        when(dtr.getBaseTypeFormat()).thenReturn(BaseTypeFormat.INT32);
+        when(dtr.getContainers()).thenReturn(containers);
+    }
+
     @Test
     void verifyRenderingOfOneDimensionalArray() {
 
-
-        DataTypeReferenceRenderer renderer = new DataTypeReferenceRenderer(new OutputLogger(), false);
-
-        DataTypeReference dtr = mock(DataTypeReference.class);
-        List<DataTypeReference.ContainerType> containers = new ArrayList<>();
         containers.add(DataTypeReference.ContainerType.array);
-        when(dtr.getContainers()).thenReturn(containers);
-        when(dtr.getBaseType()).thenReturn(BaseType.number);
-        when(dtr.getBaseTypeFormat()).thenReturn(BaseTypeFormat.INT32);
-        final IndententationPrinter ip = TestHelper.getIndentationPrinter();
         renderer.render(ip, dtr, null);
 
-        final String expected = createExpectedResultOneDimensionalArray();
-        assertEquals(expected, ip.toString());
+        createExpectedResult(yamlBuffer, 1);
+        assertEquals(yamlBuffer.toString(), ip.toString());
     }
 
     @Test
     void verifyRenderingOfTwoDimensionalArray() {
 
-        DataTypeReferenceRenderer renderer = new DataTypeReferenceRenderer(new OutputLogger(), false);
-
-        DataTypeReference dtr = mock(DataTypeReference.class);
-        List<DataTypeReference.ContainerType> containers = new ArrayList<>();
         containers.add(DataTypeReference.ContainerType.array);
         containers.add(DataTypeReference.ContainerType.array);
-        when(dtr.getContainers()).thenReturn(containers);
-        when(dtr.getBaseType()).thenReturn(BaseType.number);
-        when(dtr.getBaseTypeFormat()).thenReturn(BaseTypeFormat.INT32);
 
-        final IndententationPrinter ip = TestHelper.getIndentationPrinter();
         renderer.render(ip, dtr, null);
 
-        final String expected = createExpectedResultTwoDimensionalArray();
-        assertEquals(expected, ip.toString());
+        createExpectedResult(yamlBuffer, 2);
+        assertEquals(yamlBuffer.toString(), ip.toString());
     }
 
     @Test
     void verifyRenderingOfThreeDimensionalArray() {
 
-        DataTypeReferenceRenderer renderer = new DataTypeReferenceRenderer(new OutputLogger(), false);
+        containers.add(DataTypeReference.ContainerType.array);
+        containers.add(DataTypeReference.ContainerType.array);
+        containers.add(DataTypeReference.ContainerType.array);
 
-        DataTypeReference dtr = mock(DataTypeReference.class);
-        List<DataTypeReference.ContainerType> containers = new ArrayList<>();
-        containers.add(DataTypeReference.ContainerType.array);
-        containers.add(DataTypeReference.ContainerType.array);
-        containers.add(DataTypeReference.ContainerType.array);
-        when(dtr.getContainers()).thenReturn(containers);
-        when(dtr.getBaseType()).thenReturn(BaseType.number);
-        when(dtr.getBaseTypeFormat()).thenReturn(BaseTypeFormat.INT32);
-
-        final IndententationPrinter ip = TestHelper.getIndentationPrinter();
         renderer.render(ip, dtr, null);
 
-        final String expected = createExpectedResultThreeDimensionalArray();
-        assertEquals(expected, ip.toString());
+        createExpectedResult(yamlBuffer, 3);
+        assertEquals(yamlBuffer.toString(), ip.toString());
     }
 
-    private String createExpectedResultOneDimensionalArray() {
-        return "type: array" + DOS_NEWLINE +
-                "items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  type: integer" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  format: int32";
-
-
+    // this method was added to simplify calling from tests above
+    private void createExpectedResult(StringBuffer yamlBuffer, int nestingDepth) {
+        createExpectedResult(yamlBuffer, nestingDepth, nestingDepth);
     }
 
-    private String createExpectedResultTwoDimensionalArray() {
-        return "type: array" + DOS_NEWLINE +
-                "items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  type: array" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "    type: integer" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "    format: int32";
+    /**
+     * @param yamlBuffer   expected result will be built up in this buffer
+     * @param currentLevel the array will be traversed from outer container down to value type
+     * @param nestingDepth total nesting depth
+     */
+    private void createExpectedResult(StringBuffer yamlBuffer, int currentLevel, int nestingDepth) {
 
-
+        if (currentLevel == 0) {
+            addValueType(yamlBuffer, currentLevel, nestingDepth);
+        } else {
+            addArrayType(yamlBuffer, currentLevel, nestingDepth);
+            createExpectedResult(yamlBuffer, currentLevel - 1, nestingDepth);
+        }
     }
 
-    private String createExpectedResultThreeDimensionalArray() {
-        return "type: array" + DOS_NEWLINE +
-                "items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  type: array" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "  items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "    type: array" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "    items:" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "      type: integer" + DOS_NEWLINE +
-                TestHelper.INITIAL_INDENTATION + "      format: int32";
+    private void addArrayType(StringBuffer sb, int level, int nestingDepth) {
+
+        String indenting = calculateIndenting(level, nestingDepth);
+        sb.append(indenting);
+        sb.append("type: array" + DOS_NEWLINE);
+        sb.append(indenting);
+        sb.append("items:" + DOS_NEWLINE);
     }
+
+    private void addValueType(StringBuffer sb, int level, int nestingDepth) {
+        String indenting = calculateIndenting(level, nestingDepth);
+        sb.append(indenting);
+        sb.append("type: integer" + DOS_NEWLINE);
+        sb.append(indenting);
+        sb.append("format: int32");
+    }
+
+    private String calculateIndenting(int level, int nestingDepth) {
+        final char[] a = new char[(nestingDepth - level) * 2];
+        Arrays.fill(a, ' ');
+        return new String(a);
+    }
+
 }
