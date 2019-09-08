@@ -20,7 +20,7 @@ import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 
 import dk.jyskebank.tools.enunciate.modules.freemarker.Typed1ArgTemplateMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 
 public class ResponseDataTypeRenderer extends Typed1ArgTemplateMethod<String, String> {
   @SuppressWarnings("unused") private final EnunciateLogger logger;
@@ -38,7 +38,7 @@ public class ResponseDataTypeRenderer extends Typed1ArgTemplateMethod<String, St
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
+    IndentationPrinter ip = new IndentationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
     dataTypeReferenceRenderer.render(ip, dataType, description);
     return ip.toString();

@@ -24,7 +24,7 @@ import com.webcohesion.enunciate.api.datatype.DataType;
 
 import dk.jyskebank.tools.enunciate.modules.freemarker.Typed1ArgTemplateMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 
 public class SchemaRenderer extends Typed1ArgTemplateMethod<String, String> {
   private static final Pattern VALID_REF_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9\\.\\-_]+$");
@@ -45,12 +45,12 @@ public class SchemaRenderer extends Typed1ArgTemplateMethod<String, String> {
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, objectTypeRenderer.doRemoveObjectPrefix());
+    IndentationPrinter ip = new IndentationPrinter(nextLineIndent, objectTypeRenderer.doRemoveObjectPrefix());
     renderLines(ip);
     return ip.toString();
   }
   
-  private void renderLines(IndententationPrinter ip) {
+  private void renderLines(IndentationPrinter ip) {
     ip.add(getRefId() + ":");
     objectTypeRenderer.render(ip, datatype, syntaxIsJson);
   }

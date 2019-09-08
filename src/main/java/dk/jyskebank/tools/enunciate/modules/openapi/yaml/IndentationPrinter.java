@@ -23,7 +23,7 @@ import java.util.Deque;
 /**
  * Printer helping keep track of YAML indentation levels.
  */
-public class IndententationPrinter {
+public class IndentationPrinter {
     private static final String DOS_NEWLINE = "\r\n";
     private static final String SEQUENCE_PREFIX = "- ";
     public static final String JSON_ = "json_";
@@ -33,7 +33,7 @@ public class IndententationPrinter {
     private boolean itemFollows;
     private boolean removeObjectPrefix;
 
-    public IndententationPrinter(String initialIndentation, boolean removeObjectPrefix) {
+    public IndentationPrinter(String initialIndentation, boolean removeObjectPrefix) {
         this.removeObjectPrefix = removeObjectPrefix;
         indentLevelStack.push(new IndentLevel(initialIndentation));
     }
@@ -46,12 +46,12 @@ public class IndententationPrinter {
         this.itemFollows = true;
     }
 
-    public IndententationPrinter item(String... lines) {
+    public IndentationPrinter item(String... lines) {
         itemFollows = true;
         return add(lines);
     }
 
-    public IndententationPrinter add(String... lines) {
+    public IndentationPrinter add(String... lines) {
         addIndentationForAllButFirstLine();
         for (String line : lines) {
             if (removeObjectPrefix) {
@@ -78,12 +78,12 @@ public class IndententationPrinter {
         }
     }
 
-    public IndententationPrinter nextLevel() {
+    public IndentationPrinter nextLevel() {
         indentLevelStack.push(getActive().next());
         return this;
     }
 
-    public IndententationPrinter prevLevel() {
+    public IndentationPrinter prevLevel() {
         if (indentLevelStack.size() == 1) {
             throw new IllegalStateException("Cannot go beyond initial indentation");
         }
@@ -91,12 +91,12 @@ public class IndententationPrinter {
         return this;
     }
 
-    public IndententationPrinter pushNextLevel() {
+    public IndentationPrinter pushNextLevel() {
         memoryStack.push(getActive());
         return nextLevel();
     }
 
-    public IndententationPrinter popLevel() {
+    public IndentationPrinter popLevel() {
         IndentLevel revertTo = memoryStack.pop();
         while (indentLevelStack.peek() != revertTo) {
             indentLevelStack.pop();

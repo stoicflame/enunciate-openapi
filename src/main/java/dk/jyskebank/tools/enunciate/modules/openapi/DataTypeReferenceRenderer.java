@@ -23,7 +23,7 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
 import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class DataTypeReferenceRenderer {
         this.removeObjectPrefix = removeObjectPrefix;
     }
 
-    public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
+    public void render(IndentationPrinter ip, DataTypeReference dtr, String description) {
         if (dtr == null) {
             throw new IllegalStateException("Cannot render null data type");
         }
@@ -99,7 +99,7 @@ public class DataTypeReferenceRenderer {
         return containers.stream().noneMatch(c -> c.isMap());
     }
 
-    private void renderNestedArrays(IndententationPrinter ip, DataTypeReference dtr, int dimensionSize) {
+    private void renderNestedArrays(IndentationPrinter ip, DataTypeReference dtr, int dimensionSize) {
 
         if (dimensionSize == 0) {
             renderValue(ip, () -> renderType(ip, dtr));
@@ -111,11 +111,11 @@ public class DataTypeReferenceRenderer {
         }
     }
 
-    private void renderValue(IndententationPrinter ip, Runnable valueTypeRenderer) {
+    private void renderValue(IndentationPrinter ip, Runnable valueTypeRenderer) {
         valueTypeRenderer.run(); // NOSONAR
     }
 
-    private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
+    private void renderContainer(IndentationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
         if (isMap) {
             renderMapContainer(ip, valueTypeRenderer);
         } else {
@@ -123,19 +123,19 @@ public class DataTypeReferenceRenderer {
         }
     }
 
-    private void renderNonMapContainer(IndententationPrinter ip, Runnable valueTypeRenderer) {
+    private void renderNonMapContainer(IndentationPrinter ip, Runnable valueTypeRenderer) {
         renderArray(ip);
         ip.nextLevel();
         renderValue(ip, valueTypeRenderer);
         ip.prevLevel();
     }
 
-    private void renderArray(IndententationPrinter ip) {
+    private void renderArray(IndentationPrinter ip) {
         ip.add("type: array");
         ip.add("items:");
     }
 
-    private void renderMapContainer(IndententationPrinter ip, Runnable valueTypeRenderer) {
+    private void renderMapContainer(IndentationPrinter ip, Runnable valueTypeRenderer) {
         ip.add("type: object");
         ip.add("additionalProperties:");
         ip.nextLevel();
@@ -143,30 +143,30 @@ public class DataTypeReferenceRenderer {
         ip.prevLevel();
     }
 
-    public void renderType(IndententationPrinter ip, Parameter parameter) {
+    public void renderType(IndentationPrinter ip, Parameter parameter) {
         renderType(ip, OpenApiTypeFormat.from(parameter));
     }
 
-    private void renderType(IndententationPrinter ip, DataTypeReference dtr) {
+    private void renderType(IndentationPrinter ip, DataTypeReference dtr) {
         renderType(ip, OpenApiTypeFormat.from(dtr));
     }
 
-    private void renderType(IndententationPrinter ip, OpenApiTypeFormat tf) {
+    private void renderType(IndentationPrinter ip, OpenApiTypeFormat tf) {
         ip.add("type: ", tf.getType());
         tf.getFormat().ifPresent(f -> ip.add("format: ", f));
     }
 
-    public void renderObsoletedFileFormat(IndententationPrinter ip) {
+    public void renderObsoletedFileFormat(IndentationPrinter ip) {
         logger.info("CALLING obsoleted format");
         //new Exception("bad code").printStackTrace();
         renderType(ip, OpenApiTypeFormat.BINARY_STREAM_TYPE);
     }
 
-    private static void addSchemaRef(IndententationPrinter ip, DataType value) {
+    private static void addSchemaRef(IndentationPrinter ip, DataType value) {
         addSchemaSlugReference(ip, value.getSlug());
     }
 
-    public void addSchemaRef(IndententationPrinter ip, DataTypeReference ref) {
+    public void addSchemaRef(IndentationPrinter ip, DataTypeReference ref) {
         logger.info("Looking at ref %s", ref.getBaseType());
 
         String slug = ref.getSlug();
@@ -177,7 +177,7 @@ public class DataTypeReferenceRenderer {
         }
     }
 
-    private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
+    private static void addSchemaSlugReference(IndentationPrinter ip, String slug) {
         ip.add("$ref: \"#/components/schemas/" + slug + "\"");
     }
 
