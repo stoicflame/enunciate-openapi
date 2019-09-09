@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: "Title from enunciate.xml"
   version: "version from enunciate.xml"
-  description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
+  description: ""
 servers:
 - url: "../.."
 paths:

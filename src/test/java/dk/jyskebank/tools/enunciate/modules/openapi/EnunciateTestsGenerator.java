@@ -25,6 +25,7 @@ public class EnunciateTestsGenerator {
 					.filter(Files::isDirectory)
 					.map(Path::getFileName)
 					.map(Path::toString)
+					.sorted()
 //					.filter("simple"::equals)
 					.map(name -> DynamicTest.dynamicTest(name, new EnunciateExec(name)::run))
 					.collect(toList());

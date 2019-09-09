@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <enunciate version="version from enunciate.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.11.1.xsd">
 	<title>Title from enunciate.xml</title>
-	<description>Description from enunciate.xml. Can contain weird letters æøåÆØÅ</description>
 
 	<modules disabledByDefault="true">
 		<openapi disabled="false" basePath="../.." skipBase="false" passThroughAnnotations="dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation,xxXxx" />
