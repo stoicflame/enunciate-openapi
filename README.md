@@ -56,6 +56,22 @@ You can also use a relative path. In this case, you should know that the base pa
 	  <modules>
 	    <openapi disabled="false" base="../src/main/enunciate/custom-swagger-ui"/>
 
+### Removing 'json_' prefix ###
+Enunciate generates output with the prefix 'json_'. To prevent this prefix from showing up in the OpenAPI service definition (openapi.yml), you
+can add the flag 'removeObjectPrefix'. The default value is 'false'.
+
+     <enunciate>
+	  <modules>
+	    <openapi disabled="false" removeObjectPrefix="true"/>
+
+### Excluding examples ###
+Enunciate provides the option to include examples of the request/response body, but if you use an Enum in it, the Enum value
+is chosen randomly. This can be inconvenient when you are developing because the output will always be different and this makes it hard to spot the changes that you are working on. 
+To alleviate this problem you can exclude the examples by setting the flag 'disableExamples=true' on the openapi element in enunciate.xml. The default value is 'false'.
+
+     <enunciate>
+	  <modules>
+	    <openapi disabled="false" disableExamples="true"/>
 
 ## Release ##
 

@@ -24,7 +24,7 @@ class ObjectTypeRendererTest {
     void verifyRenderAbstractType() {
 
         ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(new OutputLogger(), null
-                , null, false);
+                , null, false, false);
 
         IndententationPrinter ip = getIndentationPrinter();
         DataType abstractType = getAbstractTypeWithTwoSubtypes();
@@ -39,7 +39,7 @@ class ObjectTypeRendererTest {
     @Test
     void verifyRenderConcreteType() {
         ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(new OutputLogger(), null
-                , null, false);
+                , null, false, false);
 
         IndententationPrinter ip = getIndentationPrinter();
         DataType concreteType = getConcreteType();

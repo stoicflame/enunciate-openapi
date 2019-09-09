@@ -59,12 +59,14 @@ public class ObjectTypeRenderer {
     private final Set<String> passThroughAnnotations;
 
     private final boolean removeObjectPrefix;
+    private final boolean disableExamples;
 
-    public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer, Set<String> passThroughAnnotations, boolean removeObjectPrefix) {
+    public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer, Set<String> passThroughAnnotations, boolean removeObjectPrefix, boolean disableExamples) {
         this.logger = enunciateLogger;
         this.datatypeRefRenderer = datatypeRefRenderer;
         this.passThroughAnnotations = passThroughAnnotations;
         this.removeObjectPrefix = removeObjectPrefix;
+        this.disableExamples = disableExamples;
     }
 
     public void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
@@ -98,7 +100,9 @@ public class ObjectTypeRenderer {
         addOptionalEnum(ip, datatype);
         addOptionalXml(ip, datatype);
 
-        addOptionalExample(ip, datatype, syntaxIsJson);
+        if ( !disableExamples) {
+            addOptionalExample(ip, datatype, syntaxIsJson);
+        }
     }
 
     private void addOptionalSupertypeHeader(IndententationPrinter ip, DataType datatype) {
