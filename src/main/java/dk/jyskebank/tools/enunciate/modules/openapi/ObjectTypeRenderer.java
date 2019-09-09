@@ -49,7 +49,7 @@ import com.webcohesion.enunciate.api.datatype.Value;
 import com.webcohesion.enunciate.javac.javadoc.JavaDoc;
 import com.webcohesion.enunciate.metadata.DocumentationExample;
 
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.JsonToYamlHelper;
 
 public class ObjectTypeRenderer {
@@ -69,7 +69,7 @@ public class ObjectTypeRenderer {
         this.disableExamples = disableExamples;
     }
 
-    public void render(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+    public void render(IndentationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         logger.info("Rendering type " + datatype.getLabel());
         ip.pushNextLevel();
 
@@ -86,11 +86,11 @@ public class ObjectTypeRenderer {
         ip.popLevel();
     }
 
-    private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
+    private static void addSchemaSlugReference(IndentationPrinter ip, String slug) {
         ip.add(String.format(JSON_REF_FORMAT, slug));
     }
 
-    private void renderConcreteType(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+    private void renderConcreteType(IndentationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         ip.add("title: ", safeYamlString(datatype.getLabel()));
         addOptionalSupertypeHeader(ip, datatype);
 
@@ -105,7 +105,7 @@ public class ObjectTypeRenderer {
         }
     }
 
-    private void addOptionalSupertypeHeader(IndententationPrinter ip, DataType datatype) {
+    private void addOptionalSupertypeHeader(IndentationPrinter ip, DataType datatype) {
         List<DataTypeReference> supertypes = datatype.getSupertypes();
         if (supertypes == null || supertypes.isEmpty()) {
             return;
@@ -121,7 +121,7 @@ public class ObjectTypeRenderer {
         ip.itemFollows();
     }
 
-    private void addOptionalRequired(IndententationPrinter ip, DataType datatype) {
+    private void addOptionalRequired(IndentationPrinter ip, DataType datatype) {
         List<? extends Property> properties = datatype.getProperties();
         if (properties == null) {
             return;
@@ -163,7 +163,7 @@ public class ObjectTypeRenderer {
         }
     }
 
-    private void addOptionalEnum(IndententationPrinter ip, DataType datatype) {
+    private void addOptionalEnum(IndentationPrinter ip, DataType datatype) {
         List<? extends Value> values = datatype.getValues();
         if (values == null || values.isEmpty()) {
             return;
@@ -175,7 +175,7 @@ public class ObjectTypeRenderer {
         renderEnum(ip, enums);
     }
 
-    public void renderEnum(IndententationPrinter ip, List<String> values) {
+    public void renderEnum(IndentationPrinter ip, List<String> values) {
         ip.add("enum:");
         ip.nextLevel();
         for (String e : values) {
@@ -184,7 +184,7 @@ public class ObjectTypeRenderer {
         ip.prevLevel();
     }
 
-    private void addOptionalProperties(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+    private void addOptionalProperties(IndentationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         List<? extends Property> properties = datatype.getProperties();
         if (properties == null || properties.isEmpty()) {
             return;
@@ -198,7 +198,7 @@ public class ObjectTypeRenderer {
         ip.prevLevel();
     }
 
-    private void addProperty(IndententationPrinter ip, DataType datatype, Property p, boolean syntaxIsJson) {
+    private void addProperty(IndentationPrinter ip, DataType datatype, Property p, boolean syntaxIsJson) {
         logger.info(" adding property " + p.getName() + " with annotations " + p.getAnnotations().keySet());
 
         ip.add("\"" + p.getName() + "\"", ":");
@@ -222,7 +222,7 @@ public class ObjectTypeRenderer {
         ip.prevLevel();
     }
 
-    private void addPassThroughAnnotations(IndententationPrinter ip, Property p) {
+    private void addPassThroughAnnotations(IndentationPrinter ip, Property p) {
         List<String> annotations = p.getAnnotations().entrySet().stream()
                 .filter(e -> passThroughAnnotations.contains(e.getKey()))
                 .map(e -> renderAnnotation(e.getKey(), e.getValue().getElementValues()))
@@ -254,7 +254,7 @@ public class ObjectTypeRenderer {
         return sb.toString();
     }
 
-    private static void addConstraints(IndententationPrinter ip, Property p) {
+    private static void addConstraints(IndentationPrinter ip, Property p) {
         List<ContainerType> containers = p.getDataType().getContainers();
         boolean isArray = containers != null && !containers.isEmpty();
 
@@ -293,7 +293,7 @@ public class ObjectTypeRenderer {
         }
     }
 
-    private void addOptionalNullable(IndententationPrinter ip, Property p) {
+    private void addOptionalNullable(IndentationPrinter ip, Property p) {
         getNillable(p).ifPresent(isNullable -> {
             if (!TypeHelper.renderAsSimpleRef(p.getDataType())) {
                 ip.add("nullable: ", isNullable);
@@ -301,7 +301,7 @@ public class ObjectTypeRenderer {
         });
     }
 
-    private void addNamespaceXml(IndententationPrinter ip, Property p) {
+    private void addNamespaceXml(IndentationPrinter ip, Property p) {
         PropertyMetadata metadata = AccessorProperty.getMetadata(p);
         if (metadata == null) {
             return;
@@ -351,7 +351,7 @@ public class ObjectTypeRenderer {
                 .findFirst();
     }
 
-    private void addOptionalXml(IndententationPrinter ip, DataType datatype) {
+    private void addOptionalXml(IndentationPrinter ip, DataType datatype) {
         String xmlName = getNonNullAndNonEmpty(AccessorDataType.getXmlName(datatype));
 
         Namespace namespace = datatype.getNamespace();
@@ -379,7 +379,7 @@ public class ObjectTypeRenderer {
         return str.isEmpty() ? null : str;
     }
 
-    private static void addOptionalExample(IndententationPrinter ip, DataType datatype, boolean syntaxIsJson) {
+    private static void addOptionalExample(IndentationPrinter ip, DataType datatype, boolean syntaxIsJson) {
         if (!syntaxIsJson) {
             return;
         }
@@ -387,7 +387,7 @@ public class ObjectTypeRenderer {
         renderExample(ip, getExampleFromType(datatype, datatype.getBaseType(), Optional.empty()));
     }
 
-    private static void addOptionalPropertyExample(IndententationPrinter ip, Property property, boolean syntaxIsJson) {
+    private static void addOptionalPropertyExample(IndentationPrinter ip, Property property, boolean syntaxIsJson) {
         if (!syntaxIsJson) {
             return;
         }
@@ -397,7 +397,7 @@ public class ObjectTypeRenderer {
         renderExample(ip, getExampleFromType(null, baseType, specifiedExample));
     }
 
-    private static void renderExample(IndententationPrinter ip, Optional<String> optExample) {
+    private static void renderExample(IndentationPrinter ip, Optional<String> optExample) {
         optExample.ifPresent(example -> {
             ip.add("example:");
             ip.pushNextLevel();

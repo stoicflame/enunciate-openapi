@@ -24,7 +24,7 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import dk.jyskebank.tools.enunciate.modules.freemarker.Typed1ArgTemplateMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 
 public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
   @SuppressWarnings("unused") private final EnunciateLogger logger;
@@ -42,7 +42,7 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
 
   @Override
   protected String exec(String nextLineIndent) {
-    IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
+    IndentationPrinter ip = new IndentationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
     addOptionalEnum(ip);
     addType(ip);
@@ -50,7 +50,7 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
     return ip.toString();
   }
 
-  private void addType(IndententationPrinter ip) {
+  private void addType(IndentationPrinter ip) {
     if (parameter.isMultivalued()) {
       ip.add("type: array");
       ip.add("items:");
@@ -62,7 +62,7 @@ public class ParameterRenderer extends Typed1ArgTemplateMethod<String, String> {
     }
   }
 
-  private void addOptionalEnum(IndententationPrinter ip) {
+  private void addOptionalEnum(IndentationPrinter ip) {
     Set<String> constraintValues = parameter.getConstraintValues();
     if (constraintValues != null && !constraintValues.isEmpty()) {
       objectTypeRenderer.renderEnum(ip, new ArrayList<>(constraintValues));

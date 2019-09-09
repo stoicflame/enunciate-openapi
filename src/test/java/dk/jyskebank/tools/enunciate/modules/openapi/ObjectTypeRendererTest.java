@@ -3,7 +3,7 @@ package dk.jyskebank.tools.enunciate.modules.openapi;
 import com.webcohesion.enunciate.api.datatype.BaseType;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 class ObjectTypeRendererTest {
 
-    public static final String INITIAL_INDENTATION = "x";
+
     public static final String CONCRETE_TYPE_LABEL = "ConcreteX";
 
     @Test
@@ -26,7 +26,7 @@ class ObjectTypeRendererTest {
         ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(new OutputLogger(), null
                 , null, false, false);
 
-        IndententationPrinter ip = getIndentationPrinter();
+        IndentationPrinter ip = TestHelper.getIndentationPrinter();
         DataType abstractType = getAbstractTypeWithTwoSubtypes();
 
         objectTypeRenderer.render(ip, abstractType, true);
@@ -41,7 +41,7 @@ class ObjectTypeRendererTest {
         ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(new OutputLogger(), null
                 , null, false, false);
 
-        IndententationPrinter ip = getIndentationPrinter();
+        IndentationPrinter ip = TestHelper.getIndentationPrinter();
         DataType concreteType = getConcreteType();
 
         objectTypeRenderer.render(ip, concreteType, false);
@@ -56,7 +56,7 @@ class ObjectTypeRendererTest {
         return String.format("title: \"%s\"%s%s  type: string",
                 CONCRETE_TYPE_LABEL,
                 DOS_NEWLINE,
-                INITIAL_INDENTATION);
+                TestHelper.INITIAL_INDENTATION);
     }
 
     private DataType getConcreteType() {
@@ -77,10 +77,10 @@ class ObjectTypeRendererTest {
         String DOS_NEWLINE = "\r\n";
         return String.format("oneOf: %s%s  %s%s%s  %s",
                 DOS_NEWLINE,
-                INITIAL_INDENTATION,
+                TestHelper.INITIAL_INDENTATION,
                 getJsonRefForSubType("A"),
                 DOS_NEWLINE,
-                INITIAL_INDENTATION,
+                TestHelper.INITIAL_INDENTATION,
                 getJsonRefForSubType("B"));
     }
 
@@ -88,9 +88,7 @@ class ObjectTypeRendererTest {
         return String.format(JSON_REF_FORMAT, a);
     }
 
-    private IndententationPrinter getIndentationPrinter() {
-        return new IndententationPrinter(INITIAL_INDENTATION, false);
-    }
+
 
     private DataType getAbstractTypeWithTwoSubtypes() {
 

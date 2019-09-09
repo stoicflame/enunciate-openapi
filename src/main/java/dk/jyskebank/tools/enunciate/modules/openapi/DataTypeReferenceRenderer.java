@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package dk.jyskebank.tools.enunciate.modules.openapi;
-
-import java.util.List;
 
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.DataType;
@@ -25,124 +23,165 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
 import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
-
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
+import java.util.List;
+
 public class DataTypeReferenceRenderer {
-	private final EnunciateLogger logger;
-	private boolean removeObjectPrefix;
+    private final EnunciateLogger logger;
+    private boolean removeObjectPrefix;
 
-	public DataTypeReferenceRenderer(EnunciateLogger logger, boolean removeObjectPrefix) {
-		this.logger = logger;
-		this.removeObjectPrefix = removeObjectPrefix;
-	}
-  
-  	public void render(IndententationPrinter ip, DataTypeReference dtr, String description) {
-	    if (dtr == null) {
-	      throw new IllegalStateException("Cannot render null data type");
-	    }
-    
-	    logger.info("  render type for " + dtr.getContainers());
-    
-	    DataType value = dtr.getValue();
-	    List<ContainerType> containers = dtr.getContainers();
-	    boolean hasContainers = containers != null && !containers.isEmpty();
-	    
-	    if (TypeHelper.renderAsSimpleRef(dtr)) {
-    		addSchemaRef(ip, value);
-    		return;
-	    }
-	    
-	    if (description != null && !description.isEmpty()) {
-	      ip.add("description: ", YamlHelper.safeYamlString(description));
-	    }
-
-		if (value != null) {
-    		for (ContainerType ct : containers) {
-    			renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
-    		}
-	    } else {
-	    	if (hasContainers) {
-	    		for (ContainerType ct : containers) {
-	    			renderContainer(ip, ct.isMap(), () -> renderType(ip, dtr));
-	    		}
-	    	} else {
-	    		// FIXME: Conversion to DataTypeReferenceImpl must be broken in Jaxb frontend
-	    		boolean workaroundRendering = false;
-	    		if (dtr instanceof DataTypeReferenceImpl) {
-	    			XmlType xmlType = ((DataTypeReferenceImpl)dtr).getXmlType();
-	    			if (xmlType instanceof MapXmlType) {
-	    				MapXmlType mapXmlType = ((MapXmlType)xmlType);
-	    				if (mapXmlType.getKeyType().isSimple() && mapXmlType.getValueType().isSimple()) {
-	    					logger.info("Workaround rendering of simple map");
-	    					renderContainer(ip, true, () -> ip.add("type: string"));
-	    					workaroundRendering = true;
-	    				} else {
-	    					logger.info("Unhandled map with types " + mapXmlType.getKeyType() + " : " + mapXmlType.getValueType());
-	    				}
-	    			}
-	    		}
-	    		
-	    		if (!workaroundRendering) {
-	    			renderType(ip, dtr);
-	    		}
-	    	}
-	    }
-  	}
-
-	public boolean doRemoveObjectPrefix() {
-		return removeObjectPrefix;
-	}
-
-  private void renderContainer(IndententationPrinter ip, boolean isMap, Runnable valueTypeRendere) {
-      if (isMap) {
-    	  ip.add("type: object");
-    	  ip.add("additionalProperties:");
-        } else {
-            ip.add("type: array");
-            ip.add("items:");
-        }
-        ip.nextLevel();
-        valueTypeRendere.run(); // NOSONAR
-        ip.prevLevel();
-  }
-
-  public void renderType(IndententationPrinter ip, Parameter parameter) {
-	  renderType(ip, OpenApiTypeFormat.from(parameter));
-  }
-  
-  private void renderType(IndententationPrinter ip, DataTypeReference dtr) {
-	  renderType(ip, OpenApiTypeFormat.from(dtr));
-  }
-  
-  private void renderType(IndententationPrinter ip, OpenApiTypeFormat tf) {
-	  ip.add("type: ", tf.getType());
-	  tf.getFormat().ifPresent(f -> ip.add("format: ", f));
-  }
-  
-  public void renderObsoletedFileFormat(IndententationPrinter ip) {
-	  logger.info("CALLING obsoleted format");
-	  //new Exception("bad code").printStackTrace();
-	  renderType(ip, OpenApiTypeFormat.BINARY_STREAM_TYPE);
-  }
-
-  private static void addSchemaRef(IndententationPrinter ip, DataType value) {
-    addSchemaSlugReference(ip, value.getSlug());
-  }
-
-  public void addSchemaRef(IndententationPrinter ip, DataTypeReference ref) {
-	  logger.info("Looking at ref %s",  ref.getBaseType());
-	  
-    String slug = ref.getSlug();
-    if (slug != null && !slug.isEmpty()) {
-      addSchemaSlugReference(ip, slug);
-    } else {
-    	renderType(ip, ref);
+    public DataTypeReferenceRenderer(EnunciateLogger logger, boolean removeObjectPrefix) {
+        this.logger = logger;
+        this.removeObjectPrefix = removeObjectPrefix;
     }
-  }
 
-  private static void addSchemaSlugReference(IndententationPrinter ip, String slug) {
-    ip.add("$ref: \"#/components/schemas/" + slug + "\"");
-  }
+    public void render(IndentationPrinter ip, DataTypeReference dtr, String description) {
+        if (dtr == null) {
+            throw new IllegalStateException("Cannot render null data type");
+        }
+
+        logger.info("  render type for " + dtr.getContainers());
+
+        DataType value = dtr.getValue();
+        List<ContainerType> containers = dtr.getContainers();
+        boolean hasContainers = containers != null && !containers.isEmpty();
+
+        if (TypeHelper.renderAsSimpleRef(dtr)) {
+            addSchemaRef(ip, value);
+            return;
+        }
+
+        if (description != null && !description.isEmpty()) {
+            ip.add("description: ", YamlHelper.safeYamlString(description));
+        }
+
+        if (value != null) {
+            for (ContainerType ct : containers) {
+                renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
+            }
+        } else {
+            if (hasContainers) {
+                if (isMultiDimensionalCollection(containers)) {
+                    renderNestedArrays(ip, dtr, containers.size());
+
+                } else {
+                    for (ContainerType ct : containers) {
+                        renderContainer(ip, ct.isMap(), () -> renderType(ip, dtr));
+                    }
+                }
+            } else {
+                // FIXME: Conversion to DataTypeReferenceImpl must be broken in Jaxb frontend
+                boolean workaroundRendering = false;
+                if (dtr instanceof DataTypeReferenceImpl) {
+                    XmlType xmlType = ((DataTypeReferenceImpl) dtr).getXmlType();
+                    if (xmlType instanceof MapXmlType) {
+                        MapXmlType mapXmlType = ((MapXmlType) xmlType);
+                        if (mapXmlType.getKeyType().isSimple() && mapXmlType.getValueType().isSimple()) {
+                            logger.info("Workaround rendering of simple map");
+                            renderContainer(ip, true, () -> ip.add("type: string"));
+                            workaroundRendering = true;
+                        } else {
+                            logger.info("Unhandled map with types " + mapXmlType.getKeyType() + " : " + mapXmlType.getValueType());
+                        }
+                    }
+                }
+
+                if (!workaroundRendering) {
+                    renderType(ip, dtr);
+                }
+            }
+        }
+    }
+
+    private boolean isMultiDimensionalCollection(List<ContainerType> containers) {
+        return containers.stream().noneMatch(c -> c.isMap());
+    }
+
+    private void renderNestedArrays(IndentationPrinter ip, DataTypeReference dtr, int dimensionSize) {
+
+        if (dimensionSize == 0) {
+            renderValue(ip, () -> renderType(ip, dtr));
+        } else {
+            renderArray(ip);
+            ip.nextLevel();
+            renderNestedArrays(ip, dtr, dimensionSize - 1);
+            ip.prevLevel();
+        }
+    }
+
+    private void renderValue(IndentationPrinter ip, Runnable valueTypeRenderer) {
+        valueTypeRenderer.run(); // NOSONAR
+    }
+
+    private void renderContainer(IndentationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
+        if (isMap) {
+            renderMapContainer(ip, valueTypeRenderer);
+        } else {
+            renderNonMapContainer(ip, valueTypeRenderer);
+        }
+    }
+
+    private void renderNonMapContainer(IndentationPrinter ip, Runnable valueTypeRenderer) {
+        renderArray(ip);
+        ip.nextLevel();
+        renderValue(ip, valueTypeRenderer);
+        ip.prevLevel();
+    }
+
+    private void renderArray(IndentationPrinter ip) {
+        ip.add("type: array");
+        ip.add("items:");
+    }
+
+    private void renderMapContainer(IndentationPrinter ip, Runnable valueTypeRenderer) {
+        ip.add("type: object");
+        ip.add("additionalProperties:");
+        ip.nextLevel();
+        renderValue(ip, valueTypeRenderer);
+        ip.prevLevel();
+    }
+
+    public void renderType(IndentationPrinter ip, Parameter parameter) {
+        renderType(ip, OpenApiTypeFormat.from(parameter));
+    }
+
+    private void renderType(IndentationPrinter ip, DataTypeReference dtr) {
+        renderType(ip, OpenApiTypeFormat.from(dtr));
+    }
+
+    private void renderType(IndentationPrinter ip, OpenApiTypeFormat tf) {
+        ip.add("type: ", tf.getType());
+        tf.getFormat().ifPresent(f -> ip.add("format: ", f));
+    }
+
+    public void renderObsoletedFileFormat(IndentationPrinter ip) {
+        logger.info("CALLING obsoleted format");
+        //new Exception("bad code").printStackTrace();
+        renderType(ip, OpenApiTypeFormat.BINARY_STREAM_TYPE);
+    }
+
+    private static void addSchemaRef(IndentationPrinter ip, DataType value) {
+        addSchemaSlugReference(ip, value.getSlug());
+    }
+
+    public void addSchemaRef(IndentationPrinter ip, DataTypeReference ref) {
+        logger.info("Looking at ref %s", ref.getBaseType());
+
+        String slug = ref.getSlug();
+        if (slug != null && !slug.isEmpty()) {
+            addSchemaSlugReference(ip, slug);
+        } else {
+            renderType(ip, ref);
+        }
+    }
+
+    private static void addSchemaSlugReference(IndentationPrinter ip, String slug) {
+        ip.add("$ref: \"#/components/schemas/" + slug + "\"");
+    }
+
+    public boolean doRemoveObjectPrefix() {
+        return removeObjectPrefix;
+    }
 }

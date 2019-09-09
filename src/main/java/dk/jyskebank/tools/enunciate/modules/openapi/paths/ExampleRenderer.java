@@ -21,7 +21,7 @@ import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.Example;
 
 import dk.jyskebank.tools.enunciate.modules.freemarker.Typed1ArgTemplateMethod;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.JsonToYamlHelper;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
 
@@ -40,7 +40,7 @@ public class ExampleRenderer extends Typed1ArgTemplateMethod<String, String> {
 
     @Override
     protected String exec(String nextLineIndent) {
-        IndententationPrinter ip = new IndententationPrinter(nextLineIndent, removeObjectPrefix);
+        IndentationPrinter ip = new IndentationPrinter(nextLineIndent, removeObjectPrefix);
 
         if ("js".equals(example.getLang())) {
             String yaml = JsonToYamlHelper.jsonToYaml(example.getBody());

@@ -23,7 +23,7 @@ import dk.jyskebank.tools.enunciate.modules.freemarker.Typed1ArgTemplateMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod.MediaAndType;
-import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndententationPrinter;
+import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 
 public class RequestEntityRenderer extends Typed1ArgTemplateMethod<String, String> {
   private MediaAndType mediaAndType;
@@ -42,7 +42,7 @@ public class RequestEntityRenderer extends Typed1ArgTemplateMethod<String, Strin
   
   @Override
   protected String exec(String nextLineIndent) {
-      IndententationPrinter ip = new IndententationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
+      IndentationPrinter ip = new IndentationPrinter(nextLineIndent, dataTypeReferenceRenderer.doRemoveObjectPrefix());
 
       ip.add(safeYamlString(mediaWithFallback), ":");
       ip.nextLevel();
