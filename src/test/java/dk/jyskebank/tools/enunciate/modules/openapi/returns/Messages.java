@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.ObjectMapper;
-
 @XmlRootElement
 public class Messages {
 	
@@ -26,24 +23,5 @@ public class Messages {
 			return;
 		}
 		this.messages.add(newMessage);
-	}
-
-	@JsonIgnore
-	public boolean isNotOk() {
-		return messages.stream().anyMatch("error"::equals);
-	}
-
-	@JsonIgnore
-	public boolean isOK() {
-		return !isNotOk();
-	}
-
-	@Override
-	public String toString() {
-		try {
-			return new ObjectMapper().writeValueAsString(this);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 }

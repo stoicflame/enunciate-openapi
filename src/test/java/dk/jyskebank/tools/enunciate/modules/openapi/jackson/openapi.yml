@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: ""
+servers: []
+paths:
+  "/jackson/bad-duplets":
+    get:
+      description: ""
+      tags:
+        - "Data"
+      summary: ""
+      deprecated: false
+      operationId: getDuplet
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/json_DupletAnnotationsDto"
+ 
+  "/jackson/ignore":
+    get:
+      description: ""
+      tags:
+        - "Data"
+      summary: ""
+      deprecated: false
+      operationId: getIgnore
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/json_IgnoreMethodsDto"
+ 
+  "/jackson/ordering":
+    get:
+      description: ""
+      tags:
+        - "Data"
+      summary: ""
+      deprecated: false
+      operationId: get
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/json_PropertyOrderingDto"
+ 
+components:
+  schemas:
+    "json_DupletAnnotationsDto":
+      title: "DupletAnnotationsDto"
+      type: object
+      properties:
+        "Duplet":
+          type: string
+        "Valid":
+          type: string
+        "AlsoValid":
+          type: string
+      example:
+        Duplet: "..."
+        Valid: "..."
+        AlsoValid: "..."
+    "json_IgnoreMethodsDto":
+      title: "IgnoreMethodsDto"
+      type: object
+      properties:
+        "data":
+          type: string
+      example:
+        data: "..."
+    "json_PropertyOrderingDto":
+      title: "madness"
+      type: object
+      properties:
+        "first":
+          type: string
+        "last":
+          type: string
+      example:
+        first: "..."
+        last: "..."

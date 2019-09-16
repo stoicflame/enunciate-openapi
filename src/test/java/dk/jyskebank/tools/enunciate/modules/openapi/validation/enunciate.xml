@@ -2,10 +2,15 @@
 <enunciate version="version from enunciate.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.11.1.xsd">
 	<title>Title from enunciate.xml</title>
 
+	<api-classes>
+		<include pattern="dk.jyskebank.tools.enunciate.modules.openapi.validation.*" />
+	</api-classes>
+
 	<modules disabledByDefault="true">
-		<openapi disabled="false" basePath="../.." skipBase="false" passThroughAnnotations="dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation,xxXxx" />
+		<openapi disabled="false" skipBase="false" />
 		<jaxrs groupBy="annotation" disabled="false" />
-		<jackson1 disabled="false" />
+		<jackson1 disabled="true" />
+		<jackson disabled="false" />
 		<jaxb disabled="false" />
 		<jaxrs disabled="false" />
 	</modules>

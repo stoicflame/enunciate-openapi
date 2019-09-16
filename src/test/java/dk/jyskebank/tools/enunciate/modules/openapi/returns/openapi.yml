@@ -96,8 +96,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_DataDTO"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
         "400":
           description: "Bad request, inspect response payload for error details"
           content:
@@ -105,8 +105,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
         "401":
           description: "Unauthorized, please provide valid Authentication header"
           content:
@@ -114,8 +114,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
         "403":
           description: "Forbidden, user does not have permission"
           content:
@@ -123,8 +123,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
         "404":
           description: "Not Found, inspect response for more info"
           content:
@@ -132,8 +132,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
         "500":
           description: "Internal Server Error, Unexpected server error"
           content:
@@ -141,8 +141,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
               example:
-                first: "..."
                 last: "..."
+                first: "..."
  
     put:
       description: "Summary.\n\nDescription follows..."
@@ -290,35 +290,26 @@ paths:
  
 components:
   schemas:
+    "json_DataDTO":
+      title: "DataDTO"
+      type: object
+      properties:
+        "last":
+          type: string
+        "first":
+          type: string
+      example:
+        last: "..."
+        first: "..."
     "json_Messages":
       title: "Messages"
       type: object
-      required:
-      - "notOk"
-      - "OK"
       properties:
         "messages":
           type: array
           items:
             type: string
-        "notOk":
-          type: boolean
-        "OK":
-          type: boolean
       example:
         messages:
         - "..."
         - "..."
-        notOk: true
-        OK: true
-    "json_DataDTO":
-      title: "madness"
-      type: object
-      properties:
-        "first":
-          type: string
-        "last":
-          type: string
-      example:
-        first: "..."
-        last: "..."

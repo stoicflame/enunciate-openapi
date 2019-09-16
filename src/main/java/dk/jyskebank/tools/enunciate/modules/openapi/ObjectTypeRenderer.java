@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -190,10 +191,18 @@ public class ObjectTypeRenderer {
             return;
         }
 
+        Set<String> processedProperties = new HashSet<>();
+        
         ip.add("properties:");
         ip.nextLevel();
         for (Property p : properties) {
-            addProperty(ip, datatype, p, syntaxIsJson);
+        	String name = p.getName();
+			if (processedProperties.contains(name)) {
+				logger.info(" ignoring duplet property {}", name);
+			} else {
+        		addProperty(ip, datatype, p, syntaxIsJson);
+        		processedProperties.add(name);
+        	}
         }
         ip.prevLevel();
     }
