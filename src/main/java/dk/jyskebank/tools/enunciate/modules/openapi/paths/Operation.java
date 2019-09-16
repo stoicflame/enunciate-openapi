@@ -87,7 +87,7 @@ public class Operation {
   }
   
   public String getOperationId() {
-    return operationIds.getOperationId(method.getSlug(), method.getDeveloperLabel());
+    return operationIds.getOperationId(method);
   }
   
   public boolean getHasParameters() {

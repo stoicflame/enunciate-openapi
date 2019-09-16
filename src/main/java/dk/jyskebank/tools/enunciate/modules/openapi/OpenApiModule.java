@@ -206,10 +206,12 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
       ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix(), disableExamples());
       
+      OperationIds operationIds = new OperationIds(logger, resourceApis);
+      
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
       model.put("info", new Info(logger, enunciate.getConfiguration(), context)); 
-      model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, new OperationIds(), enunciate.getConfiguration(), context, resourceApis));
+      model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, operationIds, enunciate.getConfiguration(), context, resourceApis));
       model.put("servers", new Servers(logger, enunciate.getConfiguration(), config));
       Set<Syntax> syntaxes = apiRegistry.getSyntaxes(apiRegistrationContext);
       model.put("components", new Components(logger, objectTypeRenderer, syntaxes));

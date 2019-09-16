@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: ""
+servers: []
+paths:
+  "/operationid/conflict":
+    get:
+      description: ""
+      tags:
+        - "Other"
+      summary: ""
+      deprecated: false
+      operationId: conflict
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/operationid/conflict/{id}":
+    get:
+      description: ""
+      tags:
+        - "Other"
+      summary: ""
+      deprecated: false
+      operationId: conflict_id
+      parameters:
+      - name: "id"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: integer
+          format: int64
+        style: simple
+      responses:
+        "200":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+  "/operationid/conflict/other/{id}":
+    put:
+      description: ""
+      tags:
+        - "Other"
+      summary: ""
+      deprecated: false
+      operationId: conflict_id_dto
+      parameters:
+      - name: "id"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: integer
+          format: int64
+        style: simple
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "application/json":
+            schema:
+              type: string
+      responses:
+        "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+ 
+components: {}
