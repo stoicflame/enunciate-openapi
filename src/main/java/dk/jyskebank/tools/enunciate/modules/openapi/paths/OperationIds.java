@@ -22,12 +22,16 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.resources.Method;
 import com.webcohesion.enunciate.api.resources.Parameter;
-import com.webcohesion.enunciate.api.resources.ResourceApi;
+import com.webcohesion.enunciate.api.resources.Resource;
+
+import dk.jyskebank.tools.enunciate.modules.openapi.LocalEnunciateModel;
 
 /**
  * Provides unique operationIds to methods.
@@ -37,70 +41,80 @@ import com.webcohesion.enunciate.api.resources.ResourceApi;
 */
 public class OperationIds {
 	private final EnunciateLogger logger;
-	private final Map<String, String> uidToOperationid;
+	private final Map<Method, String> uidToOperationid;
+	private final LocalEnunciateModel model;
 
-	public OperationIds(EnunciateLogger logger, List<ResourceApi> resourceApis) {
+	public OperationIds(EnunciateLogger logger, LocalEnunciateModel model) {
 		this.logger = logger;
+		this.model = model;
 		
-		uidToOperationid = preComputeOperationIds(resourceApis);
+		uidToOperationid = preComputeOperationIds();
 	}
+	
+	int uniq = 0;
 
 	public String getOperationId(Method m) {
-		String uId = toUniqueId(m);
-		String id = uidToOperationid.get(uId);
-		logger.debug("Operation ID %s -> %s", uId, id);
+		String id = uidToOperationid.get(m);
+		logger.debug("Operation ID %s -> %s", Objects.toString(m), id);
 		return id;
 	}
 
-	private Map<String, String> preComputeOperationIds(List<ResourceApi> resourceApis) {
-		Set<Method> allMethods = resourceApis.stream()
-				.flatMap(ra -> ra.getResourceGroups().stream())
+	private Map<Method, String> preComputeOperationIds() {
+		Set<Method> allMethods = model.streamResourceGroups()
 				.flatMap(rg -> rg.getResources().stream())
 				.flatMap(r -> r.getMethods().stream())
 				.collect(toSet());
-		
+
 		Map<String, List<Method>> preferredLabels = allMethods.stream()
 				.collect(groupingBy(Method::getDeveloperLabel));
 
 		return allMethods.stream()
-			.collect(toMap(this::toUniqueId, m -> makeOperationId(preferredLabels, m)));
+			.collect(toMap(m -> m, m -> makeOperationId(preferredLabels, m)));
 	}
-	
+
+	// Try to keep operationId simple, but add more info if required
+	// Fall-back is to use label+hash(path)
 	private String makeOperationId(Map<String, List<Method>> preferredLabels, Method m) {
-		String assignedLabel = m.getDeveloperLabel();
-		List<? extends Parameter> parameters = m.getParameters();
+		String wantedLabel = m.getDeveloperLabel();
 
-		List<Method> contenders = preferredLabels.get(assignedLabel);
+		List<Method> contenders = preferredLabels.get(wantedLabel);
 		if (contenders.size() == 1) {
-			return assignedLabel;
-		}
-		
-		if (!parameters.isEmpty()) {
-			String args = parameters.stream()
-				.map(Parameter::getName)
-				.collect(joining("_"));
-			assignedLabel =  assignedLabel + "_" + args;
+			return wantedLabel;
 		}
 
-		if (m.getRequestEntity() != null) {
-			assignedLabel = assignedLabel + "_dto";
+		String assignedLabel;
+		String idWithArgNames = argumentNames(m);
+		String idWithArgNameTypes = argumentNameTypes(m);
+
+		if (isNameUnique(contenders, this::argumentNames, idWithArgNames)) {
+			assignedLabel = wantedLabel + "_" + idWithArgNames;
+		} else if (isNameUnique(contenders, this::argumentNameTypes, idWithArgNameTypes)) {
+			assignedLabel = wantedLabel + "_" + idWithArgNameTypes;
+		} else {
+			Resource r = model.findParentResource(m);
+			assignedLabel = wantedLabel + "_" + Integer.toHexString(r.getPath().hashCode());
 		}
-		
 		logger.debug("Contention on method : %s:%s => %s", m.getSlug(), m.getDeveloperLabel(), assignedLabel);
 		
 		return assignedLabel;
 	}
 
-	/**
-	 * A unique id based on slug and parameter names.
-	 * 
-	 * Necessary since different Method instances are passed around,
-	 * representing the same method.
-	 */
-	private String toUniqueId(Method m) {
-		String args = m.getParameters().stream()
+	private boolean isNameUnique(List<Method> contenders, Function<Method, String> strify, String wantedId) {
+		return contenders.stream()
+			.map(strify)
+			.filter(wantedId::equals)
+			.count() == 1;
+	}
+	
+	private String argumentNames(Method m) {
+		return m.getParameters().stream()
 				.map(Parameter::getName)
 				.collect(joining("_"));
-		return m.getSlug() + "_" + args;
+	}
+
+	private String argumentNameTypes(Method m) {
+		return m.getParameters().stream()
+				.map(p -> p.getName() + "_" + p.getTypeName())
+				.collect(joining("_"));
 	}
 }

@@ -43,4 +43,12 @@ public class Resource {
 	public Response conflict(@PathParam("id") long id, InputStream is) {
 		return Response.ok("").build();
 	}
+	@Path("/conflict/dto-type/{id}")
+	@TypeHint(String.class)
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response conflict(@PathParam("id") long id, String string) {
+		return Response.ok("").build();
+	}
 }

@@ -40,17 +40,12 @@ import java.util.stream.Stream;
 import com.webcohesion.enunciate.EnunciateContext;
 import com.webcohesion.enunciate.EnunciateException;
 import com.webcohesion.enunciate.EnunciateLogger;
-import com.webcohesion.enunciate.api.ApiRegistrationContext;
 import com.webcohesion.enunciate.api.ApiRegistry;
-import com.webcohesion.enunciate.api.DefaultRegistrationContext;
 import com.webcohesion.enunciate.api.InterfaceDescriptionFile;
 import com.webcohesion.enunciate.api.datatype.Syntax;
-import com.webcohesion.enunciate.api.resources.ResourceApi;
-import com.webcohesion.enunciate.api.services.ServiceApi;
 import com.webcohesion.enunciate.artifacts.FileArtifact;
 import com.webcohesion.enunciate.module.ApiFeatureProviderModule;
 import com.webcohesion.enunciate.module.ApiRegistryAwareModule;
-import com.webcohesion.enunciate.module.ApiRegistryProviderModule;
 import com.webcohesion.enunciate.module.BasicGeneratingModule;
 import com.webcohesion.enunciate.module.DependencySpec;
 import com.webcohesion.enunciate.module.DocumentationProviderModule;
@@ -73,7 +68,7 @@ import freemarker.template.TemplateExceptionHandler;
  * <h1>OpenAPI Module</h1>
  * Based on Swagger Module by Ryan Heaton.
  */
-public class OpenApiModule extends BasicGeneratingModule implements ApiFeatureProviderModule, ApiRegistryAwareModule, ApiRegistryProviderModule, DocumentationProviderModule {
+public class OpenApiModule extends BasicGeneratingModule implements ApiFeatureProviderModule, ApiRegistryAwareModule, DocumentationProviderModule {
   private static final String OPENAPI_MODULENAME = "openapi";
 
   private static final List<String> DEPENDENCY_MODULES = Arrays.asList("jackson", "jackson1", "jaxb", "jaxrs", "jaxws", "spring-web");
@@ -130,8 +125,6 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
 
   @Override
   public void call(EnunciateContext context) {
-    //no-op; work happens with the swagger interface description.
-
     File docsDir = getDocsDir();
     FileArtifact openapiArtifact = new FileArtifact(getName(), OPENAPI_MODULENAME, docsDir);
     openapiArtifact.setPublic(false);
@@ -141,56 +134,22 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     enunciate.addArtifact(openapiArtifact);
     
     try {
-      ApiRegistrationContext registrationContext = new DefaultRegistrationContext(context);
-      List<ResourceApi> resourceApis = apiRegistry.getResourceApis(registrationContext);
-      new OpenApiInterfaceDescription(resourceApis, registrationContext).writeToFolder(docsDir);
+    	LocalEnunciateModel model = new LocalEnunciateModel(context, apiRegistry);
+      
+      new OpenApiInterfaceDescription(model).writeToFolder(docsDir);
     } catch (IOException e) {
       throw new EnunciateException(e);
     }
   }
 
-  @Override
-  public ApiRegistry getApiRegistry() {
-    return new ApiRegistry() {
-      @Override
-      public List<ServiceApi> getServiceApis(ApiRegistrationContext context) {
-        return Collections.emptyList();
-      }
-
-      @Override
-      public List<ResourceApi> getResourceApis(ApiRegistrationContext context) {
-        return Collections.emptyList();
-      }
-
-      @Override
-      public Set<Syntax> getSyntaxes(ApiRegistrationContext context) {
-        return Collections.emptySet();
-      }
-
-      @Override
-      public InterfaceDescriptionFile getSwaggerUI() {
-        ApiRegistrationContext registrationContext = new DefaultRegistrationContext(context);
-        List<ResourceApi> resourceApis = apiRegistry.getResourceApis(registrationContext);
-
-        if (resourceApis == null || resourceApis.isEmpty()) {
-          info("No resource APIs registered: OpenApi UI will not be generated.");
-        }
-
-        return new OpenApiInterfaceDescription(resourceApis, registrationContext);
-      }
-    };
-  }
-
   private class OpenApiInterfaceDescription implements InterfaceDescriptionFile {
-    private final List<ResourceApi> resourceApis;
-    private final ApiRegistrationContext apiRegistrationContext;
+    private final LocalEnunciateModel enunciateModel;
 
-    public OpenApiInterfaceDescription(List<ResourceApi> resourceApis, ApiRegistrationContext context) {
-      this.resourceApis = resourceApis;
-      this.apiRegistrationContext = context;
-    }
+    public OpenApiInterfaceDescription(LocalEnunciateModel model) {
+		this.enunciateModel = model;
+	}
 
-    @Override
+	@Override
     public String getHref() {
       return getDocsSubdir() + "/index.html";
     }
@@ -206,14 +165,14 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
       ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix(), disableExamples());
       
-      OperationIds operationIds = new OperationIds(logger, resourceApis);
+      OperationIds operationIds = new OperationIds(logger, enunciateModel);
       
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
       model.put("info", new Info(logger, enunciate.getConfiguration(), context)); 
-      model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, operationIds, enunciate.getConfiguration(), context, resourceApis));
+      model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, operationIds, enunciateModel));
       model.put("servers", new Servers(logger, enunciate.getConfiguration(), config));
-      Set<Syntax> syntaxes = apiRegistry.getSyntaxes(apiRegistrationContext);
+      Set<Syntax> syntaxes = apiRegistry.getSyntaxes(enunciateModel.getRegistrationContext());
       model.put("components", new Components(logger, objectTypeRenderer, syntaxes));
       model.put("file", new FileDirective(dir, logger));
       

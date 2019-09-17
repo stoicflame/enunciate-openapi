@@ -24,7 +24,6 @@ import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.PathSummary;
 import com.webcohesion.enunciate.api.resources.Method;
 import com.webcohesion.enunciate.api.resources.Resource;
-import com.webcohesion.enunciate.api.resources.ResourceApi;
 import com.webcohesion.enunciate.api.resources.ResourceGroup;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
@@ -35,7 +34,7 @@ public class Endpoint {
   private PathSummary pathSummary;
   private List<Operation> operations = new ArrayList<>();
 
-  public Endpoint(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, List<Resource> resources, ResourceApi resourceApi, ResourceGroup resourceGroup, PathSummary pathSummary) {
+  public Endpoint(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, List<Resource> resources, ResourceGroup resourceGroup, PathSummary pathSummary) {
     this.resourceGroup = resourceGroup;
     this.pathSummary = pathSummary;
     

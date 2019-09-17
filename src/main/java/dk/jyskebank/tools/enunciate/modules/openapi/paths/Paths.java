@@ -18,33 +18,30 @@ package dk.jyskebank.tools.enunciate.modules.openapi.paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.webcohesion.enunciate.EnunciateConfiguration;
-import com.webcohesion.enunciate.EnunciateContext;
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.PathSummary;
 import com.webcohesion.enunciate.api.resources.Resource;
-import com.webcohesion.enunciate.api.resources.ResourceApi;
 import com.webcohesion.enunciate.api.resources.ResourceGroup;
 
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
+import dk.jyskebank.tools.enunciate.modules.openapi.LocalEnunciateModel;
 import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
 
 public class Paths {
   @SuppressWarnings("unused") private EnunciateLogger logger;
   private List<Endpoint> endpoints = new ArrayList<>();
 
-  public Paths(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, EnunciateConfiguration configuration, EnunciateContext context, List<ResourceApi> resourceApis) {
+  public Paths(EnunciateLogger logger, DataTypeReferenceRenderer dataTypeReferenceRenderer, ObjectTypeRenderer objectTypeRenderer, OperationIds operationIds, LocalEnunciateModel model) {
     this.logger = logger;
     
-    for (ResourceApi resourceApi : resourceApis) {
-      for (ResourceGroup resourceGroup : resourceApi.getResourceGroups()) {
+    model.streamResourceGroups()
+    	.forEach(resourceGroup -> {
         for (PathSummary pathSummary : resourceGroup.getPaths()) {
           List<Resource> resources = findResourcesForPath(resourceGroup, pathSummary.getPath());
           
-          endpoints.add(new Endpoint(logger, dataTypeReferenceRenderer, objectTypeRenderer,  operationIds, resources, resourceApi, resourceGroup, pathSummary));
+          endpoints.add(new Endpoint(logger, dataTypeReferenceRenderer, objectTypeRenderer,  operationIds, resources, resourceGroup, pathSummary));
         }
-      }
-    }
+      });
   }
   
   private List<Resource> findResourcesForPath(ResourceGroup group, String path) {
