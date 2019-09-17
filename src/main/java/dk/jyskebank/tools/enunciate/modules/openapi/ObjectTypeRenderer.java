@@ -19,7 +19,6 @@ import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeY
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -128,21 +127,21 @@ public class ObjectTypeRenderer {
             return;
         }
 
-        List<Property> requiredProperties = new ArrayList<>();
-        for (Property p : properties) {
-            if (p.isRequired()) {
-                requiredProperties.add(p);
-            }
-        }
-
-        if (requiredProperties.isEmpty()) {
+        List<String> requiredPropertyNames = properties.stream()
+        	.filter(Property::isRequired)
+        	.map(Property::getName)
+        	.distinct()
+        	.sorted()
+        	.collect(toList());
+        
+        if (requiredPropertyNames.isEmpty()) {
             return;
         }
 
         ip.add("required:");
         ip.nextLevel();
-        for (Property p : requiredProperties) {
-            ip.item("\"" + p.getName() + "\"");
+        for (String name : requiredPropertyNames) {
+            ip.item("\"" + name + "\"");
         }
         ip.prevLevel();
     }

@@ -6,18 +6,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * duplet property has too many annotations.
  */
 public class DupletAnnotationsDto {
-	@JsonProperty("Duplet")
+	@JsonProperty(value = "Duplet", required = true)
 	private String duplet;
 	@JsonProperty("Valid")
 	private String valid;
 	private String alsoValid;
 	
-	@JsonProperty("Duplet")
+	@JsonProperty(value = "Duplet", required = true)
 	public String getDuplet() {
 		return duplet;
 	}
 
-	@JsonProperty("Duplet")
+	@JsonProperty(value = "Duplet", required = true)
 	public void setDuplet(String duplet) {
 		this.duplet = duplet;
 	}

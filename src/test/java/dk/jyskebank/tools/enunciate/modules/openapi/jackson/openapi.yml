@@ -58,6 +58,8 @@ components:
     "json_DupletAnnotationsDto":
       title: "DupletAnnotationsDto"
       type: object
+      required:
+      - "Duplet"
       properties:
         "Duplet":
           type: string
