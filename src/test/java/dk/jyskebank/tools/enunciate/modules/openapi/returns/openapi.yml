@@ -72,7 +72,7 @@ paths:
         - "Data"
       summary: "An initial summary."
       deprecated: false
-      operationId: get_2787f3a5
+      operationId: get
       parameters:
       - name: "userid"
         in: header
@@ -226,7 +226,7 @@ paths:
         - "Data"
       summary: ""
       deprecated: false
-      operationId: get_973ffbf
+      operationId: putByteArray
       parameters:
       - name: "userid"
         in: header
@@ -281,6 +281,130 @@ paths:
               schema:
                 $ref: "#/components/schemas/json_Messages"
         "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+ 
+  "/data/{pathArg}/invalid-delete":
+    delete:
+      description: ""
+      tags:
+        - "Data"
+      summary: ""
+      deprecated: false
+      operationId: deleteWithPayloadIsInvalid
+      parameters:
+      - name: "userid"
+        in: header
+        description: "The actual user performing the operation"
+        required: false
+        schema:
+          type: string
+        style: simple
+      - name: "pathArg"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: "Bad request, inspect response payload for error details"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "401":
+          description: "Unauthorized, please provide valid Authentication header"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "403":
+          description: "Forbidden, user does not have permission"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "404":
+          description: "Not Found, inspect response for more info"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "500":
+          description: "Internal Server Error, Unexpected server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+ 
+  "/data/{pathArg}/invalid-get":
+    get:
+      description: ""
+      tags:
+        - "Data"
+      summary: ""
+      deprecated: false
+      operationId: getWithPayloadIsInvalid
+      parameters:
+      - name: "userid"
+        in: header
+        description: "The actual user performing the operation"
+        required: false
+        schema:
+          type: string
+        style: simple
+      - name: "pathArg"
+        in: path
+        description: ""
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: "Bad request, inspect response payload for error details"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "401":
+          description: "Unauthorized, please provide valid Authentication header"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "403":
+          description: "Forbidden, user does not have permission"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "404":
+          description: "Not Found, inspect response for more info"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "500":
+          description: "Internal Server Error, Unexpected server error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/json_Messages"
+        "200":
           description: ""
           content:
             "*/*":

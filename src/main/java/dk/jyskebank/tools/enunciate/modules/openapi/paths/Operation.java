@@ -99,7 +99,14 @@ public class Operation {
   }
   
   public boolean getHasEntity() {
-    return method.getRequestEntity() != null;
+	
+	  return httpMethodAllowsEntity()
+			  && method.getRequestEntity() != null;
+  }
+  
+  private boolean httpMethodAllowsEntity() {
+	  String httpMethod = getHttpMethod();
+	  return !"delete".equals(httpMethod) && !"get".equals(httpMethod);
   }
 
   public String getIsEntityRequired() {

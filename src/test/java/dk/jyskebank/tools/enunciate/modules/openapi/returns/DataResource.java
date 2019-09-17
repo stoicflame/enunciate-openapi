@@ -89,7 +89,27 @@ public class DataResource {
 	@Path("/bytearray-input")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam("pathArg") String path, byte[] body) {
+	public Response putByteArray(@PathParam("pathArg") String path, byte[] body) {
 	  return Response.ok("").build();
 	}
+
+
+
+	@Path("/invalid-get")
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWithPayloadIsInvalid(@PathParam("pathArg") String path, byte[] body) {
+	  return Response.ok("").build();
+	}
+
+	@Path("/invalid-delete")
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteWithPayloadIsInvalid(@PathParam("pathArg") String path, byte[] body) {
+	  return Response.ok("").build();
+	}
+
+
 }
