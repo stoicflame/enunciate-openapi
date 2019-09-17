@@ -51,8 +51,6 @@ public class OperationIds {
 		uidToOperationid = preComputeOperationIds();
 	}
 	
-	int uniq = 0;
-
 	public String getOperationId(Method m) {
 		String id = uidToOperationid.get(m);
 		logger.debug("Operation ID %s -> %s", Objects.toString(m), id);
@@ -91,12 +89,17 @@ public class OperationIds {
 		} else if (isNameUnique(contenders, this::argumentNameTypes, idWithArgNameTypes)) {
 			assignedLabel = wantedLabel + "_" + idWithArgNameTypes;
 		} else {
-			Resource r = model.findParentResource(m);
-			assignedLabel = wantedLabel + "_" + Integer.toHexString(r.getPath().hashCode());
+			assignedLabel = wantedLabel + "_" + getFallbackId(m);
 		}
 		logger.debug("Contention on method : %s:%s => %s", m.getSlug(), m.getDeveloperLabel(), assignedLabel);
 		
 		return assignedLabel;
+	}
+
+	private String getFallbackId(Method m) {
+		Resource r = model.findParentResource(m);
+		String uniq = r.getPath() + m.getHttpMethod();
+		return Integer.toHexString(uniq.hashCode());
 	}
 
 	private boolean isNameUnique(List<Method> contenders, Function<Method, String> strify, String wantedId) {

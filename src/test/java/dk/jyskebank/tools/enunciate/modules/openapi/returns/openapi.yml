@@ -72,7 +72,7 @@ paths:
         - "Data"
       summary: "An initial summary."
       deprecated: false
-      operationId: get_609f8df1
+      operationId: get_2787f3a5
       parameters:
       - name: "userid"
         in: header
@@ -226,7 +226,7 @@ paths:
         - "Data"
       summary: ""
       deprecated: false
-      operationId: get_599e6930
+      operationId: get_973ffbf
       parameters:
       - name: "userid"
         in: header

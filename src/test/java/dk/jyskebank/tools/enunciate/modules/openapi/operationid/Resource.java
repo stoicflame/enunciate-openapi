@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -51,4 +52,16 @@ public class Resource {
 	public Response conflict(@PathParam("id") long id, String string) {
 		return Response.ok("").build();
 	}
+
+
+	// It is possible (but not a good idea) to place multiple http types on same method 
+	@Path("/conflict_multi")
+	@TypeHint(String.class)
+	@PUT
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response conflict_multi() {
+		return Response.ok("").build();
+	}
+
 }
