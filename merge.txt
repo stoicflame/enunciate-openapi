@@ -8,7 +8,7 @@ Setup
  git config --local user.name "Jesper Skov"
  git config --local user.email "jskov@jyskebank.dk"
 
- git remote add jb ssh://git@bitbucket.corp.jyskebank.net:7999/jbintool/enunciate-openapi.git
+ git remote add jb ssh://git@githost/jbintool/enunciate-openapi.git
  git fetch jb
 
 First drop
