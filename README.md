@@ -29,7 +29,50 @@ From Gradle you would do something like this:
     }
 
 
-I am unable to help Maven users. But if you know how to make it work, please let me know, so I can insert instructions here.
+For Maven, you would do something like this:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- pom.xml -->
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+    <!-- ... snip ... -->
+    <build>
+        <!-- ... snip ... -->
+        <pluginManagement>
+            <!-- ... snip ... -->
+            <plugin>
+                <groupId>com.webcohesion.enunciate</groupId>
+                <artifactId>enunciate-maven-plugin</artifactId>
+                <version>2.12.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>docs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <docsDir>${project.build.directory}</docsDir>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <dependencies>
+                    <!-- Provides OpenAPI 3 generation -->
+                    <dependency>
+                        <groupId>dk.jyskebank.tooling.enunciate</groupId>
+                        <artifactId>enunciate-openapi</artifactId>
+                        <version>1.1.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </pluginManagement>
+    </build>
+</project>
+```
 
 ### Enable the Module ###
 
