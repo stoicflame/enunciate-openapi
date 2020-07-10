@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: "Title from enunciate.xml"
+  version: "version from enunciate.xml"
+  description: ""
+servers: []
+paths:
+  "/path/{pathArg}":
+    put:
+      description: "Summary.\n\nDescription follows..."
+      tags:
+        - "Resource group text"
+      summary: "Summary."
+      deprecated: false
+      operationId: update
+      parameters:
+      - name: "pathArg"
+        in: path
+        description: "Argument on path."
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        description: ""
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/json_DataDTO"
+          "application/xml":
+            schema:
+              $ref: "#/components/schemas/xml_ns0_dataDTO"
+          "text/plain":
+            schema:
+              type: string
+              format: binary
+      responses:
+        "204":
+          description: ""
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/json_DataDTO"
+ 
+components:
+  schemas:
+    "json_DataDTO":
+      title: "DataDTO"
+      type: object
+      properties:
+        "last":
+          type: string
+        "first":
+          type: string
+      example:
+        last: "..."
+        first: "..."
+    "xml_ns0_dataDTO":
+      title: "dataDTO"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          "first":
+            type: string
+          "last":
+            type: string
+        xml:
+          name: data
+          namespace: http://www.jyskebank.dk/enunciate/openapi/version/1
