@@ -87,13 +87,15 @@ paths:
           description: ${response.description}
           [#if response.hasData]
           content:
-            ${response.mediaType}:
+            [#list response.mediaTypeExampleList as mediaTypeExample]
+            ${mediaTypeExample.mediaType}:
               schema:
-                ${response.renderDataType("                ")}
-              [#if response.hasExample]
+                ${mediaTypeExample.renderDataType("                ")}
+              [#if mediaTypeExample.hasExample]
               example:
-                ${response.renderExample("                ")}
+                ${mediaTypeExample.renderExample("                ")}
               [/#if]
+          [/#list][#-- list mediaTypeExample --]
           [/#if][#-- response.hasData --]
 [/#list] [#-- list responses --]
             [/#list][#-- list operations --]
