@@ -7,6 +7,5 @@
 		<jaxrs groupBy="annotation" disabled="false" />
 		<jackson1 disabled="false" />
 		<jaxb disabled="false" />
-		<jaxrs disabled="false" />
 	</modules>
 </enunciate>
