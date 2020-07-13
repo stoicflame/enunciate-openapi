@@ -163,7 +163,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     protected void writeToFolder(File dir) throws IOException {
       EnunciateLogger logger = enunciate.getLogger();
       DataTypeReferenceRenderer dataTypeReferenceRenderer = new DataTypeReferenceRenderer(logger, doRemoveObjectPrefix());
-      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), doRemoveObjectPrefix(), disableExamples());
+      ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), getNamespacePrefixMap(), doRemoveObjectPrefix(), disableExamples());
       
       OperationIds operationIds = new OperationIds(logger, enunciateModel);
       
@@ -198,6 +198,17 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
 	  private boolean doRemoveObjectPrefix() {
 	    return Boolean.parseBoolean(config.getString("[@removeObjectPrefix]"));
 	  }
+
+      /**
+       * Get namespace prefix map from enunciate configuration, return empty map if configuration is invalid.
+       * @return namespacePrefixMap
+       */
+	  private Map<String, String> getNamespacePrefixMap(){
+        if(enunciate.getConfiguration() == null){
+          return Collections.emptyMap();
+        }
+        return enunciate.getConfiguration().getNamespaces();
+      }
   }
 
   protected String getHost() {
