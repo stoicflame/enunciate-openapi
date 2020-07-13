@@ -20,6 +20,8 @@ As it is, documentation is pretty barren - but I wanted to make the module avail
 
 ## Using the Module ##
 
+NOTE: The module is compiled against Enunciate 2.12.1. It fails building against the latest version (at present 2.13.1).
+
 From Gradle you would do something like this:
 
     apply plugin: "com.webcohesion.enunciate"

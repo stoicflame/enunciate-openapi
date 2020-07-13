@@ -8,7 +8,7 @@ defaultTasks 'dist'
 
 // Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
 ext {
-	enunciateVersion = "2.12.0"
+	enunciateVersion = "2.12.1"
 
 	jacksonVersion = "2.10.1"
 
