@@ -48,25 +48,25 @@ repositories {
 }
 
 dependencies {
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     compileOnly "com.webcohesion.enunciate:enunciate-core:${enunciateVersion}"
     compileOnly "com.webcohesion.enunciate:enunciate-jaxb:${enunciateVersion}"
     compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compileOnly 'org.freemarker:freemarker:2.3.28'
 
-	testCompile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
-	testCompile "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
-	testCompile files("$jdkHome/lib/tools.jar")
-	testCompile "org.slf4j:slf4j-ext:1.7.7"
-	testCompile "ch.qos.logback:logback-classic:1.1.2"
-    testCompile "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
-   	testCompile files("build/distributions/openapi-swagger-ui.zip")
+	testImplementation "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
+	testImplementation "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
+	testImplementation files("$jdkHome/lib/tools.jar")
+	testImplementation "org.slf4j:slf4j-ext:1.7.7"
+	testImplementation "ch.qos.logback:logback-classic:1.1.2"
+    testImplementation "com.webcohesion.enunciate:enunciate-top:${enunciateVersion}"
+   	testImplementation files("build/distributions/openapi-swagger-ui.zip")
 
-   	testCompile "org.assertj:assertj-core:3.12.2"
-	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-	testCompile("org.junit.platform:junit-platform-runner:${junitPlatformVersion}")
-	testCompile("org.mockito:mockito-core:${mockitoVersion}")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+   	testImplementation "org.assertj:assertj-core:3.12.2"
+	testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+	testImplementation "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
+	testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+	testRuntimeOnly    "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
 }
 
 sourceCompatibility = "1.8"
@@ -75,7 +75,7 @@ targetCompatibility = "1.8"
 
 task packSwaggerUi(type: Zip) {
      from "swagger-ui"
-     archiveName = "openapi-swagger-ui.zip"
+     archiveFileName = "openapi-swagger-ui.zip"
 }
 
 jar {
@@ -83,34 +83,34 @@ jar {
         include "**/*.ftl"
     }
     from packSwaggerUi
-    destinationDir = publishDir
+    destinationDirectory = publishDir
     
     manifest {
 		attributes(["Implementation-Version" : publicVersion])
 	}
-	version = publicVersion
+	archiveVersion = publicVersion
 }
 
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc
-    destinationDir = publishDir
+    destinationDirectory = publishDir
 
     manifest {
 		attributes(["Implementation-Version" : publicVersion])
 	}
-	version = publicVersion
+	archiveVersion = publicVersion
 	classifier = "javadoc"
 }
 
 task sourceJar(type: Jar) {
 	from sourceSets.main.allSource
-    destinationDir = publishDir
+    destinationDirectory = publishDir
 
     manifest {
 		attributes(["Implementation-Version" : publicVersion])
 	}
-	version = publicVersion
+	archiveVersion = publicVersion
 	classifier = "sources"
 }
 
