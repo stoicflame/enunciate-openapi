@@ -40,7 +40,24 @@ components:
             type: string
           "anEnum":
             $ref: "#/components/schemas/xml_ns0_dataXmlEnum"
+          "dataValue":
+            xml:
+              namespace: http://www.jyskebank.dk/enunciate/openapi/version/2
+              prefix: prefix-b
+            $ref: "#/components/schemas/xml_prefix-b_dataXmlDTODataValue"
         xml:
           name: dataXmlDTO
           namespace: http://www.jyskebank.dk/enunciate/openapi/version/1
           prefix: prefix-a
+    "xml_prefix-b_dataXmlDTODataValue":
+      title: "dataXmlDTODataValue"
+      allOf:
+      - type: string
+        format: binary
+      - type: object
+        properties:
+          "customString":
+            type: string
+        xml:
+          namespace: http://www.jyskebank.dk/enunciate/openapi/version/2
+          prefix: prefix-b

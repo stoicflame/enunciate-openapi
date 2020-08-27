@@ -323,6 +323,11 @@ public class ObjectTypeRenderer {
         boolean renderAttribute = AccessorProperty.isAttribute(p);
         boolean renderNamespace = namespace != null && !namespace.isEmpty();
 
+        String namespacePrefix = null;
+        if (renderNamespace && this.namespacePrefixMap != null && !this.namespacePrefixMap.isEmpty()) {
+            namespacePrefix = getNonNullAndNonEmpty(this.namespacePrefixMap.get(namespace));
+        }
+
         if (!wrappedName.isPresent() && !renderAttribute && !renderNamespace) {
             return;
         }
@@ -339,6 +344,10 @@ public class ObjectTypeRenderer {
         if (renderNamespace) {
             ip.add("namespace: ", namespace);
         }
+        if (namespacePrefix != null && !namespacePrefix.isEmpty()) {
+            ip.add("prefix: ", namespacePrefix);
+        }
+
         ip.prevLevel();
     }
 

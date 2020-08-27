@@ -3,6 +3,7 @@
 
 	<namespaces>
 		<namespace uri="http://www.jyskebank.dk/enunciate/openapi/version/1" id="prefix-a"/>
+		<namespace uri="http://www.jyskebank.dk/enunciate/openapi/version/2" id="prefix-b"/>
 	</namespaces>
 
 	<modules disabledByDefault="true">
