@@ -1,7 +1,3 @@
-**This project is in transition into the https://github.com/stoicflame namespace (where the other Enunciate projects live)**
-
-
-
 # Enunciate OpenApi3 Module #
 
 
