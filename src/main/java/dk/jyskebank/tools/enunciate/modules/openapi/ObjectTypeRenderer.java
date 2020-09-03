@@ -57,14 +57,16 @@ public class ObjectTypeRenderer {
     private final EnunciateLogger logger;
     private final DataTypeReferenceRenderer datatypeRefRenderer;
     private final Set<String> passThroughAnnotations;
+    private final Map<String, String> namespacePrefixMap;
 
     private final boolean removeObjectPrefix;
     private final boolean disableExamples;
 
-    public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer, Set<String> passThroughAnnotations, boolean removeObjectPrefix, boolean disableExamples) {
+    public ObjectTypeRenderer(EnunciateLogger enunciateLogger, DataTypeReferenceRenderer datatypeRefRenderer, Set<String> passThroughAnnotations, Map<String, String> namespacePrefixMap, boolean removeObjectPrefix, boolean disableExamples) {
         this.logger = enunciateLogger;
         this.datatypeRefRenderer = datatypeRefRenderer;
         this.passThroughAnnotations = passThroughAnnotations;
+        this.namespacePrefixMap = namespacePrefixMap;
         this.removeObjectPrefix = removeObjectPrefix;
         this.disableExamples = disableExamples;
     }
@@ -321,6 +323,11 @@ public class ObjectTypeRenderer {
         boolean renderAttribute = AccessorProperty.isAttribute(p);
         boolean renderNamespace = namespace != null && !namespace.isEmpty();
 
+        String namespacePrefix = null;
+        if (renderNamespace && this.namespacePrefixMap != null && !this.namespacePrefixMap.isEmpty()) {
+            namespacePrefix = getNonNullAndNonEmpty(this.namespacePrefixMap.get(namespace));
+        }
+
         if (!wrappedName.isPresent() && !renderAttribute && !renderNamespace) {
             return;
         }
@@ -337,6 +344,10 @@ public class ObjectTypeRenderer {
         if (renderNamespace) {
             ip.add("namespace: ", namespace);
         }
+        if (namespacePrefix != null && !namespacePrefix.isEmpty()) {
+            ip.add("prefix: ", namespacePrefix);
+        }
+
         ip.prevLevel();
     }
 
@@ -365,7 +376,12 @@ public class ObjectTypeRenderer {
         Namespace namespace = datatype.getNamespace();
         String xmlNamespace = getNonNullAndNonEmpty(namespace != null ? namespace.getUri() : null);
 
-        logger.debug("optionalXml for " + datatype.getLabel() + " : " + xmlName + " / " + xmlNamespace);
+        String namespacePrefix = null;
+        if (xmlNamespace != null && this.namespacePrefixMap != null && !this.namespacePrefixMap.isEmpty()) {
+            namespacePrefix = getNonNullAndNonEmpty(this.namespacePrefixMap.get(xmlNamespace));
+        }
+
+        logger.debug("optionalXml for " + datatype.getLabel() + " : " + xmlName + " / " + xmlNamespace + " / "+ namespacePrefix);
 
         if (xmlName != null || xmlNamespace != null) {
             ip.add("xml:");
@@ -375,6 +391,9 @@ public class ObjectTypeRenderer {
             }
             if (xmlNamespace != null) {
                 ip.add("namespace: ", xmlNamespace);
+            }
+            if (namespacePrefix != null) {
+                ip.add("prefix: ", namespacePrefix);
             }
             ip.prevLevel();
         }
