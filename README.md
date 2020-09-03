@@ -1,4 +1,9 @@
+**This project is in transition into the https://github.com/stoicflame namespace (where the other Enunciate projects live)**
+
+
+
 # Enunciate OpenApi3 Module #
+
 
 This project contains an [OpenAPI3](https://github.com/OAI/OpenAPI-Specification) module for [Enunciate](https://github.com/stoicflame/enunciate).
 The code is based on the Enunciate built-in module for Swagger.
