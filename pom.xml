@@ -13,7 +13,7 @@
 
         <enunciate.version>2.12.0</enunciate.version>
         <jackson.version>2.10.1</jackson.version>
-        <jacksondatabind.version>2.10.1</jacksondatabind.version>
+        <jacksondatabind.version>2.10.5.1</jacksondatabind.version>
         <freemarker.version>2.3.23</freemarker.version>
         <resteasy.version>3.0.12.Final</resteasy.version>
         <slf4j.version>1.7.7</slf4j.version>
