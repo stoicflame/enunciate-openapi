@@ -67,9 +67,7 @@ public class DataTypeReferenceRenderer {
                     renderNestedArrays(ip, dtr, containers.size());
 
                 } else {
-                    for (ContainerType ct : containers) {
-                        renderContainer(ip, ct.isMap(), () -> renderType(ip, dtr));
-                    }
+                    renderContainer(ip, containers, () -> renderType(ip, dtr));
                 }
             } else {
                 // FIXME: Conversion to DataTypeReferenceImpl must be broken in Jaxb frontend
@@ -115,9 +113,21 @@ public class DataTypeReferenceRenderer {
         valueTypeRenderer.run(); // NOSONAR
     }
 
+    private void renderContainer(IndentationPrinter ip, List<ContainerType> containers, Runnable valueTypeRenderer) {
+        if(!containers.isEmpty()){
+            ContainerType container = containers.get(0);
+            containers.remove(container);
+            renderContainer(ip, container.isMap(), valueTypeRenderer);
+            ip.nextLevel();
+            renderContainer(ip, containers, valueTypeRenderer);
+            ip.prevLevel();
+        }
+
+    }
+
     private void renderContainer(IndentationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
         if (isMap) {
-            renderMapContainer(ip, valueTypeRenderer);
+            renderMapContainer(ip);
         } else {
             renderNonMapContainer(ip, valueTypeRenderer);
         }
@@ -135,12 +145,9 @@ public class DataTypeReferenceRenderer {
         ip.add("items:");
     }
 
-    private void renderMapContainer(IndentationPrinter ip, Runnable valueTypeRenderer) {
+    private void renderMapContainer(IndentationPrinter ip) {
         ip.add("type: object");
         ip.add("additionalProperties:");
-        ip.nextLevel();
-        renderValue(ip, valueTypeRenderer);
-        ip.prevLevel();
     }
 
     public void renderType(IndentationPrinter ip, Parameter parameter) {
