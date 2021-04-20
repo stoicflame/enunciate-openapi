@@ -16,26 +16,13 @@ ext {
 	junitJupiterVersion = '5.6.2'
 	mockitoVersion = '3.0.0'
 	
-	jbNexus = System.getenv('NEXUS_REPO_URL')
-	publicVersion = version.replaceAll("([V-])0(\\d)", '$1$2').replace("V", "").replace("-", ".")
 	publishDir = file("dist/publish")
 	
 	jdkHome = findJdkHome()
 }
 
-if (jbNexus) {
-	System.setProperty("javax.net.ssl.trustStore", file("gradle/jb-nexus-trust").getAbsolutePath());
-  	System.setProperty("javax.net.ssl.trustStorePassword", "changeit"); 
-}
-
 repositories {
-	if (jbNexus) {
-		maven {
-	    	url jbNexus
-	  	}
-    } else {
-    	mavenCentral()
-    }
+   	mavenCentral()
 }
 
 dependencies {
@@ -77,9 +64,9 @@ jar {
     destinationDirectory = publishDir
     
     manifest {
-		attributes(["Implementation-Version" : publicVersion])
+		attributes(["Implementation-Version" : project.version])
 	}
-	archiveVersion = publicVersion
+	archiveVersion = project.version
 }
 
 
@@ -88,9 +75,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     destinationDirectory = publishDir
 
     manifest {
-		attributes(["Implementation-Version" : publicVersion])
+		attributes(["Implementation-Version" : project.version])
 	}
-	archiveVersion = publicVersion
+	archiveVersion = project.version
 	classifier = "javadoc"
 }
 
@@ -99,9 +86,9 @@ task sourceJar(type: Jar) {
     destinationDirectory = publishDir
 
     manifest {
-		attributes(["Implementation-Version" : publicVersion])
+		attributes(["Implementation-Version" : project.version])
 	}
-	archiveVersion = publicVersion
+	archiveVersion = project.version
 	classifier = "sources"
 }
 
@@ -169,13 +156,13 @@ publishing {
 				}
 			}
 			from components.java
-			version = publicVersion
+			version = project.version
 		}
 	}
 }
 model {
 	tasks.generatePomFileForMavenJavaPublication {
-		destination = new File(publishDir, "${project.name}-${publicVersion}.pom")
+		destination = new File(publishDir, "${project.name}-${project.version}.pom")
 	}
 }
 
