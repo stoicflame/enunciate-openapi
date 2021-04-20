@@ -6,7 +6,6 @@ plugins {
 
 defaultTasks 'dist'
 
-// Setup to use Jyske Bank Nexus if present, otherwise use Maven Central
 ext {
 	enunciateVersion = "2.12.1"
 
@@ -128,7 +127,7 @@ publishing {
 				asNode().with {
 					appendNode('name', 'enunciate-openapi')
 					appendNode('description', 'Enunciate module that generates OpenAPI output')
-					appendNode('url', 'https://github.com/Jyskebank/enunciate-openapi')
+					appendNode('url', 'https://github.com/stoicflame/enunciate-openapi')
 					appendNode('licenses').with {
 						appendNode('license').with {
 							appendNode('name', 'The Apache Software License, Version 2.0')
@@ -149,9 +148,9 @@ publishing {
 						}
 					}
 					appendNode('scm').with {
-						appendNode('connection', 'scm:git:git@github.com:Jyskebank/enunciate-openapi.git')
-						appendNode('developerConnection', 'scm:git:git@github.com:Jyskebank/enunciate-openapi.git')
-						appendNode('url', 'https://github.com/Jyskebank/enunciate-openapi')
+						appendNode('connection', 'scm:git:git@github.com:stoicflame/enunciate-openapi.git')
+						appendNode('developerConnection', 'scm:git:git@github.com:stoicflame/enunciate-openapi.git')
+						appendNode('url', 'https://github.com/stoicflame/enunciate-openapi')
 					}
 				}
 			}
