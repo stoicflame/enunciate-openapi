@@ -15,6 +15,7 @@
  */
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
+import com.google.common.collect.Lists;
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
@@ -58,9 +59,7 @@ public class DataTypeReferenceRenderer {
         }
 
         if (value != null) {
-            for (ContainerType ct : containers) {
-                renderContainer(ip, ct.isMap(), () -> addSchemaRef(ip, value));
-            }
+            renderContainer(ip, Lists.newCopyOnWriteArrayList(containers), () -> addSchemaRef(ip, value));
         } else {
             if (hasContainers) {
                 if (isMultiDimensionalCollection(containers)) {
