@@ -1,7 +1,6 @@
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
 import com.webcohesion.enunciate.api.datatype.BaseType;
-import com.webcohesion.enunciate.api.datatype.BaseTypeFormat;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,7 @@ class DataTypeReferenceRendererTest {
 
         System.out.println("Running init");
         when(dtr.getBaseType()).thenReturn(BaseType.number);
-        when(dtr.getBaseTypeFormat()).thenReturn(BaseTypeFormat.INT32);
+        when(dtr.getBaseTypeFormat()).thenReturn("int32");
         when(dtr.getContainers()).thenReturn(containers);
     }
 

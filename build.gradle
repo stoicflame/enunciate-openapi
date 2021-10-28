@@ -7,7 +7,7 @@ plugins {
 defaultTasks 'dist'
 
 ext {
-	enunciateVersion = "2.12.1"
+	enunciateVersion = "2.13.3"
 
 	jacksonVersion = "2.10.1"
 
