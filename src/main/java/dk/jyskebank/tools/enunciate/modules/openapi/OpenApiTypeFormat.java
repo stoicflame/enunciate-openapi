@@ -23,41 +23,19 @@ import com.webcohesion.enunciate.modules.jaxb.model.types.KnownXmlType;
 import java.util.Optional;
 
 public class OpenApiTypeFormat {
-//    private static final Map<BaseTypeFormat, String> ENUNCIATE_TO_OPENAPI_FORMAT = new EnumMap<>(BaseTypeFormat.class);
-//
-//    static {
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.INT32, "int32");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.INT64, "int64");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.FLOAT, "float");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.DOUBLE, "double");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.OCTETS, "binary");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.BASE64, "byte");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.DATE, "date");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.DATE_TIME, "date-time");
-//        ENUNCIATE_TO_OPENAPI_FORMAT.put(BaseTypeFormat.PASSWORD, "password");
-//    }
 
     private final String type;
     private final String format;
 
-    //	public static final OpenApiTypeFormat BASE64_TYPE = new OpenApiTypeFormat(BaseType.string, BaseTypeFormat.BASE64);
     public static final OpenApiTypeFormat BASE64_TYPE = new OpenApiTypeFormat(BaseType.string, "byte");
-    //	public static final OpenApiTypeFormat BINARY_STREAM_TYPE = new OpenApiTypeFormat(BaseType.string, BaseTypeFormat.OCTETS);
     public static final OpenApiTypeFormat BINARY_STREAM_TYPE = new OpenApiTypeFormat(BaseType.string, "binary");
-    //	public static final OpenApiTypeFormat DATE_TIME_TYPE = new OpenApiTypeFormat(BaseType.string, BaseTypeFormat.DATE_TIME);
     public static final OpenApiTypeFormat DATE_TIME_TYPE = new OpenApiTypeFormat(BaseType.string, "date-time");
-    //	public static final OpenApiTypeFormat DATE_TYPE = new OpenApiTypeFormat(BaseType.string, BaseTypeFormat.DATE);
     public static final OpenApiTypeFormat DATE_TYPE = new OpenApiTypeFormat(BaseType.string, "date");
 
     private OpenApiTypeFormat(BaseType enunciateType, String enunciateFormat) {
         type = fromEnunciateType(enunciateType, enunciateFormat);
         format = enunciateFormat;
     }
-
-
-//	public static String toOpenApiFormat(BaseTypeFormat format) {
-//		return format == null ? null : ENUNCIATE_TO_OPENAPI_FORMAT.get(format);
-//	}
 
     private static OpenApiTypeFormat fromValidated(BaseType baseType, String format) {
         // This was AFAIK a now-obsoleted fallback in older swagger formats. Cannot find documentation now.
