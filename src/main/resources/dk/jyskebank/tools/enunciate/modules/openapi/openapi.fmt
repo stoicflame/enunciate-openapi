@@ -49,8 +49,8 @@ servers:
   [/#list]
 [/#if]
 security:
-  - BasicAuth: []
-  - BearerAuth: []
+  - basicAuth: []
+  - bearerAuth: []
 [#if paths.isEmpty]
 paths: {}
 [#else]
@@ -104,17 +104,15 @@ paths:
     [/#list][#-- list operations --]
   [/#list][#-- list endpoints --]
 [/#if][#-- if paths --]
-[#if components.isEmpty]
-components: {}
-[#else]
 components:
   securitySchemes:
-    BasicAuth:
+    basicAuth:
       type: http
       scheme: basic
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
+  [#if !components.isEmpty]
   schemas:
     [#list components.schemas as schema]
     ${schema.render("    ")}
