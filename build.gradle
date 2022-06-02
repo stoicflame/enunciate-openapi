@@ -7,7 +7,9 @@ plugins {
 defaultTasks 'dist'
 
 ext {
-	enunciateVersion = "2.14.0"
+	enunciateVersion = "2.15.0-SNAPSHOT"
+
+	guavaVersion = "14.0.1"
 
 	jacksonVersion = "2.10.1"
 
@@ -22,6 +24,7 @@ ext {
 
 repositories {
    	mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
@@ -30,6 +33,7 @@ dependencies {
     compileOnly "com.webcohesion.enunciate:enunciate-jaxb:${enunciateVersion}"
     compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compileOnly 'org.freemarker:freemarker:2.3.28'
+	compileOnly "com.google.guava:guava:${guavaVersion}"
 
 	testImplementation "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
 	testImplementation "org.jboss.resteasy:jaxrs-api:3.0.12.Final"
