@@ -4,6 +4,9 @@ info:
   version: "version from enunciate.xml"
   description: ""
 servers: []
+security:
+  - basicAuth: []
+  - bearerAuth: []
 paths:
   "/operationid/conflict":
     get:
@@ -142,4 +145,11 @@ paths:
               schema:
                 type: string
  
-components: {}
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer

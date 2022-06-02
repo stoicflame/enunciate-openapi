@@ -15,7 +15,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-public class EnunciateTestsGenerator {
+public class EnunciateTestsGeneratorTest {
 	@TestFactory
 	public List<DynamicTest> makeTests() throws IOException {
 		copySwaggerUiJar();

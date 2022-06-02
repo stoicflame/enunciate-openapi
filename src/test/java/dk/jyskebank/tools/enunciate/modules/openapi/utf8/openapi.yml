@@ -5,6 +5,9 @@ info:
   description: "Description from enunciate.xml. Can contain weird letters æøåÆØÅ"
 servers:
 - url: "../.."
+security:
+  - basicAuth: []
+  - bearerAuth: []
 paths:
   "/path/{pathArg}":
     get:
@@ -31,6 +34,13 @@ paths:
                 $ref: "#/components/schemas/json_DataUTF8CharsetFieldsDTO"
  
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     "json_DataUTF8CharsetFieldsDTO":
       title: "DataUTF8CharsetFieldsDTO"

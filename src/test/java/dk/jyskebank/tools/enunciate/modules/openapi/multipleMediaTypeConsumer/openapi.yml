@@ -4,6 +4,9 @@ info:
   version: "version from enunciate.xml"
   description: ""
 servers: []
+security:
+  - basicAuth: []
+  - bearerAuth: []
 paths:
   "/path/{pathArg}":
     put:
@@ -44,6 +47,13 @@ paths:
                 $ref: "#/components/schemas/json_DataDTO"
  
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     "json_DataDTO":
       title: "DataDTO"
