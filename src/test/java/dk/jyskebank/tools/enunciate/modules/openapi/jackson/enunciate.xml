@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<enunciate version="version from enunciate.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.11.1.xsd">
+<enunciate version="version from enunciate.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://enunciate.webcohesion.com/schemas/enunciate-2.14.0.xsd">
 	<title>Title from enunciate.xml</title>
 
 	<api-classes>
