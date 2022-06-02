@@ -48,6 +48,9 @@ servers:
 - url: ${server.url}
   [/#list]
 [/#if]
+security:
+  - BasicAuth: []
+  - BearerAuth: []
 [#if paths.isEmpty]
 paths: {}
 [#else]
@@ -95,16 +98,23 @@ paths:
               example:
                 ${mediaTypeExample.renderExample("                ")}
               [/#if]
-          [/#list][#-- list mediaTypeExample --]
+            [/#list][#-- list mediaTypeExample --]
           [/#if][#-- response.hasData --]
-[/#list] [#-- list responses --]
-            [/#list][#-- list operations --]
-        [/#list][#-- list endpoints --]
+      [/#list] [#-- list responses --]
+    [/#list][#-- list operations --]
+  [/#list][#-- list endpoints --]
 [/#if][#-- if paths --]
 [#if components.isEmpty]
 components: {}
 [#else]
 components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     [#list components.schemas as schema]
     ${schema.render("    ")}
