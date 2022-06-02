@@ -100,7 +100,7 @@ paths:
               [/#if]
             [/#list][#-- list mediaTypeExample --]
           [/#if][#-- response.hasData --]
-      [/#list] [#-- list responses --]
+[/#list] [#-- list responses --]
     [/#list][#-- list operations --]
   [/#list][#-- list endpoints --]
 [/#if][#-- if paths --]

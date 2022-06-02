@@ -40,7 +40,9 @@ public class DataTypeReferenceRenderer {
 
     public void render(IndentationPrinter ip, DataTypeReference dtr, String description) {
         if (dtr == null) {
-            throw new IllegalStateException("Cannot render null data type");
+            logger.debug("  no data type reference - void? (description: " + description + ")");
+            return;
+            //throw new IllegalStateException("Cannot render null data type");
         }
 
         logger.info("  render type for " + dtr.getContainers());
@@ -58,13 +60,12 @@ public class DataTypeReferenceRenderer {
             ip.add("description: ", YamlHelper.safeYamlString(description));
         }
 
-        if (value != null) {
+        if (value != null && hasContainers) {
             renderContainer(ip, Lists.newCopyOnWriteArrayList(containers), () -> addSchemaRef(ip, value));
         } else {
             if (hasContainers) {
                 if (isMultiDimensionalCollection(containers)) {
                     renderNestedArrays(ip, dtr, containers.size());
-
                 } else {
                     renderContainer(ip, containers, () -> renderType(ip, dtr));
                 }
@@ -93,11 +94,10 @@ public class DataTypeReferenceRenderer {
     }
 
     private boolean isMultiDimensionalCollection(List<ContainerType> containers) {
-        return containers.stream().noneMatch(c -> c.isMap());
+        return containers.stream().noneMatch(ContainerType::isMap);
     }
 
     private void renderNestedArrays(IndentationPrinter ip, DataTypeReference dtr, int dimensionSize) {
-
         if (dimensionSize == 0) {
             renderValue(ip, () -> renderType(ip, dtr));
         } else {
@@ -121,7 +121,6 @@ public class DataTypeReferenceRenderer {
             renderContainer(ip, containers, valueTypeRenderer);
             ip.prevLevel();
         }
-
     }
 
     private void renderContainer(IndentationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
