@@ -145,7 +145,7 @@ public class DataTypeReferenceRenderer {
 
     private void renderMapContainer(IndentationPrinter ip) {
         ip.add("type: object");
-        ip.add("additionalProperties:");
+        ip.add("additionalProperties: {}");
     }
 
     public void renderType(IndentationPrinter ip, Parameter parameter) {
