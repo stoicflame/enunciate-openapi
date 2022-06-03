@@ -14,4 +14,16 @@ public class PatternDto {
 		this.data = data;
 	}
 
+	/**
+	 * Pattern containing special characters to be handled "specially" in resulting yml (e.g. by block scalar).
+	 */
+	@Pattern(regexp = "[a-zA-Z0-9\\s\\.\\+\\?\\/\\-\\:\\(\\)\\,\\']{0,35}")
+	public String getSecond() {
+		return data;
+	}
+
+	public void setSecond(String data) {
+		this.data = data;
+	}
+
 }

@@ -41,5 +41,11 @@ components:
           pattern: >
             '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
           type: string
+        "second":
+          pattern: >
+            '[a-zA-Z0-9\s\.\+\?\/\-\:\(\)\,\']{0,35}'
+          description: "Pattern containing special characters to be handled \"specially\" in resulting yml (e.g. by block scalar)."
+          type: string
       example:
         first: "..."
+        second: "..."
