@@ -6,8 +6,8 @@
 	<modules disabledByDefault="true">
 		<openapi disabled="false" basePath="../.." skipBase="false" passThroughAnnotations="dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation,xxXxx" />
 		<jaxrs groupBy="annotation" disabled="false" />
-		<jackson1 disabled="true" />
-		<jackson disabled="false" />
+		<jackson1 disabled="false" />
+		<jackson disabled="true" />
 		<jaxb disabled="false" />
 		<jaxrs disabled="false" />
 	</modules>
