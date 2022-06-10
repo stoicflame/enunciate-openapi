@@ -4,9 +4,6 @@ info:
   version: "version"
   description: ""
 servers: []
-security:
-  - basicAuth: []
-  - bearerAuth: []
 paths:
   "/path/jsondto":
     get:
@@ -41,13 +38,6 @@ paths:
                 $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
  
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    bearerAuth:
-      type: http
-      scheme: bearer
   schemas:
     "json_DataJsonDTO":
       title: "DataJsonDTO"

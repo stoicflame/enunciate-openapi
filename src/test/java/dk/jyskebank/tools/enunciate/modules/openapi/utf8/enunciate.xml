@@ -4,7 +4,7 @@
 	<description>Description from enunciate.xml. Can contain weird letters æøåÆØÅ</description>
 
 	<modules disabledByDefault="true">
-		<openapi disabled="false" basePath="../.." skipBase="false" passThroughAnnotations="dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation,xxXxx" />
+		<openapi disabled="false" basePath="../.." skipBase="false" passThroughAnnotations="dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation,xxXxx" securitySchemes="basicAuth,bearerAuth" />
 		<jaxrs groupBy="annotation" disabled="false" />
 		<jackson1 disabled="false" />
 		<jackson disabled="true" />

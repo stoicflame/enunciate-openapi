@@ -4,9 +4,6 @@ info:
   version: "version from enunciate.xml"
   description: ""
 servers: []
-security:
-  - basicAuth: []
-  - bearerAuth: []
 paths:
   "/data/{pathArg}":
     post:
@@ -65,13 +62,6 @@ paths:
           description: "Internal Server Error, Unexpected server error"
  
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    bearerAuth:
-      type: http
-      scheme: bearer
   schemas:
     "json_Cat":
       title: "Cat"

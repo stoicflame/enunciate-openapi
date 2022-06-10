@@ -5,6 +5,9 @@ info:
   description: ""
 servers:
 - url: "../.."
+security:
+  - basicAuth: []
+  - bearerAuth: []
 paths:
   "/path/{pathArg}":
     delete:
@@ -109,6 +112,13 @@ paths:
                 $ref: "#/components/schemas/xml_ns0_dataXmlDTO"
  
 components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     "json_DataDTO":
       title: "DataDTO"
@@ -136,12 +146,8 @@ components:
           "content":
             type: string
             format: binary
-            x-annotations:
-              - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="bar", listValues={"a", "b", "c"})'
           "password":
             type: string
-            x-annotations:
-              - '@dk.jyskebank.tools.enunciate.modules.openapi.simple.CustomAnnotation(custom="foo")'
           "success":
             nullable: false
             type: boolean

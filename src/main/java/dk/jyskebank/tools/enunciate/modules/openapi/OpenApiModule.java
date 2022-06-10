@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ import dk.jyskebank.tools.enunciate.modules.openapi.components.Components;
 import dk.jyskebank.tools.enunciate.modules.openapi.info.Info;
 import dk.jyskebank.tools.enunciate.modules.openapi.paths.OperationIds;
 import dk.jyskebank.tools.enunciate.modules.openapi.paths.Paths;
+import dk.jyskebank.tools.enunciate.modules.openapi.security.SecurityRequirement;
 import dk.jyskebank.tools.enunciate.modules.openapi.servers.Servers;
 import freemarker.cache.URLTemplateLoader;
 import freemarker.core.Environment;
@@ -166,12 +168,13 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       ObjectTypeRenderer objectTypeRenderer = new ObjectTypeRenderer(logger, dataTypeReferenceRenderer, getPassThroughAnnotations(), getNamespacePrefixMap(), doRemoveObjectPrefix(), disableExamples());
       
       OperationIds operationIds = new OperationIds(logger, enunciateModel);
-      
+
       dir.mkdirs();
       Map<String, Object> model = new HashMap<>();
       model.put("info", new Info(logger, enunciate.getConfiguration(), context)); 
       model.put("paths", new Paths(logger, dataTypeReferenceRenderer, objectTypeRenderer, operationIds, enunciateModel));
       model.put("servers", new Servers(logger, enunciate.getConfiguration(), config));
+      model.put("security", new SecurityRequirement(logger, enunciate.getConfiguration(), objectTypeRenderer, config));
       Set<Syntax> syntaxes = apiRegistry.getSyntaxes(enunciateModel.getRegistrationContext());
       model.put("components", new Components(logger, objectTypeRenderer, syntaxes));
       model.put("file", new FileDirective(dir, logger));
@@ -190,7 +193,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
     }
 
 	  /**
-	   * By default all model objects are prefixed with "json_" in output file openapi.yml.
+	   * By default, all model objects are prefixed with "json_" in output file openapi.yml.
 	   * When this configuration property has value <code>true</code>, then this prefix is omitted.
 	   *
 	   * Having the prefix caused problems with client code generation.
@@ -306,7 +309,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       }
       else {
         debug("Zip file %s to be extracted as the documentation base.", baseFile);
-        enunciate.unzip(new FileInputStream(baseFile), buildDir);
+        enunciate.unzip(Files.newInputStream(baseFile.toPath()), buildDir);
       }
     }
   }
@@ -360,7 +363,7 @@ public class OpenApiModule extends BasicGeneratingModule implements ApiFeaturePr
       .filter(s -> !s.isEmpty())
       .collect(toSet());
   }
-  
+
   public Set<String> getFacetIncludes() {
     List<Object> includes = config.getList("facets.include[@name]");
     Set<String> facetIncludes = new TreeSet<>();

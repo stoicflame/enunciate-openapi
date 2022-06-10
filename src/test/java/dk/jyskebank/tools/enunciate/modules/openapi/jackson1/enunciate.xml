@@ -7,7 +7,7 @@
 	</api-classes>
 
 	<modules disabledByDefault="true">
-		<openapi disabled="false" skipBase="false" />
+		<openapi disabled="false" skipBase="false" securitySchemes="basicAuth,bearerAuth" />
 		<jaxrs groupBy="annotation" disabled="false" />
 		<jackson1 disabled="false" />
 		<jackson disabled="true" />

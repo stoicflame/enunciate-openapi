@@ -4,9 +4,6 @@ info:
   version: "version from enunciate.xml"
   description: ""
 servers: []
-security:
-  - basicAuth: []
-  - bearerAuth: []
 paths:
   "/validation/pattern":
     get:
@@ -25,13 +22,6 @@ paths:
                 $ref: "#/components/schemas/json_PatternDto"
  
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    bearerAuth:
-      type: http
-      scheme: bearer
   schemas:
     "json_PatternDto":
       title: "PatternDto"
