@@ -5,16 +5,16 @@
     <groupId>dk.jyskebank.tooling.enunciate</groupId>
     <artifactId>enunciate-openapi</artifactId>
     <name>Enunciate module for OpenAPI</name>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.1.6-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <enunciate.version>2.12.0</enunciate.version>
-        <jackson.version>2.10.1</jackson.version>
-        <jacksondatabind.version>2.10.5.1</jacksondatabind.version>
+        <enunciate.version>2.15.0-SNAPSHOT</enunciate.version>
+        <jackson.version>2.13.3</jackson.version>
         <freemarker.version>2.3.23</freemarker.version>
+        <guava.version>14.0.1</guava.version>
         <resteasy.version>3.0.12.Final</resteasy.version>
         <slf4j.version>1.7.7</slf4j.version>
         <logback.version>1.1.2</logback.version>
@@ -42,14 +42,19 @@
             <version>${freemarker.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jacksondatabind.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

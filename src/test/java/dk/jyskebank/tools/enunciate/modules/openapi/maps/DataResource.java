@@ -17,4 +17,11 @@ public class DataResource {
     public Response getXmlType() {
       return Response.ok(new DataXmlDTO()).build();
 	}
+
+	@GET
+	@Path("/jsondto")
+	@Produces(MediaType.APPLICATION_JSON)
+	public DataJsonDTO getJsonData() {
+		return new DataJsonDTO();
+	}
 }

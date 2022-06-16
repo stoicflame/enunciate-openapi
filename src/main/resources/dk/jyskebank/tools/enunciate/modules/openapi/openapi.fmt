@@ -48,6 +48,12 @@ servers:
 - url: ${server.url}
   [/#list]
 [/#if]
+[#if !security.isEmpty]
+security:
+[#list security.schemes as scheme]
+  - ${scheme.schemeId}: []
+[/#list]
+[/#if]
 [#if paths.isEmpty]
 paths: {}
 [#else]
@@ -95,19 +101,27 @@ paths:
               example:
                 ${mediaTypeExample.renderExample("                ")}
               [/#if]
-          [/#list][#-- list mediaTypeExample --]
+            [/#list][#-- list mediaTypeExample --]
           [/#if][#-- response.hasData --]
 [/#list] [#-- list responses --]
-            [/#list][#-- list operations --]
-        [/#list][#-- list endpoints --]
+    [/#list][#-- list operations --]
+  [/#list][#-- list endpoints --]
 [/#if][#-- if paths --]
-[#if components.isEmpty]
+[#if components.isEmpty && security.isEmpty]
 components: {}
 [#else]
 components:
+[#if !security.isEmpty]
+  securitySchemes:
+  [#list security.schemes as scheme]
+    ${scheme.render("    ")}
+  [/#list]
+[/#if][#-- if security --]
+  [#if !components.isEmpty]
   schemas:
     [#list components.schemas as schema]
     ${schema.render("    ")}
 [/#list][#-- list schemas --]
 [/#if][#-- if components --]
+[/#if][#-- if components ad security --]
 [/@file]

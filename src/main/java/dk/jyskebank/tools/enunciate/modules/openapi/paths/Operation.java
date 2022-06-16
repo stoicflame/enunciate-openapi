@@ -15,30 +15,21 @@
  */
 package dk.jyskebank.tools.enunciate.modules.openapi.paths;
 
+import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeYamlString;
+
+import java.util.*;
+
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.BaseType;
 import com.webcohesion.enunciate.api.datatype.DataType;
 import com.webcohesion.enunciate.api.datatype.DataTypeReference;
 import com.webcohesion.enunciate.api.datatype.Example;
-import com.webcohesion.enunciate.api.resources.Entity;
-import com.webcohesion.enunciate.api.resources.MediaTypeDescriptor;
-import com.webcohesion.enunciate.api.resources.Method;
-import com.webcohesion.enunciate.api.resources.Parameter;
-import com.webcohesion.enunciate.api.resources.ResourceGroup;
-import com.webcohesion.enunciate.api.resources.StatusCode;
+import com.webcohesion.enunciate.api.resources.*;
+
 import dk.jyskebank.tools.enunciate.modules.openapi.DataTypeReferenceRenderer;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod;
 import dk.jyskebank.tools.enunciate.modules.openapi.FindBestDataTypeMethod.MediaAndType;
 import dk.jyskebank.tools.enunciate.modules.openapi.ObjectTypeRenderer;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper.safeYamlString;
 
 public class Operation {
     private static final String FALLBACK_SUCCESS_MEDIA_TYPE = "*/*";
@@ -98,7 +89,6 @@ public class Operation {
     }
 
     public boolean getHasEntity() {
-
         return httpMethodAllowsEntity()
                 && method.getRequestEntity() != null;
     }
@@ -147,13 +137,20 @@ public class Operation {
                     Optional<Example> optionalExample = getExampleForMediaType(responseEntity, mediaType);
 
                     if (dataType != null) {
-                        Response.MediaTypeExample mediaTypeExample = response.new MediaTypeExample(mediaType, dataType, optionalExample);
+                        Response.MediaTypeExample mediaTypeExample =
+                                response.new MediaTypeExample(mediaType, dataType, optionalExample);
                         response.getMediaTypeExampleList().add(mediaTypeExample);
                     }
                 } else {
                     for (MediaTypeDescriptor mediaTypeDescriptor : code.getMediaTypes()) {
-                        Response.MediaTypeExample mediaTypeExample = response.new MediaTypeExample(mediaTypeDescriptor.getMediaType(), mediaTypeDescriptor.getDataType(), getExampleForMediaType(responseEntity, mediaTypeDescriptor.getMediaType()));
-                        response.getMediaTypeExampleList().add(mediaTypeExample);
+                        if (mediaTypeDescriptor.getDataType() != null) {
+                            Response.MediaTypeExample mediaTypeExample =
+                                    response.new MediaTypeExample(mediaTypeDescriptor.getMediaType(),
+                                            mediaTypeDescriptor.getDataType(),
+                                            getExampleForMediaType(responseEntity,
+                                                    mediaTypeDescriptor.getMediaType()));
+                            response.getMediaTypeExampleList().add(mediaTypeExample);
+                        }
                     }
                 }
 
@@ -167,7 +164,10 @@ public class Operation {
             String description = responseEntity != null ? responseEntity.getDescription() : "Success";
             Response successResponse = new Response(logger, dataTypeReferenceRenderer, code, successHeaders, description);
             Response.MediaTypeExample successMediaTypeExample = successResponse.new MediaTypeExample(FALLBACK_SUCCESS_MEDIA_TYPE, successDataType, Optional.empty());
-            successResponse.getMediaTypeExampleList().add(successMediaTypeExample);
+            // no response entity -> no need for example/content
+            if (responseEntity != null) {
+                successResponse.getMediaTypeExampleList().add(successMediaTypeExample);
+            }
             responses.add(successResponse);
         }
     }

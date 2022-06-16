@@ -299,7 +299,11 @@ public class ObjectTypeRenderer {
 
         Pattern mustMatchPattern = p.getAnnotation(Pattern.class);
         if (mustMatchPattern != null) {
-            ip.add("pattern: ", "'" + mustMatchPattern.regexp() + "'");
+            // pattern could be anything -> use a block scalar
+            ip.add("pattern: >");
+            ip.nextLevel();
+            ip.add("'" + mustMatchPattern.regexp() + "'");
+            ip.prevLevel();
         }
     }
 

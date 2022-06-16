@@ -15,6 +15,8 @@
  */
 package dk.jyskebank.tools.enunciate.modules.openapi;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.webcohesion.enunciate.EnunciateLogger;
 import com.webcohesion.enunciate.api.datatype.DataType;
@@ -24,10 +26,9 @@ import com.webcohesion.enunciate.api.resources.Parameter;
 import com.webcohesion.enunciate.modules.jaxb.api.impl.DataTypeReferenceImpl;
 import com.webcohesion.enunciate.modules.jaxb.model.types.MapXmlType;
 import com.webcohesion.enunciate.modules.jaxb.model.types.XmlType;
+
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.IndentationPrinter;
 import dk.jyskebank.tools.enunciate.modules.openapi.yaml.YamlHelper;
-
-import java.util.List;
 
 public class DataTypeReferenceRenderer {
     private final EnunciateLogger logger;
@@ -40,7 +41,9 @@ public class DataTypeReferenceRenderer {
 
     public void render(IndentationPrinter ip, DataTypeReference dtr, String description) {
         if (dtr == null) {
-            throw new IllegalStateException("Cannot render null data type");
+            logger.debug("  no data type reference - void? (description: " + description + ")");
+            return;
+            //throw new IllegalStateException("Cannot render null data type");
         }
 
         logger.info("  render type for " + dtr.getContainers());
@@ -58,13 +61,12 @@ public class DataTypeReferenceRenderer {
             ip.add("description: ", YamlHelper.safeYamlString(description));
         }
 
-        if (value != null) {
+        if (value != null && hasContainers) {
             renderContainer(ip, Lists.newCopyOnWriteArrayList(containers), () -> addSchemaRef(ip, value));
         } else {
             if (hasContainers) {
                 if (isMultiDimensionalCollection(containers)) {
                     renderNestedArrays(ip, dtr, containers.size());
-
                 } else {
                     renderContainer(ip, containers, () -> renderType(ip, dtr));
                 }
@@ -78,6 +80,9 @@ public class DataTypeReferenceRenderer {
                         if (mapXmlType.getKeyType().isSimple() && mapXmlType.getValueType().isSimple()) {
                             logger.info("Workaround rendering of simple map");
                             renderContainer(ip, true, () -> ip.add("type: string"));
+                            ip.nextLevel();
+                            ip.add("type: string");
+                            ip.prevLevel();
                             workaroundRendering = true;
                         } else {
                             logger.info("Unhandled map with types " + mapXmlType.getKeyType() + " : " + mapXmlType.getValueType());
@@ -93,11 +98,10 @@ public class DataTypeReferenceRenderer {
     }
 
     private boolean isMultiDimensionalCollection(List<ContainerType> containers) {
-        return containers.stream().noneMatch(c -> c.isMap());
+        return containers.stream().noneMatch(ContainerType::isMap);
     }
 
     private void renderNestedArrays(IndentationPrinter ip, DataTypeReference dtr, int dimensionSize) {
-
         if (dimensionSize == 0) {
             renderValue(ip, () -> renderType(ip, dtr));
         } else {
@@ -117,11 +121,15 @@ public class DataTypeReferenceRenderer {
             ContainerType container = containers.get(0);
             containers.remove(container);
             renderContainer(ip, container.isMap(), valueTypeRenderer);
-            ip.nextLevel();
-            renderContainer(ip, containers, valueTypeRenderer);
-            ip.prevLevel();
+            if (container.isMap() && containers.isEmpty()) {
+                // a map without additional containers would render empty "additionalProperties" -> add an empty object
+                ip.add(" {}");
+            } else {
+                ip.nextLevel();
+                renderContainer(ip, containers, valueTypeRenderer);
+                ip.prevLevel();
+            }
         }
-
     }
 
     private void renderContainer(IndentationPrinter ip, boolean isMap, Runnable valueTypeRenderer) {
