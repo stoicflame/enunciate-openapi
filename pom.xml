@@ -16,7 +16,7 @@
         <freemarker.version>2.3.23</freemarker.version>
         <guava.version>14.0.1</guava.version>
         <resteasy.version>3.0.12.Final</resteasy.version>
-        <slf4j.version>1.7.7</slf4j.version>
+        <slf4j.version>1.7.26</slf4j.version>
         <logback.version>1.1.2</logback.version>
         <assertj.version>3.12.2</assertj.version>
 
